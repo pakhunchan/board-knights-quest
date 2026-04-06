@@ -146,6 +146,30 @@ namespace BoardOfEducation.Game
 
             if (state == NullifyGameManager.State.LevelSelect)
                 BuildLevelSelectCircles();
+
+            if (state == NullifyGameManager.State.LevelComplete)
+                MakeOverlayTappable();
+        }
+
+        /// <summary>
+        /// Makes the entire Level Complete overlay act as a tap target.
+        /// Any tap anywhere on the screen will advance.
+        /// </summary>
+        private void MakeOverlayTappable()
+        {
+            if (levelCompleteOverlay == null) return;
+
+            // Enable raycast on background so taps register
+            var bgImg = levelCompleteOverlay.GetComponent<Image>();
+            if (bgImg != null) bgImg.raycastTarget = true;
+
+            // Add a button to the whole overlay if not already present
+            var overlayBtn = levelCompleteOverlay.GetComponent<Button>();
+            if (overlayBtn == null)
+                overlayBtn = levelCompleteOverlay.AddComponent<Button>();
+
+            overlayBtn.onClick.RemoveAllListeners();
+            overlayBtn.onClick.AddListener(OnContinueClicked);
         }
 
         private void ShowScreen(NullifyGameManager.State state)
@@ -618,7 +642,7 @@ namespace BoardOfEducation.Game
                 completeMoveText.text = $"Moves: {moveCount} (par: {par})";
             }
 
-            if (continueText != null) continueText.text = "Tap Continue or wait...";
+            if (continueText != null) continueText.text = "Tap anywhere to continue...";
 
             // Auto-continue after 5 seconds as fallback
             if (autoContinueCoroutine != null) StopCoroutine(autoContinueCoroutine);
@@ -631,7 +655,7 @@ namespace BoardOfEducation.Game
             while (remaining > 0f)
             {
                 if (continueText != null)
-                    continueText.text = $"Tap Continue or wait ({Mathf.CeilToInt(remaining)}s)...";
+                    continueText.text = $"Tap anywhere to continue ({Mathf.CeilToInt(remaining)}s)...";
                 remaining -= Time.deltaTime;
                 yield return null;
             }

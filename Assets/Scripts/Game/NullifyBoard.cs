@@ -24,7 +24,10 @@ namespace BoardOfEducation.Game
         // Active circles in the current level
         private List<NullifyCircle> circles = new List<NullifyCircle>();
         private NullifyCircle hoveredCircle;
-        private bool isAnimating;
+
+        // Dwell-to-absorb: auto-absorb when piece hovers over a circle
+        private float hoverDwellTime = -1f;
+        private const float ABSORB_DWELL_SECONDS = 0.15f;
 
         // Piece cursor — a number label that follows the piece
         private GameObject pieceCursorGo;
@@ -73,7 +76,7 @@ namespace BoardOfEducation.Game
         {
             var gm = NullifyGameManager.Instance;
             if (gm == null || gm.CurrentState != NullifyGameManager.State.Playing) return;
-            if (gm.TrackedContactId < 0 || isAnimating) return;
+            if (gm.TrackedContactId < 0) return;
             if (PieceManager.Instance == null) return;
             if (!PieceManager.Instance.ActivePieces.TryGetValue(gm.TrackedContactId, out var piece)) return;
 
@@ -184,7 +187,7 @@ namespace BoardOfEducation.Game
             }
             circles.Clear();
             hoveredCircle = null;
-            isAnimating = false;
+            hoverDwellTime = -1f;
         }
 
         // ── Circle Creation ──────────────────────────────────
@@ -304,6 +307,7 @@ namespace BoardOfEducation.Game
                     hoveredCircle.SetVisualState(NullifyCircle.VisualState.Idle);
 
                 hoveredCircle = nearest;
+                hoverDwellTime = nearest != null ? 0f : -1f;
 
                 if (hoveredCircle != null)
                 {
@@ -327,11 +331,53 @@ namespace BoardOfEducation.Game
                     }
                 }
             }
+            else if (hoveredCircle != null)
+            {
+                // Same circle — accumulate dwell time
+                hoverDwellTime += Time.deltaTime;
+                if (hoverDwellTime >= ABSORB_DWELL_SECONDS)
+                {
+                    hoverDwellTime = -1f;
+                    PerformAutoAbsorb();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Auto-absorb or combine when piece dwells on a circle.
+        /// Same logic as HandlePieceTouched but triggered by hover dwell.
+        /// </summary>
+        private void PerformAutoAbsorb()
+        {
+            if (hoveredCircle == null) return;
+
+            var gm = NullifyGameManager.Instance;
+
+            if (!pieceHasValue)
+            {
+                AbsorbCircle(hoveredCircle);
+            }
+            else
+            {
+                var result = NullifyLevel.EvaluateCombine(pieceHeldData, hoveredCircle.Data);
+                if (result.IsValid)
+                {
+                    gm?.RecordMove();
+                    PerformCombine(hoveredCircle, result);
+                }
+                else
+                {
+                    hoveredCircle.AnimateReject();
+                    hoveredCircle.SetVisualState(NullifyCircle.VisualState.Idle);
+                }
+            }
+
+            hoveredCircle = null;
         }
 
         private void HandlePieceTouched(PieceManager.PieceContact piece)
         {
-            if (!IsTrackedPiece(piece) || isAnimating) return;
+            if (!IsTrackedPiece(piece)) return;
             if (hoveredCircle == null) return;
 
             var gm = NullifyGameManager.Instance;
@@ -365,8 +411,6 @@ namespace BoardOfEducation.Game
 
         private void AbsorbCircle(NullifyCircle circle)
         {
-            isAnimating = true;
-
             var gm = NullifyGameManager.Instance;
             gm?.RecordMove();
 
@@ -374,58 +418,39 @@ namespace BoardOfEducation.Game
             string display = circle.Data.DisplayText;
             CircleType type = circle.Data.Type;
 
+            // Remove from active list immediately
             circles.Remove(circle);
 
+            // Update piece cursor instantly — no waiting for animation
+            ShowPieceCursor(val, display);
+            pieceHeldData = new CircleData(val, type, display);
+
+            // Fire-and-forget animation (plays in background)
             circle.AnimateNullify(() =>
             {
-                // Show the absorbed value on the piece cursor
-                // For operations, convert to a descriptive label
-                if (type == CircleType.Number)
-                    ShowPieceCursor(val, display);
-                else
-                    ShowPieceCursor(val, display); // keep operation display
-
-                pieceHeldData = new CircleData(val, type, display);
-
-                isAnimating = false;
-
-                // If this was the last circle, check completion
                 gm?.CompleteLevelCheck(circles.Count);
             });
         }
 
         private void PerformCombine(NullifyCircle target, CombineResult result)
         {
-            isAnimating = true;
-
             var gm = NullifyGameManager.Instance;
 
+            // Remove from active list immediately
+            circles.Remove(target);
+            int remaining = circles.Count;
+
+            // Update piece cursor instantly
             if (result.IsNullified)
-            {
-                // Result is zero — circle disappears and piece value clears
-                circles.Remove(target);
-                int remaining = circles.Count;
-
-                target.AnimateNullify(() =>
-                {
-                    HidePieceCursor();
-                    isAnimating = false;
-                    gm?.CompleteLevelCheck(remaining);
-                });
-            }
+                HidePieceCursor();
             else
-            {
-                // Result is non-zero — circle disappears, piece gets new value
-                circles.Remove(target);
-                int remaining = circles.Count;
+                ShowPieceCursor(result.ResultValue, result.ResultDisplay);
 
-                target.AnimateNullify(() =>
-                {
-                    ShowPieceCursor(result.ResultValue, result.ResultDisplay);
-                    isAnimating = false;
-                    gm?.CompleteLevelCheck(remaining);
-                });
-            }
+            // Fire-and-forget animation
+            target.AnimateNullify(() =>
+            {
+                gm?.CompleteLevelCheck(remaining);
+            });
         }
 
         // ── Proximity Detection ──────────────────────────────
