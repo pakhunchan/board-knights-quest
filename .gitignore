@@ -41,3 +41,9 @@ crashlytics-build.properties
 
 # Prebuilt assets (large, managed separately)
 Assets_prebuilt/
+
+# Board SDK tooling/simulator artifacts
+.utmp/
+
+# Large reference files
+misc/Direct Instruction Mathematics*
