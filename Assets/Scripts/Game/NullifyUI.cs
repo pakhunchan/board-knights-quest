@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 using System.Collections.Generic;
 using BoardOfEducation.Input;
@@ -24,6 +25,7 @@ namespace BoardOfEducation.Game
         [SerializeField] private RectTransform pieceCircleContainer;
         [SerializeField] private Button confirmButton;
         [SerializeField] private TextMeshProUGUI pieceStatusText;
+        [SerializeField] private Button backButton;
 
         [Header("Level Select")]
         [SerializeField] private TextMeshProUGUI levelSelectTitle;
@@ -101,6 +103,10 @@ namespace BoardOfEducation.Game
                 gm.OnPieceDetected += HandlePieceDetected;
                 gm.OnPieceLost += HandlePieceLost;
             }
+
+            // Wire up back button
+            if (backButton != null)
+                backButton.onClick.AddListener(OnBackClicked);
 
             // Wire up confirm button
             if (confirmButton != null)
@@ -297,6 +303,11 @@ namespace BoardOfEducation.Game
                 if (glyph == glyphId && rect != null)
                     rect.localScale = Vector3.one * 1.3f;
             }
+        }
+
+        private void OnBackClicked()
+        {
+            SceneManager.LoadScene("LandingPage");
         }
 
         private void OnConfirmClicked()

@@ -6,7 +6,12 @@ public static class CommandLineBuild
 {
     public static void BuildAndroid()
     {
-        var scenes = new[] { "Assets/Scenes/Nullify.unity" };
+        var scenes = new[]
+        {
+            "Assets/Scenes/LandingPage.unity",
+            "Assets/Scenes/Nullify.unity",
+            "Assets/Scenes/Playground.unity",
+        };
         var options = new BuildPlayerOptions
         {
             scenes = scenes,

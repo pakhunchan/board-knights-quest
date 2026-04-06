@@ -75,6 +75,11 @@ namespace BoardOfEducation.Game
             var pieceSelectGo = CreateUIElement("PieceSelectScreen", canvasGo.transform);
             StretchFill(pieceSelectGo);
 
+            // Back button (top-left, returns to landing page)
+            var backBtnGo = CreateButton(pieceSelectGo.transform, "BackButton",
+                "< BACK", HexColor("#e74c3c"), HexColor("#555555"));
+            SetAnchored(backBtnGo, new Vector2(0.02f, 0.88f), new Vector2(0.15f, 0.97f));
+
             // Title: "NULLIFY"
             var psTitle = CreateText(pieceSelectGo.transform, "Title", "NULLIFY",
                 64, TextAlignmentOptions.Center, Color.white);
@@ -207,6 +212,7 @@ namespace BoardOfEducation.Game
             SetRef(uiSO, "levelSelectScreen", levelSelectGo);
             SetRef(uiSO, "gameplayScreen", gameplayGo);
             SetRef(uiSO, "levelCompleteOverlay", completeGo);
+            SetRef(uiSO, "backButton", backBtnGo.GetComponent<Button>());
             SetRef(uiSO, "pieceSelectTitle", psTitle.GetComponent<TextMeshProUGUI>());
             SetRef(uiSO, "pieceSelectSubtitle", psSubtitle.GetComponent<TextMeshProUGUI>());
             SetRef(uiSO, "pieceCircleContainer", pcRect);
