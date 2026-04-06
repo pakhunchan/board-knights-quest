@@ -46,33 +46,19 @@ namespace BoardOfEducation.Core
 
         private void ValidateSetup()
         {
-            bool valid = true;
-
-            if (GameManager.Instance == null)
-            {
-                Debug.LogError("[BoardStartup] GameManager not found in scene!");
-                valid = false;
-            }
-
             if (Input.PieceManager.Instance == null)
             {
                 Debug.LogError("[BoardStartup] PieceManager not found in scene!");
-                valid = false;
+                return;
             }
 
+            // These are optional — only present in the fraction game scene
+            if (GameManager.Instance != null)
+                Debug.Log("[BoardStartup] GameManager found.");
             if (Logging.InteractionLogger.Instance == null)
-            {
-                Debug.LogWarning("[BoardStartup] InteractionLogger not found — interactions will not be logged.");
-            }
+                Debug.Log("[BoardStartup] InteractionLogger not present (optional).");
 
-            if (Lessons.LessonController.Instance == null)
-            {
-                Debug.LogError("[BoardStartup] LessonController not found in scene!");
-                valid = false;
-            }
-
-            if (valid)
-                Debug.Log("[BoardStartup] All core systems initialized successfully.");
+            Debug.Log("[BoardStartup] Core systems initialized.");
         }
     }
 }
