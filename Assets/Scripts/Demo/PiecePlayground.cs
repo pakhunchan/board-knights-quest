@@ -15,9 +15,17 @@ namespace BoardOfEducation.Demo
         [SerializeField] private Text instructionText;
         [SerializeField] private Text pieceCountText;
         [SerializeField] private RectTransform cardContainer;
+        [SerializeField] private RectTransform bgCircleContainer;
 
         // Active cards keyed by contactId
         private Dictionary<int, GameObject> activeCards = new Dictionary<int, GameObject>();
+
+        // Procedurally generated circle sprite (shared by all circles)
+        private static Sprite circleSprite;
+
+        // Background circle gentle float animation
+        private List<(RectTransform rect, float speed, float amplitude, Vector2 origin)> floatingCircles
+            = new List<(RectTransform, float, float, Vector2)>();
 
         // Distinct colors for each of the 7 Board Arcade pieces
         private static readonly Dictionary<int, Color> PieceColors = new Dictionary<int, Color>
@@ -41,6 +49,9 @@ namespace BoardOfEducation.Demo
 
         private void OnEnable()
         {
+            EnsureCircleSprite();
+            SpawnBackgroundCircles();
+
             if (PieceManager.Instance != null)
             {
                 PieceManager.Instance.OnPiecePlaced += HandlePiecePlaced;
@@ -110,6 +121,16 @@ namespace BoardOfEducation.Demo
                     fadingCards[i] = (card, timer);
                 }
             }
+
+            // Gently float background circles
+            float time = Time.time;
+            foreach (var (rect, speed, amplitude, origin) in floatingCircles)
+            {
+                if (rect == null) continue;
+                float yOffset = Mathf.Sin(time * speed) * amplitude;
+                float xOffset = Mathf.Cos(time * speed * 0.7f) * amplitude * 0.5f;
+                rect.anchoredPosition = origin + new Vector2(xOffset, yOffset);
+            }
         }
 
         private void HandlePiecePlaced(PieceManager.PieceContact piece)
@@ -148,6 +169,86 @@ namespace BoardOfEducation.Demo
             // Could add subtle position tracking later — for now just log
         }
 
+        /// <summary>Creates a procedural circle texture + sprite (once, shared).</summary>
+        private static void EnsureCircleSprite()
+        {
+            if (circleSprite != null) return;
+
+            int size = 128;
+            var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+            float center = size / 2f;
+            float radius = center - 1f;
+
+            for (int y = 0; y < size; y++)
+            {
+                for (int x = 0; x < size; x++)
+                {
+                    float dist = Vector2.Distance(new Vector2(x, y), new Vector2(center, center));
+                    // Soft edge for anti-aliasing
+                    float alpha = Mathf.Clamp01((radius - dist) / 1.5f);
+                    tex.SetPixel(x, y, new Color(1f, 1f, 1f, alpha));
+                }
+            }
+            tex.Apply();
+
+            circleSprite = Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f);
+        }
+
+        /// <summary>Spawn soft glowing background circles for each piece color.</summary>
+        private void SpawnBackgroundCircles()
+        {
+            if (bgCircleContainer == null) return;
+
+            // Positions spread across the play area (normalized 0-1 within container)
+            var positions = new Vector2[]
+            {
+                new Vector2(0.10f, 0.55f),
+                new Vector2(0.25f, 0.35f),
+                new Vector2(0.40f, 0.60f),
+                new Vector2(0.55f, 0.30f),
+                new Vector2(0.70f, 0.55f),
+                new Vector2(0.85f, 0.40f),
+                new Vector2(0.50f, 0.75f),
+            };
+
+            int[] glyphIds = {
+                PieceManager.ArcadeGlyphs.RobotYellow,
+                PieceManager.ArcadeGlyphs.RobotPurple,
+                PieceManager.ArcadeGlyphs.RobotOrange,
+                PieceManager.ArcadeGlyphs.RobotPink,
+                PieceManager.ArcadeGlyphs.ShipPink,
+                PieceManager.ArcadeGlyphs.ShipYellow,
+                PieceManager.ArcadeGlyphs.ShipPurple,
+            };
+
+            for (int i = 0; i < 7; i++)
+            {
+                Color col = PieceColors.ContainsKey(glyphIds[i]) ? PieceColors[glyphIds[i]] : Color.white;
+
+                var go = new GameObject($"BgCircle_{i}");
+                go.transform.SetParent(bgCircleContainer, false);
+
+                var rect = go.AddComponent<RectTransform>();
+                float size = Random.Range(120f, 200f);
+                rect.sizeDelta = new Vector2(size, size);
+
+                // Position using anchors within the container
+                rect.anchorMin = positions[i];
+                rect.anchorMax = positions[i];
+                rect.anchoredPosition = Vector2.zero;
+
+                var img = go.AddComponent<Image>();
+                img.sprite = circleSprite;
+                img.color = new Color(col.r, col.g, col.b, 0.15f);
+                img.raycastTarget = false;
+
+                // Register for floating animation
+                float speed = Random.Range(0.3f, 0.8f);
+                float amplitude = Random.Range(5f, 15f);
+                floatingCircles.Add((rect, speed, amplitude, Vector2.zero));
+            }
+        }
+
         private GameObject CreateCard(PieceManager.PieceContact piece)
         {
             Color pieceColor = PieceColors.ContainsKey(piece.glyphId)
@@ -184,8 +285,8 @@ namespace BoardOfEducation.Demo
             circleLayout.preferredWidth = 90;
             circleLayout.preferredHeight = 90;
             var circleImg = circleGo.AddComponent<Image>();
+            circleImg.sprite = circleSprite;
             circleImg.color = pieceColor;
-            // Make it circular by setting the image type (will be roughly circular with default sprite)
 
             // Piece name text
             var nameGo = new GameObject("Name");

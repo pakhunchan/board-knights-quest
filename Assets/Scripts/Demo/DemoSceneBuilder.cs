@@ -65,7 +65,15 @@ namespace BoardOfEducation.Demo
             var bgGo = CreateUIElement("Background", canvasGo.transform);
             StretchFill(bgGo);
             var bgImg = bgGo.AddComponent<Image>();
-            bgImg.color = HexColor("#16213e");
+            bgImg.color = HexColor("#0f0e2a");
+
+            // Background circle container (sits behind cards, fills play area)
+            var bgCirclesGo = CreateUIElement("BgCircleContainer", canvasGo.transform);
+            var bgCirclesRect = bgCirclesGo.GetComponent<RectTransform>();
+            bgCirclesRect.anchorMin = Vector2.zero;
+            bgCirclesRect.anchorMax = Vector2.one;
+            bgCirclesRect.offsetMin = Vector2.zero;
+            bgCirclesRect.offsetMax = Vector2.zero;
 
             // Title text
             var titleGo = CreateUIElement("TitleText", canvasGo.transform);
@@ -133,6 +141,7 @@ namespace BoardOfEducation.Demo
             so.FindProperty("instructionText").objectReferenceValue = instrText;
             so.FindProperty("pieceCountText").objectReferenceValue = countText;
             so.FindProperty("cardContainer").objectReferenceValue = containerRect;
+            so.FindProperty("bgCircleContainer").objectReferenceValue = bgCirclesRect;
             so.ApplyModifiedPropertiesWithoutUndo();
 
             // Save the scene
