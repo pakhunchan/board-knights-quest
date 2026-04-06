@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "board-sdk": {
+      "type": "stdio",
+      "command": "node",
+      "args": [
+        "/Users/jackie/src/board/MCP/dist/index.js"
+      ],
+      "env": {
+        "BOARD_SDK_VERSION": "3.3.0"
+      }
+    }
+  }
+}
