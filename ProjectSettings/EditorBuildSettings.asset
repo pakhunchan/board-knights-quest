@@ -5,12 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/Scenes/PiecePlayground.unity
-    guid: 718058b59590e4b5590e4e6d02671786
   - enabled: 1
-    path: Assets/Scenes/Nullify.unity
+    path: Assets/Scenes/LandingPage.unity
+    guid: c003d5569ecfe49d9b9fca3f5326feee
+  - enabled: 1
+    path: Assets/Scenes/Circles.unity
     guid: fb7f973b81db0431e9a17c4fa9529a6b
+  - enabled: 1
+    path: Assets/Scenes/Playground.unity
+    guid: 4a732e015f17e4deb8398d6836d22146
+  - enabled: 1
+    path: Assets/Scenes/FractionsDemo.unity
+    guid: 6476388c9fb8f4ae6b14dab98852d6d5
   m_configObjects:
     fun.board.input.settings: {fileID: 11400000, guid: 038ef9367c3ca4cdba9b7d23125bff13, type: 2}
     fun.board.settings: {fileID: 11400000, guid: 9e4311430c6124a63a48bfab46d73a8d, type: 2}

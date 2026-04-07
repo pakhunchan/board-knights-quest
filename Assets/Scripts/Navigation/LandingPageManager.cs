@@ -13,37 +13,48 @@ namespace BoardOfEducation.Navigation
     {
         [Header("UI References")]
         [SerializeField] private Canvas mainCanvas;
-        [SerializeField] private RectTransform nullifyCard;
+        [SerializeField] private RectTransform circlesCard;
+        [SerializeField] private RectTransform fractionsCard;
         [SerializeField] private RectTransform playgroundCard;
-        [SerializeField] private Button nullifyButton;
+        [SerializeField] private Button circlesButton;
+        [SerializeField] private Button fractionsButton;
         [SerializeField] private Button playgroundButton;
         [SerializeField] private TextMeshProUGUI subtitleText;
 
         // Piece dwell tracking
-        private float dwellOnNullify = -1f;
+        private float dwellOnCircles = -1f;
+        private float dwellOnFractions = -1f;
         private float dwellOnPlayground = -1f;
         private const float DWELL_TIME = 1.0f;
 
         // Visual feedback
-        private Image nullifyCardImage;
+        private Image circlesCardImage;
+        private Image fractionsCardImage;
         private Image playgroundCardImage;
-        private Color nullifyBaseColor;
+        private Color circlesBaseColor;
+        private Color fractionsBaseColor;
         private Color playgroundBaseColor;
 
         private void Start()
         {
-            if (nullifyButton != null)
-                nullifyButton.onClick.AddListener(OnNullifyClicked);
+            if (circlesButton != null)
+                circlesButton.onClick.AddListener(OnCirclesClicked);
+            if (fractionsButton != null)
+                fractionsButton.onClick.AddListener(OnFractionsClicked);
             if (playgroundButton != null)
                 playgroundButton.onClick.AddListener(OnPlaygroundClicked);
 
-            if (nullifyCard != null)
-                nullifyCardImage = nullifyCard.GetComponent<Image>();
+            if (circlesCard != null)
+                circlesCardImage = circlesCard.GetComponent<Image>();
+            if (fractionsCard != null)
+                fractionsCardImage = fractionsCard.GetComponent<Image>();
             if (playgroundCard != null)
                 playgroundCardImage = playgroundCard.GetComponent<Image>();
 
-            if (nullifyCardImage != null)
-                nullifyBaseColor = nullifyCardImage.color;
+            if (circlesCardImage != null)
+                circlesBaseColor = circlesCardImage.color;
+            if (fractionsCardImage != null)
+                fractionsBaseColor = fractionsCardImage.color;
             if (playgroundCardImage != null)
                 playgroundBaseColor = playgroundCardImage.color;
         }
@@ -68,30 +79,51 @@ namespace BoardOfEducation.Navigation
 
             Vector2 screenPos = firstPiece.Value.screenPosition;
 
-            // Check Nullify card
-            if (nullifyCard != null && NavigationHelper.IsOverRect(nullifyCard, screenPos, 30f))
+            // Check Circles card
+            if (circlesCard != null && NavigationHelper.IsOverRect(circlesCard, screenPos, 30f))
             {
+                dwellOnFractions = -1f;
                 dwellOnPlayground = -1f;
-                if (dwellOnNullify < 0f) dwellOnNullify = 0f;
-                dwellOnNullify += Time.deltaTime;
+                if (dwellOnCircles < 0f) dwellOnCircles = 0f;
+                dwellOnCircles += Time.deltaTime;
 
-                // Visual feedback — lerp toward brighter
-                if (nullifyCardImage != null)
-                    nullifyCardImage.color = Color.Lerp(nullifyCardImage.color, Color.white, Time.deltaTime * 3f);
+                if (circlesCardImage != null)
+                    circlesCardImage.color = Color.Lerp(circlesCardImage.color, Color.white, Time.deltaTime * 3f);
 
                 if (subtitleText != null)
-                    subtitleText.text = $"Hold to select Nullify... ({Mathf.CeilToInt(DWELL_TIME - dwellOnNullify)}s)";
+                    subtitleText.text = $"Hold to select Circles... ({Mathf.CeilToInt(DWELL_TIME - dwellOnCircles)}s)";
 
-                if (dwellOnNullify >= DWELL_TIME)
+                if (dwellOnCircles >= DWELL_TIME)
                 {
-                    dwellOnNullify = -1f;
-                    OnNullifyClicked();
+                    dwellOnCircles = -1f;
+                    OnCirclesClicked();
+                }
+            }
+            // Check Fractions card
+            else if (fractionsCard != null && NavigationHelper.IsOverRect(fractionsCard, screenPos, 30f))
+            {
+                dwellOnCircles = -1f;
+                dwellOnPlayground = -1f;
+                if (dwellOnFractions < 0f) dwellOnFractions = 0f;
+                dwellOnFractions += Time.deltaTime;
+
+                if (fractionsCardImage != null)
+                    fractionsCardImage.color = Color.Lerp(fractionsCardImage.color, Color.white, Time.deltaTime * 3f);
+
+                if (subtitleText != null)
+                    subtitleText.text = $"Hold to select Fractions... ({Mathf.CeilToInt(DWELL_TIME - dwellOnFractions)}s)";
+
+                if (dwellOnFractions >= DWELL_TIME)
+                {
+                    dwellOnFractions = -1f;
+                    OnFractionsClicked();
                 }
             }
             // Check Playground card
             else if (playgroundCard != null && NavigationHelper.IsOverRect(playgroundCard, screenPos, 30f))
             {
-                dwellOnNullify = -1f;
+                dwellOnCircles = -1f;
+                dwellOnFractions = -1f;
                 if (dwellOnPlayground < 0f) dwellOnPlayground = 0f;
                 dwellOnPlayground += Time.deltaTime;
 
@@ -115,11 +147,14 @@ namespace BoardOfEducation.Navigation
 
         private void ResetDwells()
         {
-            dwellOnNullify = -1f;
+            dwellOnCircles = -1f;
+            dwellOnFractions = -1f;
             dwellOnPlayground = -1f;
 
-            if (nullifyCardImage != null)
-                nullifyCardImage.color = Color.Lerp(nullifyCardImage.color, nullifyBaseColor, Time.deltaTime * 5f);
+            if (circlesCardImage != null)
+                circlesCardImage.color = Color.Lerp(circlesCardImage.color, circlesBaseColor, Time.deltaTime * 5f);
+            if (fractionsCardImage != null)
+                fractionsCardImage.color = Color.Lerp(fractionsCardImage.color, fractionsBaseColor, Time.deltaTime * 5f);
             if (playgroundCardImage != null)
                 playgroundCardImage.color = Color.Lerp(playgroundCardImage.color, playgroundBaseColor, Time.deltaTime * 5f);
 
@@ -127,9 +162,14 @@ namespace BoardOfEducation.Navigation
                 subtitleText.text = "Place a piece or tap to choose";
         }
 
-        private void OnNullifyClicked()
+        private void OnCirclesClicked()
         {
-            NavigationHelper.LoadScene("Nullify");
+            NavigationHelper.LoadScene("Circles");
+        }
+
+        private void OnFractionsClicked()
+        {
+            NavigationHelper.LoadScene("FractionsDemo");
         }
 
         private void OnPlaygroundClicked()

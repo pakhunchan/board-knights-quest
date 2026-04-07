@@ -80,12 +80,20 @@ namespace BoardOfEducation.Navigation
             SetAnchored(subtitleGo, new Vector2(0.15f, 0.72f), new Vector2(0.85f, 0.82f));
 
             // ══════════════════════════════════════════════════
-            // NULLIFY CARD (left)
+            // CIRCLES CARD (left)
             // ══════════════════════════════════════════════════
-            var nullifyCardGo = CreateGameCard(canvasGo.transform, "NullifyCard",
-                "NULLIFY", "Combine to zero!",
+            var circlesCardGo = CreateGameCard(canvasGo.transform, "CirclesCard",
+                "CIRCLES", "Combine to zero!",
                 HexColor("#e74c3c"), // red theme
-                new Vector2(0.1f, 0.1f), new Vector2(0.48f, 0.68f));
+                new Vector2(0.04f, 0.1f), new Vector2(0.34f, 0.68f));
+
+            // ══════════════════════════════════════════════════
+            // FRACTIONS CARD (center)
+            // ══════════════════════════════════════════════════
+            var fractionsCardGo = CreateGameCard(canvasGo.transform, "FractionsCard",
+                "FRACTIONS", "Animated equations",
+                HexColor("#3498db"), // blue theme
+                new Vector2(0.36f, 0.1f), new Vector2(0.64f, 0.68f));
 
             // ══════════════════════════════════════════════════
             // PLAYGROUND CARD (right)
@@ -93,16 +101,18 @@ namespace BoardOfEducation.Navigation
             var playgroundCardGo = CreateGameCard(canvasGo.transform, "PlaygroundCard",
                 "PAK'S\nPLAYGROUND", "Explore & experiment",
                 HexColor("#2ecc71"), // green theme
-                new Vector2(0.52f, 0.1f), new Vector2(0.9f, 0.68f));
+                new Vector2(0.66f, 0.1f), new Vector2(0.96f, 0.68f));
 
             // ══════════════════════════════════════════════════
             // WIRE UP SERIALIZED REFERENCES
             // ══════════════════════════════════════════════════
             var managerSO = new SerializedObject(landingManager);
             SetRef(managerSO, "mainCanvas", canvas);
-            SetRef(managerSO, "nullifyCard", nullifyCardGo.GetComponent<RectTransform>());
+            SetRef(managerSO, "circlesCard", circlesCardGo.GetComponent<RectTransform>());
+            SetRef(managerSO, "fractionsCard", fractionsCardGo.GetComponent<RectTransform>());
             SetRef(managerSO, "playgroundCard", playgroundCardGo.GetComponent<RectTransform>());
-            SetRef(managerSO, "nullifyButton", nullifyCardGo.GetComponent<Button>());
+            SetRef(managerSO, "circlesButton", circlesCardGo.GetComponent<Button>());
+            SetRef(managerSO, "fractionsButton", fractionsCardGo.GetComponent<Button>());
             SetRef(managerSO, "playgroundButton", playgroundCardGo.GetComponent<Button>());
             SetRef(managerSO, "subtitleText", subtitleGo.GetComponent<TextMeshProUGUI>());
             managerSO.ApplyModifiedPropertiesWithoutUndo();
@@ -122,11 +132,12 @@ namespace BoardOfEducation.Navigation
             var scenes = new[]
             {
                 new EditorBuildSettingsScene("Assets/Scenes/LandingPage.unity", true),
-                new EditorBuildSettingsScene("Assets/Scenes/Nullify.unity", true),
+                new EditorBuildSettingsScene("Assets/Scenes/Circles.unity", true),
                 new EditorBuildSettingsScene("Assets/Scenes/Playground.unity", true),
+                new EditorBuildSettingsScene("Assets/Scenes/FractionsDemo.unity", true),
             };
             EditorBuildSettings.scenes = scenes;
-            Debug.Log("[LandingSceneBuilder] Build settings configured: LandingPage(0), Nullify(1), Playground(2)");
+            Debug.Log("[LandingSceneBuilder] Build settings configured: LandingPage(0), Circles(1), Playground(2), FractionsDemo(3)");
         }
 
         // ── Game Card Helper ─────────────────────────────────
@@ -184,7 +195,7 @@ namespace BoardOfEducation.Navigation
             return cardGo;
         }
 
-        // ── Helpers (same pattern as NullifySceneBuilder) ────
+        // ── Helpers (same pattern as CirclesSceneBuilder) ────
 
         private static GameObject CreateUIElement(string name, Transform parent)
         {

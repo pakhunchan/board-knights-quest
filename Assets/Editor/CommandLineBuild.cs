@@ -9,8 +9,9 @@ public static class CommandLineBuild
         var scenes = new[]
         {
             "Assets/Scenes/LandingPage.unity",
-            "Assets/Scenes/Nullify.unity",
+            "Assets/Scenes/Circles.unity",
             "Assets/Scenes/Playground.unity",
+            "Assets/Scenes/FractionsDemo.unity",
         };
         var options = new BuildPlayerOptions
         {
