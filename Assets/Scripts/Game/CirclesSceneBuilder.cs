@@ -7,13 +7,13 @@ using TMPro;
 namespace BoardOfEducation.Game
 {
     /// <summary>
-    /// Editor utility that builds the Nullify game scene from scratch.
-    /// Menu: Board of Education > Build Nullify Scene
+    /// Editor utility that builds the Circles game scene from scratch.
+    /// Menu: Board of Education > Build Circles Scene
     /// </summary>
-    public static class NullifySceneBuilder
+    public static class CirclesSceneBuilder
     {
-        [MenuItem("Board of Education/Build Nullify Scene")]
-        public static void BuildNullifyScene()
+        [MenuItem("Board of Education/Build Circles Scene")]
+        public static void BuildCirclesScene()
         {
             if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
                 return;
@@ -45,9 +45,9 @@ namespace BoardOfEducation.Game
             var gameCoreGo = new GameObject("GameCore");
             gameCoreGo.AddComponent<Core.BoardStartup>();
             gameCoreGo.AddComponent<Input.PieceManager>();
-            var gameManager = gameCoreGo.AddComponent<NullifyGameManager>();
-            var board = gameCoreGo.AddComponent<NullifyBoard>();
-            var ui = gameCoreGo.AddComponent<NullifyUI>();
+            var gameManager = gameCoreGo.AddComponent<CirclesGameManager>();
+            var board = gameCoreGo.AddComponent<CirclesBoard>();
+            var ui = gameCoreGo.AddComponent<CirclesUI>();
 
             // ── MainCanvas ──
             var canvasGo = new GameObject("MainCanvas");
@@ -80,8 +80,8 @@ namespace BoardOfEducation.Game
                 "< BACK", HexColor("#e74c3c"), HexColor("#555555"));
             SetAnchored(backBtnGo, new Vector2(0.02f, 0.88f), new Vector2(0.15f, 0.97f));
 
-            // Title: "NULLIFY"
-            var psTitle = CreateText(pieceSelectGo.transform, "Title", "NULLIFY",
+            // Title: "CIRCLES"
+            var psTitle = CreateText(pieceSelectGo.transform, "Title", "CIRCLES",
                 64, TextAlignmentOptions.Center, Color.white);
             SetAnchored(psTitle, new Vector2(0.1f, 0.75f), new Vector2(0.9f, 0.95f));
 
@@ -200,13 +200,13 @@ namespace BoardOfEducation.Game
             // WIRE UP SERIALIZED REFERENCES
             // ══════════════════════════════════════════════════
 
-            // NullifyBoard
+            // CirclesBoard
             var boardSO = new SerializedObject(board);
             SetRef(boardSO, "circleContainer", ccRect);
             SetRef(boardSO, "mainCanvas", canvas);
             boardSO.ApplyModifiedPropertiesWithoutUndo();
 
-            // NullifyUI
+            // CirclesUI
             var uiSO = new SerializedObject(ui);
             SetRef(uiSO, "pieceSelectScreen", pieceSelectGo);
             SetRef(uiSO, "levelSelectScreen", levelSelectGo);
@@ -231,12 +231,12 @@ namespace BoardOfEducation.Game
             uiSO.ApplyModifiedPropertiesWithoutUndo();
 
             // ── Save Scene ──
-            string scenePath = "Assets/Scenes/Nullify.unity";
+            string scenePath = "Assets/Scenes/Circles.unity";
             if (!AssetDatabase.IsValidFolder("Assets/Scenes"))
                 AssetDatabase.CreateFolder("Assets", "Scenes");
 
             UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene, scenePath);
-            Debug.Log($"[NullifySceneBuilder] Nullify scene built and saved to {scenePath}");
+            Debug.Log($"[CirclesSceneBuilder] Circles scene built and saved to {scenePath}");
         }
 
         // ── Helpers ──────────────────────────────────────────
@@ -323,7 +323,7 @@ namespace BoardOfEducation.Game
             if (prop != null)
                 prop.objectReferenceValue = value;
             else
-                Debug.LogWarning($"[NullifySceneBuilder] Could not find field '{fieldName}' on {so.targetObject.GetType().Name}");
+                Debug.LogWarning($"[CirclesSceneBuilder] Could not find field '{fieldName}' on {so.targetObject.GetType().Name}");
         }
 
         private static Color HexColor(string hex)

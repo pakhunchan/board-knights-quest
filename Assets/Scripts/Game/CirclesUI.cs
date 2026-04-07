@@ -8,10 +8,10 @@ using BoardOfEducation.Input;
 namespace BoardOfEducation.Game
 {
     /// <summary>
-    /// Manages all Nullify UI screens: piece select, level select, gameplay HUD, and level complete overlay.
+    /// Manages all Circles UI screens: piece select, level select, gameplay HUD, and level complete overlay.
     /// Piece select uses a confirm button (finger tap). Level select uses tappable buttons.
     /// </summary>
-    public class NullifyUI : MonoBehaviour
+    public class CirclesUI : MonoBehaviour
     {
         [Header("Screen Panels")]
         [SerializeField] private GameObject pieceSelectScreen;
@@ -92,7 +92,7 @@ namespace BoardOfEducation.Game
         {
             EnsureCircleSprite();
 
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
             if (gm != null)
             {
                 gm.OnStateChanged += HandleStateChanged;
@@ -122,14 +122,14 @@ namespace BoardOfEducation.Game
             }
 
             // Initialize
-            ShowScreen(NullifyGameManager.State.PieceSelect);
+            ShowScreen(CirclesGameManager.State.PieceSelect);
             BuildPieceSelectCircles();
             if (pieceStatusText != null) pieceStatusText.text = "";
         }
 
         private void OnDisable()
         {
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
             if (gm != null)
             {
                 gm.OnStateChanged -= HandleStateChanged;
@@ -144,16 +144,16 @@ namespace BoardOfEducation.Game
 
         // ── State Changes ────────────────────────────────────
 
-        private void HandleStateChanged(NullifyGameManager.State state)
+        private void HandleStateChanged(CirclesGameManager.State state)
         {
             ShowScreen(state);
             pieceDwellOnPlay = -1f;
             pieceDwellOnContinue = -1f;
 
-            if (state == NullifyGameManager.State.LevelSelect)
+            if (state == CirclesGameManager.State.LevelSelect)
                 BuildLevelSelectCircles();
 
-            if (state == NullifyGameManager.State.LevelComplete)
+            if (state == CirclesGameManager.State.LevelComplete)
                 MakeOverlayTappable();
         }
 
@@ -178,12 +178,12 @@ namespace BoardOfEducation.Game
             overlayBtn.onClick.AddListener(OnContinueClicked);
         }
 
-        private void ShowScreen(NullifyGameManager.State state)
+        private void ShowScreen(CirclesGameManager.State state)
         {
-            if (pieceSelectScreen != null)  pieceSelectScreen.SetActive(state == NullifyGameManager.State.PieceSelect);
-            if (levelSelectScreen != null)  levelSelectScreen.SetActive(state == NullifyGameManager.State.LevelSelect);
-            if (gameplayScreen != null)     gameplayScreen.SetActive(state == NullifyGameManager.State.Playing);
-            if (levelCompleteOverlay != null) levelCompleteOverlay.SetActive(state == NullifyGameManager.State.LevelComplete);
+            if (pieceSelectScreen != null)  pieceSelectScreen.SetActive(state == CirclesGameManager.State.PieceSelect);
+            if (levelSelectScreen != null)  levelSelectScreen.SetActive(state == CirclesGameManager.State.LevelSelect);
+            if (gameplayScreen != null)     gameplayScreen.SetActive(state == CirclesGameManager.State.Playing);
+            if (levelCompleteOverlay != null) levelCompleteOverlay.SetActive(state == CirclesGameManager.State.LevelComplete);
         }
 
         // ── Piece Select ─────────────────────────────────────
@@ -312,7 +312,7 @@ namespace BoardOfEducation.Game
 
         private void OnConfirmClicked()
         {
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
             if (gm != null) gm.ConfirmPieceSelection();
         }
 
@@ -326,10 +326,10 @@ namespace BoardOfEducation.Game
             levelCircleData.Clear();
             selectedLevelIndex = -1;
 
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
             if (gm == null) return;
 
-            int totalLevels = NullifyLevel.AllLevels.Count;
+            int totalLevels = CirclesLevel.AllLevels.Count;
             int cols = 7;
             float spacing = 180f;
             float rowSpacing = 180f;
@@ -410,7 +410,7 @@ namespace BoardOfEducation.Game
             if (playButton != null) Destroy(playButton.gameObject);
             if (levelInfoText != null) Destroy(levelInfoText.gameObject);
 
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
             Color pieceCol = gm != null ? gm.SelectedPieceColor : Color.white;
 
             // Level info text (shows selected level name)
@@ -474,7 +474,7 @@ namespace BoardOfEducation.Game
         {
             selectedLevelIndex = levelIndex;
 
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
             Color pieceCol = gm != null ? gm.SelectedPieceColor : Color.white;
             Color selectedHighlight = Color.Lerp(pieceCol, Color.white, 0.4f);
 
@@ -496,9 +496,9 @@ namespace BoardOfEducation.Game
             }
 
             // Update level info text
-            if (levelInfoText != null && levelIndex >= 0 && levelIndex < NullifyLevel.AllLevels.Count)
+            if (levelInfoText != null && levelIndex >= 0 && levelIndex < CirclesLevel.AllLevels.Count)
             {
-                var level = NullifyLevel.AllLevels[levelIndex];
+                var level = CirclesLevel.AllLevels[levelIndex];
                 levelInfoText.text = $"Level {level.LevelNumber}: {level.Title}";
             }
         }
@@ -511,7 +511,7 @@ namespace BoardOfEducation.Game
         private void OnPlayClicked()
         {
             if (selectedLevelIndex < 0) return;
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
             if (gm != null) gm.SelectLevel(selectedLevelIndex);
         }
 
@@ -523,7 +523,7 @@ namespace BoardOfEducation.Game
 
         private void Update()
         {
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
             if (gm == null) return;
             if (gm.TrackedContactId < 0) return;
             if (PieceManager.Instance == null) return;
@@ -531,13 +531,13 @@ namespace BoardOfEducation.Game
 
             Vector2 pieceScreen = piece.screenPosition;
 
-            if (gm.CurrentState == NullifyGameManager.State.LevelSelect)
+            if (gm.CurrentState == CirclesGameManager.State.LevelSelect)
                 UpdatePieceLevelSelect(pieceScreen, gm);
-            else if (gm.CurrentState == NullifyGameManager.State.LevelComplete)
+            else if (gm.CurrentState == CirclesGameManager.State.LevelComplete)
                 UpdatePieceLevelComplete(pieceScreen);
         }
 
-        private void UpdatePieceLevelSelect(Vector2 pieceScreen, NullifyGameManager gm)
+        private void UpdatePieceLevelSelect(Vector2 pieceScreen, CirclesGameManager gm)
         {
             // Check if piece is hovering over a level circle
             foreach (var (rect, img, idx, unlocked) in levelCircleData)
@@ -618,7 +618,7 @@ namespace BoardOfEducation.Game
 
         private void HandleLevelSelected(int levelIndex)
         {
-            var level = NullifyLevel.AllLevels[levelIndex];
+            var level = CirclesLevel.AllLevels[levelIndex];
             if (levelTitleText != null) levelTitleText.text = $"Level {level.LevelNumber}: {level.Title}";
             if (moveCountText != null) moveCountText.text = "Moves: 0";
             if (instructionText != null) instructionText.text = "Combine circles to reach zero!";
@@ -626,7 +626,7 @@ namespace BoardOfEducation.Game
 
         private void HandleMoveCountChanged()
         {
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
             if (gm != null && moveCountText != null)
                 moveCountText.text = $"Moves: {gm.MoveCount}";
         }
@@ -645,7 +645,7 @@ namespace BoardOfEducation.Game
                 starsText.text = starStr;
             }
 
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
             if (completeMoveText != null && gm != null)
             {
                 var level = gm.GetCurrentLevel();
@@ -681,7 +681,7 @@ namespace BoardOfEducation.Game
                 StopCoroutine(autoContinueCoroutine);
                 autoContinueCoroutine = null;
             }
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
             if (gm != null) gm.ReturnToLevelSelect();
         }
 

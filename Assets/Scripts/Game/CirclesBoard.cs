@@ -7,23 +7,23 @@ using BoardOfEducation.Input;
 namespace BoardOfEducation.Game
 {
     /// <summary>
-    /// Core gameplay controller for Nullify.
+    /// Core gameplay controller for Circles.
     /// The piece acts as an accumulator — touch a circle to absorb its value.
     /// A number label follows the piece showing its held value.
     /// </summary>
-    public class NullifyBoard : MonoBehaviour
+    public class CirclesBoard : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private RectTransform circleContainer;
         [SerializeField] private Canvas mainCanvas;
 
         [Header("Settings")]
-        [SerializeField] private float absorbRadius = 200f;
+        [SerializeField] private float absorbRadius = 120f;
         [SerializeField] private float circleSize = 100f;
 
         // Active circles in the current level
-        private List<NullifyCircle> circles = new List<NullifyCircle>();
-        private NullifyCircle hoveredCircle;
+        private List<CirclesCircle> circles = new List<CirclesCircle>();
+        private CirclesCircle hoveredCircle;
 
         // Dwell-to-absorb: auto-absorb when piece hovers over a circle
         private float hoverDwellTime = -1f;
@@ -51,10 +51,10 @@ namespace BoardOfEducation.Game
                 PieceManager.Instance.OnPieceTouched += HandlePieceTouched;
             }
 
-            if (NullifyGameManager.Instance != null)
+            if (CirclesGameManager.Instance != null)
             {
-                NullifyGameManager.Instance.OnLevelSelected += HandleLevelSelected;
-                NullifyGameManager.Instance.OnStateChanged += HandleStateChanged;
+                CirclesGameManager.Instance.OnLevelSelected += HandleLevelSelected;
+                CirclesGameManager.Instance.OnStateChanged += HandleStateChanged;
             }
         }
 
@@ -65,17 +65,17 @@ namespace BoardOfEducation.Game
                 PieceManager.Instance.OnPieceTouched -= HandlePieceTouched;
             }
 
-            if (NullifyGameManager.Instance != null)
+            if (CirclesGameManager.Instance != null)
             {
-                NullifyGameManager.Instance.OnLevelSelected -= HandleLevelSelected;
-                NullifyGameManager.Instance.OnStateChanged -= HandleStateChanged;
+                CirclesGameManager.Instance.OnLevelSelected -= HandleLevelSelected;
+                CirclesGameManager.Instance.OnStateChanged -= HandleStateChanged;
             }
         }
 
         private void Update()
         {
-            var gm = NullifyGameManager.Instance;
-            if (gm == null || gm.CurrentState != NullifyGameManager.State.Playing) return;
+            var gm = CirclesGameManager.Instance;
+            if (gm == null || gm.CurrentState != CirclesGameManager.State.Playing) return;
             if (gm.TrackedContactId < 0) return;
             if (PieceManager.Instance == null) return;
             if (!PieceManager.Instance.ActivePieces.TryGetValue(gm.TrackedContactId, out var piece)) return;
@@ -149,9 +149,9 @@ namespace BoardOfEducation.Game
 
         // ── Level Setup ──────────────────────────────────────
 
-        private void HandleStateChanged(NullifyGameManager.State state)
+        private void HandleStateChanged(CirclesGameManager.State state)
         {
-            if (state != NullifyGameManager.State.Playing)
+            if (state != CirclesGameManager.State.Playing)
             {
                 ClearCircles();
                 HidePieceCursor();
@@ -160,11 +160,11 @@ namespace BoardOfEducation.Game
 
         private void HandleLevelSelected(int levelIndex)
         {
-            var level = NullifyLevel.AllLevels[levelIndex];
+            var level = CirclesLevel.AllLevels[levelIndex];
             SpawnCircles(level);
         }
 
-        public void SpawnCircles(NullifyLevel level)
+        public void SpawnCircles(CirclesLevel level)
         {
             ClearCircles();
             HidePieceCursor();
@@ -192,7 +192,7 @@ namespace BoardOfEducation.Game
 
         // ── Circle Creation ──────────────────────────────────
 
-        private NullifyCircle CreateCircleObject(CircleData data, Vector2 position)
+        private CirclesCircle CreateCircleObject(CircleData data, Vector2 position)
         {
             var go = new GameObject($"Circle_{data.DisplayText}");
             go.transform.SetParent(circleContainer, false);
@@ -234,7 +234,7 @@ namespace BoardOfEducation.Game
             tmp.enableWordWrapping = false;
             tmp.overflowMode = TextOverflowModes.Overflow;
 
-            var circle = go.AddComponent<NullifyCircle>();
+            var circle = go.AddComponent<CirclesCircle>();
             circle.background = bgImg;
             circle.valueText = tmp;
             circle.glowRing = glowImg;
@@ -286,8 +286,8 @@ namespace BoardOfEducation.Game
 
         private bool IsTrackedPiece(PieceManager.PieceContact piece)
         {
-            var gm = NullifyGameManager.Instance;
-            if (gm == null || gm.CurrentState != NullifyGameManager.State.Playing) return false;
+            var gm = CirclesGameManager.Instance;
+            if (gm == null || gm.CurrentState != CirclesGameManager.State.Playing) return false;
             return piece.glyphId == gm.SelectedGlyphId;
         }
 
@@ -304,7 +304,7 @@ namespace BoardOfEducation.Game
             if (nearest != hoveredCircle)
             {
                 if (hoveredCircle != null)
-                    hoveredCircle.SetVisualState(NullifyCircle.VisualState.Idle);
+                    hoveredCircle.SetVisualState(CirclesCircle.VisualState.Idle);
 
                 hoveredCircle = nearest;
                 hoverDwellTime = nearest != null ? 0f : -1f;
@@ -314,20 +314,20 @@ namespace BoardOfEducation.Game
                     // Show preview of what would happen
                     if (pieceHasValue)
                     {
-                        var result = NullifyLevel.EvaluateCombine(pieceHeldData, hoveredCircle.Data);
+                        var result = CirclesLevel.EvaluateCombine(pieceHeldData, hoveredCircle.Data);
                         if (result.IsValid)
                         {
                             string preview = result.IsNullified ? "= 0!" : $"= {result.ResultDisplay}";
-                            hoveredCircle.SetVisualState(NullifyCircle.VisualState.Preview, preview);
+                            hoveredCircle.SetVisualState(CirclesCircle.VisualState.Preview, preview);
                         }
                         else
                         {
-                            hoveredCircle.SetVisualState(NullifyCircle.VisualState.Highlighted);
+                            hoveredCircle.SetVisualState(CirclesCircle.VisualState.Highlighted);
                         }
                     }
                     else
                     {
-                        hoveredCircle.SetVisualState(NullifyCircle.VisualState.Highlighted);
+                        hoveredCircle.SetVisualState(CirclesCircle.VisualState.Highlighted);
                     }
                 }
             }
@@ -351,7 +351,7 @@ namespace BoardOfEducation.Game
         {
             if (hoveredCircle == null) return;
 
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
 
             if (!pieceHasValue)
             {
@@ -359,7 +359,7 @@ namespace BoardOfEducation.Game
             }
             else
             {
-                var result = NullifyLevel.EvaluateCombine(pieceHeldData, hoveredCircle.Data);
+                var result = CirclesLevel.EvaluateCombine(pieceHeldData, hoveredCircle.Data);
                 if (result.IsValid)
                 {
                     gm?.RecordMove();
@@ -368,7 +368,7 @@ namespace BoardOfEducation.Game
                 else
                 {
                     hoveredCircle.AnimateReject();
-                    hoveredCircle.SetVisualState(NullifyCircle.VisualState.Idle);
+                    hoveredCircle.SetVisualState(CirclesCircle.VisualState.Idle);
                 }
             }
 
@@ -380,7 +380,7 @@ namespace BoardOfEducation.Game
             if (!IsTrackedPiece(piece)) return;
             if (hoveredCircle == null) return;
 
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
 
             if (!pieceHasValue)
             {
@@ -390,7 +390,7 @@ namespace BoardOfEducation.Game
             else
             {
                 // Piece already holds a value — combine with this circle
-                var result = NullifyLevel.EvaluateCombine(pieceHeldData, hoveredCircle.Data);
+                var result = CirclesLevel.EvaluateCombine(pieceHeldData, hoveredCircle.Data);
                 if (result.IsValid)
                 {
                     gm?.RecordMove();
@@ -400,7 +400,7 @@ namespace BoardOfEducation.Game
                 {
                     // Can't combine (e.g. operation + operation)
                     hoveredCircle.AnimateReject();
-                    hoveredCircle.SetVisualState(NullifyCircle.VisualState.Idle);
+                    hoveredCircle.SetVisualState(CirclesCircle.VisualState.Idle);
                 }
             }
 
@@ -409,9 +409,9 @@ namespace BoardOfEducation.Game
 
         // ── Absorb & Combine ─────────────────────────────────
 
-        private void AbsorbCircle(NullifyCircle circle)
+        private void AbsorbCircle(CirclesCircle circle)
         {
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
             gm?.RecordMove();
 
             float val = circle.Data.Value;
@@ -426,15 +426,15 @@ namespace BoardOfEducation.Game
             pieceHeldData = new CircleData(val, type, display);
 
             // Fire-and-forget animation (plays in background)
-            circle.AnimateNullify(() =>
+            circle.AnimateDissolve(() =>
             {
                 gm?.CompleteLevelCheck(circles.Count);
             });
         }
 
-        private void PerformCombine(NullifyCircle target, CombineResult result)
+        private void PerformCombine(CirclesCircle target, CombineResult result)
         {
-            var gm = NullifyGameManager.Instance;
+            var gm = CirclesGameManager.Instance;
 
             // Remove from active list immediately
             circles.Remove(target);
@@ -447,7 +447,7 @@ namespace BoardOfEducation.Game
                 ShowPieceCursor(result.ResultValue, result.ResultDisplay);
 
             // Fire-and-forget animation
-            target.AnimateNullify(() =>
+            target.AnimateDissolve(() =>
             {
                 gm?.CompleteLevelCheck(remaining);
             });
@@ -455,9 +455,9 @@ namespace BoardOfEducation.Game
 
         // ── Proximity Detection ──────────────────────────────
 
-        private NullifyCircle FindNearestCircle(Vector2 canvasPos, float maxDist)
+        private CirclesCircle FindNearestCircle(Vector2 canvasPos, float maxDist)
         {
-            NullifyCircle nearest = null;
+            CirclesCircle nearest = null;
             float nearestDist = float.MaxValue;
 
             foreach (var circle in circles)

@@ -6,17 +6,17 @@ using System.Collections;
 namespace BoardOfEducation.Game
 {
     /// <summary>
-    /// Visual component for a single Nullify circle.
+    /// Visual component for a single Circles circle.
     /// Manages its CircleData, visual state, and animations.
     /// </summary>
-    public class NullifyCircle : MonoBehaviour
+    public class CirclesCircle : MonoBehaviour
     {
         public enum VisualState { Idle, Highlighted, Grabbed, Preview }
 
         public CircleData Data { get; private set; }
         public VisualState State { get; private set; } = VisualState.Idle;
 
-        // Child references (set by NullifyBoard when creating)
+        // Child references (set by CirclesBoard when creating)
         [HideInInspector] public Image background;
         [HideInInspector] public TextMeshProUGUI valueText;
         [HideInInspector] public Image glowRing;
@@ -170,12 +170,12 @@ namespace BoardOfEducation.Game
             onComplete?.Invoke();
         }
 
-        public void AnimateNullify(System.Action onComplete = null)
+        public void AnimateDissolve(System.Action onComplete = null)
         {
-            StartCoroutine(CoAnimateNullify(onComplete));
+            StartCoroutine(CoAnimateDissolve(onComplete));
         }
 
-        private IEnumerator CoAnimateNullify(System.Action onComplete)
+        private IEnumerator CoAnimateDissolve(System.Action onComplete)
         {
             // Flash white
             if (background != null) background.color = Color.white;

@@ -38,14 +38,14 @@ namespace BoardOfEducation.Game
     }
 
     [System.Serializable]
-    public class NullifyLevel
+    public class CirclesLevel
     {
         public int LevelNumber;
         public string Title;
         public List<CircleData> Circles;
         public int Par;
 
-        public NullifyLevel(int num, string title, List<CircleData> circles, int par)
+        public CirclesLevel(int num, string title, List<CircleData> circles, int par)
         {
             LevelNumber = num;
             Title = title;
@@ -55,7 +55,7 @@ namespace BoardOfEducation.Game
 
         /// <summary>
         /// Evaluate combining source onto target.
-        /// Number + Number = add values (nullify if 0).
+        /// Number + Number = add values (zero if 0).
         /// Number + Operation = apply operation to number.
         /// Operation + Operation = invalid.
         /// </summary>
@@ -127,9 +127,9 @@ namespace BoardOfEducation.Game
 
         // ── Level Bank ──────────────────────────────────────────
 
-        private static List<NullifyLevel> _levels;
+        private static List<CirclesLevel> _levels;
 
-        public static List<NullifyLevel> AllLevels
+        public static List<CirclesLevel> AllLevels
         {
             get
             {
@@ -154,64 +154,64 @@ namespace BoardOfEducation.Game
             return new CircleData(v, CircleType.Divide, "\u00f7" + FormatNumber(v));
         }
 
-        private static List<NullifyLevel> BuildLevels()
+        private static List<CirclesLevel> BuildLevels()
         {
-            return new List<NullifyLevel>
+            return new List<CirclesLevel>
             {
                 // 1: Simple opposites
-                new NullifyLevel(1, "Opposites", new List<CircleData>
+                new CirclesLevel(1, "Opposites", new List<CircleData>
                     { Num(3), Num(-3) }, 1),
 
                 // 2: Chain addition
-                new NullifyLevel(2, "Chain", new List<CircleData>
+                new CirclesLevel(2, "Chain", new List<CircleData>
                     { Num(5), Num(-2), Num(-3) }, 2),
 
                 // 3: Two pairs
-                new NullifyLevel(3, "Two Pairs", new List<CircleData>
+                new CirclesLevel(3, "Two Pairs", new List<CircleData>
                     { Num(4), Num(-4), Num(2), Num(-2) }, 2),
 
                 // 4: Split negative
-                new NullifyLevel(4, "Split", new List<CircleData>
+                new CirclesLevel(4, "Split", new List<CircleData>
                     { Num(6), Num(-3), Num(-3) }, 2),
 
                 // 5: Build then cancel
-                new NullifyLevel(5, "Build Up", new List<CircleData>
+                new CirclesLevel(5, "Build Up", new List<CircleData>
                     { Num(1), Num(2), Num(-3) }, 2),
 
                 // 6: Multiple paths
-                new NullifyLevel(6, "Paths", new List<CircleData>
+                new CirclesLevel(6, "Paths", new List<CircleData>
                     { Num(3), Num(-1), Num(2), Num(-4) }, 3),
 
                 // 7: Intro multiply
-                new NullifyLevel(7, "Multiply", new List<CircleData>
+                new CirclesLevel(7, "Multiply", new List<CircleData>
                     { Num(2), Mul(2), Num(-4) }, 2),
 
                 // 8: Negate then cancel
-                new NullifyLevel(8, "Negate", new List<CircleData>
+                new CirclesLevel(8, "Negate", new List<CircleData>
                     { Num(-3), Mul(-1), Num(-3) }, 2),
 
                 // 9: Intro divide
-                new NullifyLevel(9, "Divide", new List<CircleData>
+                new CirclesLevel(9, "Divide", new List<CircleData>
                     { Num(6), Div(2), Num(-3) }, 2),
 
                 // 10: Mixed ops
-                new NullifyLevel(10, "Mixed", new List<CircleData>
+                new CirclesLevel(10, "Mixed", new List<CircleData>
                     { Num(4), Div(2), Num(1), Num(-3) }, 3),
 
                 // 11: Multiply then chain
-                new NullifyLevel(11, "Multiply Chain", new List<CircleData>
+                new CirclesLevel(11, "Multiply Chain", new List<CircleData>
                     { Num(2), Mul(3), Num(-3), Num(-3) }, 3),
 
                 // 12: Divide then chain
-                new NullifyLevel(12, "Divide Chain", new List<CircleData>
+                new CirclesLevel(12, "Divide Chain", new List<CircleData>
                     { Num(8), Div(4), Num(-1), Num(-1) }, 3),
 
                 // 13: Negative multiply
-                new NullifyLevel(13, "Negative Multiply", new List<CircleData>
+                new CirclesLevel(13, "Negative Multiply", new List<CircleData>
                     { Num(-2), Mul(-2), Num(1), Num(-5) }, 3),
 
                 // 14: Full chain
-                new NullifyLevel(14, "Full Chain", new List<CircleData>
+                new CirclesLevel(14, "Full Chain", new List<CircleData>
                     { Num(3), Mul(2), Div(3), Num(-2) }, 3),
             };
         }

@@ -8,7 +8,7 @@ namespace BoardOfEducation.Navigation
 {
     /// <summary>
     /// Shared utilities used across landing page, playground, and game scenes.
-    /// Extracts duplicated code from NullifyUI/NullifyBoard into one place.
+    /// Extracts duplicated code from CirclesUI/CirclesBoard into one place.
     /// </summary>
     public static class NavigationHelper
     {

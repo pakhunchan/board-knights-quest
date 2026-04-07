@@ -5,13 +5,13 @@ using BoardOfEducation.Input;
 namespace BoardOfEducation.Game
 {
     /// <summary>
-    /// Central state machine for Nullify.
+    /// Central state machine for Circles.
     /// PieceSelect → LevelSelect → Playing → LevelComplete → LevelSelect …
     /// Tracks the player's chosen piece by glyphId (not contactId).
     /// </summary>
-    public class NullifyGameManager : MonoBehaviour
+    public class CirclesGameManager : MonoBehaviour
     {
-        public static NullifyGameManager Instance { get; private set; }
+        public static CirclesGameManager Instance { get; private set; }
 
         public enum State { PieceSelect, LevelSelect, Playing, LevelComplete }
 
@@ -23,8 +23,8 @@ namespace BoardOfEducation.Game
         public int MoveCount { get; private set; }
         public int MaxUnlockedLevel
         {
-            get => PlayerPrefs.GetInt("nullify_max_level", 0);
-            private set { PlayerPrefs.SetInt("nullify_max_level", value); PlayerPrefs.Save(); }
+            get => PlayerPrefs.GetInt("max_level", 0);
+            private set { PlayerPrefs.SetInt("max_level", value); PlayerPrefs.Save(); }
         }
 
         /// <summary>GlyphId of piece currently on board during PieceSelect, or -1.</summary>
@@ -74,7 +74,7 @@ namespace BoardOfEducation.Game
             }
             else
             {
-                Debug.LogError("[Nullify] PieceManager not found! Piece detection won't work.");
+                Debug.LogError("[Circles] PieceManager not found! Piece detection won't work.");
             }
         }
 
@@ -164,12 +164,12 @@ namespace BoardOfEducation.Game
             SelectedPieceColor = PieceColors.ContainsKey(SelectedGlyphId) ? PieceColors[SelectedGlyphId] : Color.white;
             OnPieceSelected?.Invoke(SelectedGlyphId);
             SetState(State.LevelSelect);
-            Debug.Log($"[Nullify] Piece selected: {PieceManager.GetPieceName(SelectedGlyphId)}");
+            Debug.Log($"[Circles] Piece selected: {PieceManager.GetPieceName(SelectedGlyphId)}");
         }
 
         public void SelectLevel(int index)
         {
-            if (index < 0 || index >= NullifyLevel.AllLevels.Count) return;
+            if (index < 0 || index >= CirclesLevel.AllLevels.Count) return;
             if (index > MaxUnlockedLevel) return;
 
             CurrentLevelIndex = index;
@@ -177,7 +177,7 @@ namespace BoardOfEducation.Game
             OnMoveCountChanged?.Invoke();
             OnLevelSelected?.Invoke(index);
             SetState(State.Playing);
-            Debug.Log($"[Nullify] Starting level {index + 1}: {NullifyLevel.AllLevels[index].Title}");
+            Debug.Log($"[Circles] Starting level {index + 1}: {CirclesLevel.AllLevels[index].Title}");
         }
 
         public void RecordMove()
@@ -190,7 +190,7 @@ namespace BoardOfEducation.Game
         {
             if (remainingCircles > 0) return;
 
-            var level = NullifyLevel.AllLevels[CurrentLevelIndex];
+            var level = CirclesLevel.AllLevels[CurrentLevelIndex];
             int stars = CalculateStars(MoveCount, level.Par);
 
             if (CurrentLevelIndex + 1 > MaxUnlockedLevel)
@@ -198,7 +198,7 @@ namespace BoardOfEducation.Game
 
             OnLevelCompleted?.Invoke(stars, MoveCount);
             SetState(State.LevelComplete);
-            Debug.Log($"[Nullify] Level {CurrentLevelIndex + 1} complete! {stars} stars, {MoveCount} moves (par {level.Par})");
+            Debug.Log($"[Circles] Level {CurrentLevelIndex + 1} complete! {stars} stars, {MoveCount} moves (par {level.Par})");
         }
 
         public void ReturnToLevelSelect()
@@ -227,10 +227,10 @@ namespace BoardOfEducation.Game
             return 1;
         }
 
-        public NullifyLevel GetCurrentLevel()
+        public CirclesLevel GetCurrentLevel()
         {
-            if (CurrentLevelIndex < 0 || CurrentLevelIndex >= NullifyLevel.AllLevels.Count) return null;
-            return NullifyLevel.AllLevels[CurrentLevelIndex];
+            if (CurrentLevelIndex < 0 || CurrentLevelIndex >= CirclesLevel.AllLevels.Count) return null;
+            return CirclesLevel.AllLevels[CurrentLevelIndex];
         }
 
         private static Color HexColor(string hex)
