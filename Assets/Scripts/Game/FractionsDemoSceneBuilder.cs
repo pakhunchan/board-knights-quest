@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
 using TMPro;
+using BoardOfEducation.Lessons;
 
 namespace BoardOfEducation.Game
 {
@@ -46,6 +47,7 @@ namespace BoardOfEducation.Game
             gameCoreGo.AddComponent<Core.BoardStartup>();
             gameCoreGo.AddComponent<Input.PieceManager>();
             var manager = gameCoreGo.AddComponent<FractionsDemoManager>();
+            var sequencer = gameCoreGo.AddComponent<LessonSequencer>();
 
             // ── MainCanvas ──
             var canvasGo = new GameObject("MainCanvas");
@@ -93,11 +95,17 @@ namespace BoardOfEducation.Game
             // ══════════════════════════════════════════════════
             // WIRE UP SERIALIZED REFERENCES
             // ══════════════════════════════════════════════════
+            // Wire up LessonSequencer
+            var sequencerSO = new SerializedObject(sequencer);
+            SetRef(sequencerSO, "subtitleText", subtitleGo.GetComponent<TextMeshProUGUI>());
+            sequencerSO.ApplyModifiedPropertiesWithoutUndo();
+
+            // Wire up manager
             var managerSO = new SerializedObject(manager);
             SetRef(managerSO, "equationRow", equationRowRect);
-            SetRef(managerSO, "subtitleText", subtitleGo.GetComponent<TextMeshProUGUI>());
             SetRef(managerSO, "playButton", playBtnGo.GetComponent<Button>());
             SetRef(managerSO, "playButtonGo", playBtnGo);
+            SetRef(managerSO, "sequencer", sequencer);
             managerSO.ApplyModifiedPropertiesWithoutUndo();
 
             // ── Save Scene ──

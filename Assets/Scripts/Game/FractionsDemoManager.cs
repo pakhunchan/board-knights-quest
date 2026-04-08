@@ -1,10 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using BoardOfEducation.Input;
 using BoardOfEducation.Navigation;
+using BoardOfEducation.Lessons;
 using BoardOfEducation.UI;
 
 namespace BoardOfEducation.Game
@@ -14,19 +16,22 @@ namespace BoardOfEducation.Game
     /// animates it through 8 steps with synchronized subtitles.
     /// Includes a denominator-focus zoom effect.
     /// Step 8 uses karaoke-style word highlighting with handwritten digit animations.
+    ///
+    /// Step text and animation keys are co-located in a single LessonStep array.
+    /// Playback is delegated to the shared LessonSequencer (barrier sync).
     /// </summary>
     public class FractionsDemoManager : MonoBehaviour
     {
         [SerializeField] private RectTransform equationRow;
-        [SerializeField] private TextMeshProUGUI subtitleText;
         [SerializeField] private Button playButton;
         [SerializeField] private GameObject playButtonGo;
+        [SerializeField] private LessonSequencer sequencer;
 
         // Runtime references to equation elements
         private RectTransform fracLeft;      // 1/2
         private RectTransform opEquals;      // =
         private RectTransform fracRight;     // ?/6
-        private RectTransform opMultiply;    // ×
+        private RectTransform opMultiply;    // x
         private RectTransform fracMiddle;    // ?/?
 
         // Text references
@@ -43,31 +48,42 @@ namespace BoardOfEducation.Game
         private CanvasGroup fracMiddleTopGroup;
         private CanvasGroup fracRightTopGroup;
 
-        // Step data
-        private class EquationStep
-        {
-            public string subtitle;
-            public float subtitleDuration;
+        // ── Step Definitions (single source of truth) ──────────────
 
-            public EquationStep(string text)
+        private readonly LessonStep[] steps = new LessonStep[]
+        {
+            new LessonStep("One half equals how many sixths?"),                                                                                               // 0
+            new LessonStep("Let's shift this over to the right to make space",                                                             "slideApart"),     // 1
+            new LessonStep("We need to multiply one half by something to turn it into something over six.",                                "fadeInMultiply"), // 2
+            new LessonStep("Focus first on the bottom numbers, the denominators.",                                                         "zoomInDenom"),   // 3
+            new LessonStep("Two times three equals six.",                                                                                   "swapDenom3"),    // 4
+            new LessonStep("Coming back to the full equation, the rule is whatever you multiply the bottom by, you have to multiply the top by the same value.", "zoomOut"), // 5
+            new LessonStep("Since we multiplied the bottom by three, we have to multiply the top by three."),                                                  // 6
+            new LessonStep("Multiplying the top is one times three, which is equal to three.",                                             "karaoke"),        // 7
+        };
+
+        // ── Animation Registry ─────────────────────────────────────
+
+        private Dictionary<string, Func<Action, IEnumerator>> animationRegistry;
+
+        private void BuildAnimationRegistry()
+        {
+            animationRegistry = new Dictionary<string, Func<Action, IEnumerator>>
             {
-                subtitle = text;
-                int wordCount = text.Split(' ').Length;
-                subtitleDuration = Mathf.Max(2f, wordCount * 0.3f);
-            }
+                ["slideApart"]     = CoAnimateSlideApart,
+                ["fadeInMultiply"] = CoAnimateFadeInMultiply,
+                ["zoomInDenom"]    = CoAnimateZoomIntoDenominators,
+                ["swapDenom3"]     = CoAnimateSwapDenominator3,
+                ["zoomOut"]        = CoAnimateZoomOutToFull,
+            };
         }
 
-        private readonly EquationStep[] steps = new EquationStep[]
+        private Func<Action, IEnumerator> ResolveAnimation(string key)
         {
-            new EquationStep("One half equals how many sixths?"),
-            new EquationStep("Let's shift this over to the right to make space"),
-            new EquationStep("We need to multiply one half by something to turn it into something over six."),
-            new EquationStep("Focus first on the bottom numbers, the denominators."),
-            new EquationStep("Two times three equals six."),
-            new EquationStep("Coming back to the full equation, the rule is whatever you multiply the bottom by, you have to multiply the top by the same value."),
-            new EquationStep("Since we multiplied the bottom by three, we have to multiply the top by three."),
-            new EquationStep("Multiplying the top is one times three, which is equal to three."),
-        };
+            if (string.IsNullOrEmpty(key)) return null;
+            animationRegistry.TryGetValue(key, out var factory);
+            return factory;
+        }
 
         // Layout constants — 50% larger than original
         private const float FractionWidth = 180f;
@@ -91,21 +107,8 @@ namespace BoardOfEducation.Game
         private Image playButtonImage;
         private Color playButtonBaseColor;
 
-        // ── Word Timing for Karaoke ──────────────────────────────
-
-        private struct WordTiming
-        {
-            public string word;       // original word with punctuation
-            public string cleanWord;  // lowercase, stripped of punctuation
-            public float duration;    // seconds to display this word
-            public int charStart;     // index in original string
-            public int charEnd;       // end index (exclusive) in original string
-        }
-
         private void Start()
         {
-            subtitleText.text = "";
-            subtitleText.alpha = 0f;
             playButton.onClick.AddListener(OnPlayPressed);
 
             playButtonImage = playButtonGo.GetComponent<Image>();
@@ -286,123 +289,60 @@ namespace BoardOfEducation.Game
         private IEnumerator CoPlaySequence()
         {
             BuildEquation();
+            BuildAnimationRegistry();
+            sequencer.Begin();
             yield return new WaitForSeconds(0.3f);
 
-            // Step 1: 1/2 = ?/6 — display initial equation
-            yield return RunStep(0, null);
+            // Steps 0–6: data-driven via animation registry
+            for (int i = 0; i < steps.Length - 1; i++)
+            {
+                var step = steps[i];
+                var anim = ResolveAnimation(step.animationKey);
+                yield return sequencer.RunStep(step, anim);
+            }
 
-            // Step 2: Slide apart to make space
-            yield return RunStep(1, CoAnimateSlideApart);
-
-            // Step 3: Fade in × ?/?
-            yield return RunStep(2, CoAnimateFadeInMultiply);
-
-            // Step 4: Focus on denominators (zoom in)
-            yield return RunStep(3, CoAnimateZoomIntoDenominators);
-
-            // Step 5: Swap denominator ? → 3
-            yield return RunStep(4, CoAnimateSwapDenominator3);
-
-            // Step 6: Zoom back out, show full equation
-            yield return RunStep(5, CoAnimateZoomOutToFull);
-
-            // Step 7: Subtitle only (middle num swap moved to step 8 karaoke)
-            yield return RunStep(6, null);
-
-            // Step 8: Karaoke subtitle with handwritten digits
-            yield return RunStep8Karaoke();
+            // Step 7: karaoke with handwriting (special — uses word-boundary callbacks)
+            yield return RunStep7Karaoke();
 
             // Done — show replay
-            subtitleText.alpha = 0f;
-            subtitleText.text = "";
+            sequencer.End();
             playButtonGo.SetActive(true);
         }
 
-        private IEnumerator RunStep(int stepIndex, System.Func<System.Action, IEnumerator> animFactory)
+        // ── Step 7: Karaoke with Handwriting ─────────────────────
+
+        private IEnumerator RunStep7Karaoke()
         {
-            bool animDone = false, subDone = false;
-
-            if (animFactory != null)
-                StartCoroutine(animFactory(() => animDone = true));
-            else
-                animDone = true;
-
-            StartCoroutine(CoShowSubtitle(steps[stepIndex].subtitle, steps[stepIndex].subtitleDuration, () => subDone = true));
-            yield return new WaitUntil(() => animDone && subDone);
-            yield return new WaitForSeconds(0.5f);
-        }
-
-        // ── Step 8: Karaoke with Handwriting ─────────────────────
-
-        private IEnumerator RunStep8Karaoke()
-        {
-            string text = steps[7].subtitle;
-            WordTiming[] timings = BuildWordTimings(text, 3f);
-
+            var step = steps[7];
             bool karaokeDone = false;
-            StartCoroutine(CoShowKaraokeSubtitle(timings, text, (idx, wt) =>
-            {
-                // idx 4 = "one" → pulse the left numerator "1"
-                if (idx == 4)
-                    StartCoroutine(CoPulseScale(fracLeftNum.transform, 1.3f, wt.duration));
-                // idx 6 = "three," → handwrite middle numerator
-                else if (idx == 6)
-                    StartCoroutine(CoHandwriteDigit(
-                        fracMiddleNum.rectTransform.parent as RectTransform,
-                        fracMiddleNum, wt.duration, null));
-                // idx 11 = "three." → handwrite right numerator
-                else if (idx == 11)
-                    StartCoroutine(CoHandwriteDigit(
-                        fracRightNum.rectTransform.parent as RectTransform,
-                        fracRightNum, wt.duration, null));
-            }, () => karaokeDone = true));
+
+            StartCoroutine(sequencer.CoShowKaraokeSubtitle(
+                step.subtitle, 3f,
+                (idx, word, duration) =>
+                {
+                    // idx 4 = "one" -> pulse the left numerator "1"
+                    if (idx == 4)
+                        StartCoroutine(CoPulseScale(fracLeftNum.transform, 1.3f, duration));
+                    // idx 6 = "three," -> handwrite middle numerator
+                    else if (idx == 6)
+                        StartCoroutine(CoHandwriteDigit(
+                            fracMiddleNum.rectTransform.parent as RectTransform,
+                            fracMiddleNum, duration, null));
+                    // idx 11 = "three." -> handwrite right numerator
+                    else if (idx == 11)
+                        StartCoroutine(CoHandwriteDigit(
+                            fracRightNum.rectTransform.parent as RectTransform,
+                            fracRightNum, duration, null));
+                },
+                () => karaokeDone = true));
 
             yield return new WaitUntil(() => karaokeDone);
             yield return new WaitForSeconds(0.5f);
         }
 
-        private WordTiming[] BuildWordTimings(string text, float wordsPerSecond)
-        {
-            string[] words = text.Split(' ');
-            var timings = new WordTiming[words.Length];
-
-            // Calculate total character count for proportional timing
-            int totalChars = 0;
-            foreach (var w in words)
-                totalChars += w.Length;
-
-            float totalDuration = words.Length / wordsPerSecond;
-            int charPos = 0;
-
-            // Trigger words get a minimum duration for their animations
-            var triggerWords = new HashSet<string> { "one", "three" };
-
-            for (int i = 0; i < words.Length; i++)
-            {
-                string clean = words[i].TrimEnd(',', '.', '!', '?', ';', ':').ToLower();
-                float proportion = (float)words[i].Length / totalChars;
-                float dur = Mathf.Max(0.2f, proportion * totalDuration);
-
-                if (triggerWords.Contains(clean))
-                    dur = Mathf.Max(0.6f, dur);
-
-                timings[i] = new WordTiming
-                {
-                    word = words[i],
-                    cleanWord = clean,
-                    duration = dur,
-                    charStart = charPos,
-                    charEnd = charPos + words[i].Length
-                };
-                charPos += words[i].Length + 1; // +1 for space
-            }
-
-            return timings;
-        }
-
         // ── Step Animations ─────────────────────────────────────
 
-        private IEnumerator CoAnimateSlideApart(System.Action onComplete)
+        private IEnumerator CoAnimateSlideApart(Action onComplete)
         {
             Vector2 leftFrom = fracLeft.anchoredPosition;
             Vector2 leftTo = leftFrom + new Vector2(-SlideOffset, 0);
@@ -432,9 +372,9 @@ namespace BoardOfEducation.Game
             onComplete?.Invoke();
         }
 
-        private IEnumerator CoAnimateFadeInMultiply(System.Action onComplete)
+        private IEnumerator CoAnimateFadeInMultiply(Action onComplete)
         {
-            // Position × and ?/? in the gap between fracLeft and opEquals
+            // Position x and ?/? in the gap between fracLeft and opEquals
             float midX = (fracLeft.anchoredPosition.x + opEquals.anchoredPosition.x) / 2f;
             float mulX = fracLeft.anchoredPosition.x + (midX - fracLeft.anchoredPosition.x) / 2f + OperatorWidth / 4f;
             float fracMidX = midX + (opEquals.anchoredPosition.x - midX) / 2f - OperatorWidth / 4f;
@@ -456,7 +396,7 @@ namespace BoardOfEducation.Game
         private float savedOpEqualsY;
         private float savedOpMultiplyY;
 
-        private IEnumerator CoAnimateZoomIntoDenominators(System.Action onComplete)
+        private IEnumerator CoAnimateZoomIntoDenominators(Action onComplete)
         {
             // Save current state for zoom-out
             savedEquationScale = equationRow.localScale;
@@ -467,9 +407,6 @@ namespace BoardOfEducation.Game
             float targetY = savedEquationY + FractionHeight * 0.35f;
             Vector3 targetScale = savedEquationScale * ZoomScale;
 
-            // Operators are centered in FractionHeight; slide them down to denominator level
-            // Denominators occupy the bottom 45% of the fraction rect, centered around 22.5%
-            // Operators sit at 50% — so shift down by ~27.5% of FractionHeight
             float opDropY = -FractionHeight * 0.275f;
             float opEqualsTargetY = savedOpEqualsY + opDropY;
             float opMultiplyTargetY = savedOpMultiplyY + opDropY;
@@ -510,14 +447,14 @@ namespace BoardOfEducation.Game
             onComplete?.Invoke();
         }
 
-        private IEnumerator CoAnimateSwapDenominator3(System.Action onComplete)
+        private IEnumerator CoAnimateSwapDenominator3(Action onComplete)
         {
-            // Swap the middle fraction denominator ? → 3
+            // Swap the middle fraction denominator ? -> 3
             yield return CoSwapText(fracMiddleDen, "3", 0.4f, null);
             onComplete?.Invoke();
         }
 
-        private IEnumerator CoAnimateZoomOutToFull(System.Action onComplete)
+        private IEnumerator CoAnimateZoomOutToFull(Action onComplete)
         {
             Vector3 currentScale = equationRow.localScale;
             float currentY = equationRow.anchoredPosition.y;
@@ -562,59 +499,6 @@ namespace BoardOfEducation.Game
 
         // ── Karaoke + Handwriting Coroutines ─────────────────────
 
-        private IEnumerator CoShowKaraokeSubtitle(WordTiming[] timings, string fullText,
-            System.Action<int, WordTiming> onWordStart, System.Action onComplete)
-        {
-            subtitleText.text = fullText;
-
-            // Fade in
-            float fadeTime = 0.25f;
-            float elapsed = 0f;
-            while (elapsed < fadeTime)
-            {
-                elapsed += Time.deltaTime;
-                subtitleText.alpha = Mathf.Clamp01(elapsed / fadeTime);
-                yield return null;
-            }
-            subtitleText.alpha = 1f;
-
-            // Walk through words one at a time
-            string[] words = fullText.Split(' ');
-            for (int i = 0; i < timings.Length; i++)
-            {
-                // Rebuild subtitle with current word highlighted
-                var sb = new System.Text.StringBuilder();
-                for (int w = 0; w < words.Length; w++)
-                {
-                    if (w > 0) sb.Append(' ');
-                    if (w == i)
-                        sb.Append("<color=#FF3333>").Append(words[w]).Append("</color>");
-                    else
-                        sb.Append(words[w]);
-                }
-                subtitleText.text = sb.ToString();
-
-                onWordStart?.Invoke(i, timings[i]);
-                yield return new WaitForSeconds(timings[i].duration);
-            }
-
-            // Restore plain text (no highlight) briefly
-            subtitleText.text = fullText;
-            yield return new WaitForSeconds(0.3f);
-
-            // Fade out
-            elapsed = 0f;
-            while (elapsed < fadeTime)
-            {
-                elapsed += Time.deltaTime;
-                subtitleText.alpha = 1f - Mathf.Clamp01(elapsed / fadeTime);
-                yield return null;
-            }
-            subtitleText.alpha = 0f;
-
-            onComplete?.Invoke();
-        }
-
         private IEnumerator CoPulseScale(Transform target, float scaleFactor, float duration)
         {
             Vector3 origScale = target.localScale;
@@ -651,7 +535,7 @@ namespace BoardOfEducation.Game
         }
 
         private IEnumerator CoHandwriteDigit(RectTransform parent, TextMeshProUGUI existingText,
-            float duration, System.Action onComplete)
+            float duration, Action onComplete)
         {
             // Set the final "3" text — the mask will reveal it stroke-by-stroke
             existingText.text = "3";
@@ -689,7 +573,7 @@ namespace BoardOfEducation.Game
             numRect.offsetMin = Vector2.zero;
             numRect.offsetMax = Vector2.zero;
 
-            // Animate: Progress 0→1 traces the bezier stroke, revealing the TMP "3"
+            // Animate: Progress 0->1 traces the bezier stroke, revealing the TMP "3"
             float elapsed = 0f;
             while (elapsed < duration)
             {
@@ -712,7 +596,7 @@ namespace BoardOfEducation.Game
 
         // ── Animation Coroutines ────────────────────────────────
 
-        private IEnumerator CoFadeIn(CanvasGroup cg, float duration, System.Action onComplete)
+        private IEnumerator CoFadeIn(CanvasGroup cg, float duration, Action onComplete)
         {
             float elapsed = 0f;
             float startAlpha = cg.alpha;
@@ -727,7 +611,7 @@ namespace BoardOfEducation.Game
             onComplete?.Invoke();
         }
 
-        private IEnumerator CoFadeOut(CanvasGroup cg, float duration, System.Action onComplete)
+        private IEnumerator CoFadeOut(CanvasGroup cg, float duration, Action onComplete)
         {
             float elapsed = 0f;
             float startAlpha = cg.alpha;
@@ -742,7 +626,7 @@ namespace BoardOfEducation.Game
             onComplete?.Invoke();
         }
 
-        private IEnumerator CoSwapText(TextMeshProUGUI tmp, string newValue, float duration, System.Action onComplete)
+        private IEnumerator CoSwapText(TextMeshProUGUI tmp, string newValue, float duration, Action onComplete)
         {
             float half = duration / 2f;
 
@@ -771,57 +655,6 @@ namespace BoardOfEducation.Game
                 yield return null;
             }
             tmp.transform.localScale = origScale;
-            onComplete?.Invoke();
-        }
-
-        private IEnumerator CoShowSubtitle(string text, float duration, System.Action onComplete)
-        {
-            string[] words = text.Split(' ');
-            float perWord = duration / words.Length;
-
-            subtitleText.text = text;
-
-            // Fade in
-            float fadeTime = 0.25f;
-            float elapsed = 0f;
-            while (elapsed < fadeTime)
-            {
-                elapsed += Time.deltaTime;
-                subtitleText.alpha = Mathf.Clamp01(elapsed / fadeTime);
-                yield return null;
-            }
-            subtitleText.alpha = 1f;
-
-            // Highlight one word at a time in red
-            for (int i = 0; i < words.Length; i++)
-            {
-                var sb = new System.Text.StringBuilder();
-                for (int w = 0; w < words.Length; w++)
-                {
-                    if (w > 0) sb.Append(' ');
-                    if (w == i)
-                        sb.Append("<color=#FF3333>").Append(words[w]).Append("</color>");
-                    else
-                        sb.Append(words[w]);
-                }
-                subtitleText.text = sb.ToString();
-                yield return new WaitForSeconds(perWord);
-            }
-
-            // Restore plain text briefly
-            subtitleText.text = text;
-            yield return new WaitForSeconds(0.15f);
-
-            // Fade out
-            elapsed = 0f;
-            while (elapsed < fadeTime)
-            {
-                elapsed += Time.deltaTime;
-                subtitleText.alpha = 1f - Mathf.Clamp01(elapsed / fadeTime);
-                yield return null;
-            }
-            subtitleText.alpha = 0f;
-
             onComplete?.Invoke();
         }
 

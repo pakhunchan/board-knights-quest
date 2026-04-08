@@ -1,23 +1,29 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using BoardOfEducation.Input;
 using BoardOfEducation.Navigation;
+using BoardOfEducation.Lessons;
 using BoardOfEducation.UI;
 
 namespace BoardOfEducation.Game
 {
     /// <summary>
     /// Drives the Equivalent Fractions demo: builds two pie-chart circles at runtime,
-    /// animates them through 8 steps showing that 1/2 = 3/6 with synchronized subtitles.
+    /// animates them through steps showing that 1/2 = 3/6 with synchronized subtitles.
+    ///
+    /// Step text and animation keys are co-located in a single LessonStep array.
+    /// Playback is delegated to the shared LessonSequencer (barrier sync).
     /// </summary>
     public class FractionsDemo2Manager : MonoBehaviour
     {
         [SerializeField] private RectTransform contentArea;
-        [SerializeField] private TextMeshProUGUI subtitleText;
         [SerializeField] private Button playButton;
         [SerializeField] private GameObject playButtonGo;
+        [SerializeField] private LessonSequencer sequencer;
 
         // Runtime references — created in BuildVisuals
         private FractionCircle leftCircle;
@@ -27,31 +33,49 @@ namespace BoardOfEducation.Game
         private CanvasGroup leftLabelGroup;
         private CanvasGroup rightLabelGroup;
 
-        // Step data
-        private class EquationStep
-        {
-            public string subtitle;
-            public float subtitleDuration;
+        // ── Step Definitions (single source of truth) ──────────────
 
-            public EquationStep(string text)
+        private readonly LessonStep[] steps = new LessonStep[]
+        {
+            new LessonStep("This is a circle.",                                     "showCircle:left"),   // 0
+            new LessonStep("If we draw a line down the middle and",                 "lines:left"),        // 1
+            new LessonStep("shade the left side",                                   "shade:left"),        // 2
+            new LessonStep("we get one-half",                                       "label:left"),        // 3
+            new LessonStep("This is a circle.",                                     "showCircle:right"),  // 4
+            new LessonStep("If we draw lines to split the circle into 6 pieces",    "lines:right"),       // 5
+            new LessonStep("and shade the left side",                               "shade:right"),       // 6
+            new LessonStep("we get three-sixths",                                   "label:right"),       // 7
+            new LessonStep("You can see that these fractions are equal"),                                  // 8
+            new LessonStep("But how do we go from one fraction to another fraction?"),                     // 9
+            new LessonStep("We will learn that today"),                                                    // 10
+            new LessonStep("Let's jump into an example"),                                                  // 11
+        };
+
+        // ── Animation Registry ─────────────────────────────────────
+
+        private Dictionary<string, Func<Action, IEnumerator>> animationRegistry;
+
+        private void BuildAnimationRegistry()
+        {
+            animationRegistry = new Dictionary<string, Func<Action, IEnumerator>>
             {
-                subtitle = text;
-                int wordCount = text.Split(' ').Length;
-                subtitleDuration = Mathf.Max(2f, wordCount * 0.3f);
-            }
+                ["showCircle:left"]  = cb => CoAnimateShowCircle(leftCircle, leftCircleGroup, cb),
+                ["showCircle:right"] = cb => CoAnimateShowCircle(rightCircle, rightCircleGroup, cb),
+                ["lines:left"]       = cb => CoAnimateLines(leftCircle, cb),
+                ["lines:right"]      = cb => CoAnimateLines(rightCircle, cb),
+                ["shade:left"]       = cb => CoAnimateShading(leftCircle, cb),
+                ["shade:right"]      = cb => CoAnimateShading(rightCircle, cb),
+                ["label:left"]       = cb => CoAnimateLabel(leftLabelGroup, cb),
+                ["label:right"]      = cb => CoAnimateLabel(rightLabelGroup, cb),
+            };
         }
 
-        private readonly EquationStep[] steps = new EquationStep[]
+        private Func<Action, IEnumerator> ResolveAnimation(string key)
         {
-            new EquationStep("This is a circle."),                                     // 0
-            new EquationStep("If we draw a line down the middle and"),                 // 1
-            new EquationStep("shade the left side"),                                   // 2
-            new EquationStep("we get one-half"),                                       // 3
-            new EquationStep("This is a circle."),                                     // 4
-            new EquationStep("If we draw lines to split the circle into 6 pieces"),    // 5
-            new EquationStep("and shade the left side"),                               // 6
-            new EquationStep("we get three-sixths"),                                   // 7
-        };
+            if (string.IsNullOrEmpty(key)) return null;
+            animationRegistry.TryGetValue(key, out var factory);
+            return factory;
+        }
 
         // Layout constants
         private const float CircleSize = 350f;
@@ -70,8 +94,6 @@ namespace BoardOfEducation.Game
 
         private void Start()
         {
-            subtitleText.text = "";
-            subtitleText.alpha = 0f;
             playButton.onClick.AddListener(OnPlayPressed);
 
             playButtonImage = playButtonGo.GetComponent<Image>();
@@ -147,7 +169,7 @@ namespace BoardOfEducation.Game
 
             // ── Left Circle (1/2) ──
             leftCircle = CreateCircle("LeftCircle", 2,
-                new bool[] { true, false }, // shade slice 0 (left half: 90°→270°)
+                new bool[] { true, false }, // shade slice 0 (left half: 90->270)
                 leftX);
             leftCircleGroup = leftCircle.GetComponent<CanvasGroup>();
 
@@ -157,9 +179,9 @@ namespace BoardOfEducation.Game
                 rightX);
             rightCircleGroup = rightCircle.GetComponent<CanvasGroup>();
 
-            // ── Labels ──
-            leftLabelGroup = CreateLabel("LeftLabel", "1/2", leftX);
-            rightLabelGroup = CreateLabel("RightLabel", "3/6", rightX);
+            // ── Labels (stacked fractions) ──
+            leftLabelGroup = CreateFractionLabel("LeftLabel", "1", "2", leftX);
+            rightLabelGroup = CreateFractionLabel("RightLabel", "3", "6", rightX);
         }
 
         private FractionCircle CreateCircle(string name, int divisions, bool[] shaded, float xPos)
@@ -187,22 +209,58 @@ namespace BoardOfEducation.Game
             return circle;
         }
 
-        private CanvasGroup CreateLabel(string name, string text, float xPos)
+        private CanvasGroup CreateFractionLabel(string name, string num, string den, float xPos)
         {
             var go = new GameObject(name);
             go.transform.SetParent(contentArea, false);
             var rect = go.AddComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(CircleSize, 80f);
+            rect.sizeDelta = new Vector2(200f, 140f);
             rect.anchoredPosition = new Vector2(xPos, -CircleSize / 2f + LabelOffsetY);
 
             var cg = go.AddComponent<CanvasGroup>();
             cg.alpha = 0f;
 
-            var tmp = go.AddComponent<TextMeshProUGUI>();
-            tmp.text = text;
-            tmp.fontSize = LabelFontSize;
-            tmp.alignment = TextAlignmentOptions.Center;
-            tmp.color = Color.white;
+            // Numerator (top half)
+            var numGo = new GameObject("Num");
+            numGo.transform.SetParent(go.transform, false);
+            var numRect = numGo.AddComponent<RectTransform>();
+            numRect.anchorMin = new Vector2(0, 0.5f);
+            numRect.anchorMax = Vector2.one;
+            numRect.offsetMin = Vector2.zero;
+            numRect.offsetMax = Vector2.zero;
+            var numTmp = numGo.AddComponent<TextMeshProUGUI>();
+            numTmp.text = num;
+            numTmp.fontSize = LabelFontSize;
+            numTmp.alignment = TextAlignmentOptions.Center;
+            numTmp.color = Color.white;
+            numTmp.enableWordWrapping = false;
+
+            // Horizontal bar
+            var barGo = new GameObject("Bar");
+            barGo.transform.SetParent(go.transform, false);
+            var barRect = barGo.AddComponent<RectTransform>();
+            barRect.anchorMin = new Vector2(0.2f, 0.48f);
+            barRect.anchorMax = new Vector2(0.8f, 0.52f);
+            barRect.offsetMin = Vector2.zero;
+            barRect.offsetMax = Vector2.zero;
+            var barImg = barGo.AddComponent<Image>();
+            barImg.color = Color.white;
+            barImg.raycastTarget = false;
+
+            // Denominator (bottom half)
+            var denGo = new GameObject("Den");
+            denGo.transform.SetParent(go.transform, false);
+            var denRect = denGo.AddComponent<RectTransform>();
+            denRect.anchorMin = Vector2.zero;
+            denRect.anchorMax = new Vector2(1, 0.5f);
+            denRect.offsetMin = Vector2.zero;
+            denRect.offsetMax = Vector2.zero;
+            var denTmp = denGo.AddComponent<TextMeshProUGUI>();
+            denTmp.text = den;
+            denTmp.fontSize = LabelFontSize;
+            denTmp.alignment = TextAlignmentOptions.Center;
+            denTmp.color = Color.white;
+            denTmp.enableWordWrapping = false;
 
             return cg;
         }
@@ -212,55 +270,25 @@ namespace BoardOfEducation.Game
         private IEnumerator CoPlaySequence()
         {
             BuildVisuals();
+            BuildAnimationRegistry();
+            sequencer.Begin();
             yield return new WaitForSeconds(0.3f);
 
-            // Step 0: Show left circle outline
-            yield return RunStep(0, onComplete => CoAnimateShowCircle(leftCircle, leftCircleGroup, onComplete));
-
-            // Step 1: Draw vertical line on left circle
-            yield return RunStep(1, onComplete => CoAnimateLines(leftCircle, onComplete));
-
-            // Step 2: Shade left half
-            yield return RunStep(2, onComplete => CoAnimateShading(leftCircle, onComplete));
-
-            // Step 3: Show "1/2" label
-            yield return RunStep(3, onComplete => CoAnimateLabel(leftLabelGroup, onComplete));
-
-            // Step 4: Show right circle outline
-            yield return RunStep(4, onComplete => CoAnimateShowCircle(rightCircle, rightCircleGroup, onComplete));
-
-            // Step 5: Draw 3 lines on right circle
-            yield return RunStep(5, onComplete => CoAnimateLines(rightCircle, onComplete));
-
-            // Step 6: Shade left 3 slices
-            yield return RunStep(6, onComplete => CoAnimateShading(rightCircle, onComplete));
-
-            // Step 7: Show "3/6" label
-            yield return RunStep(7, onComplete => CoAnimateLabel(rightLabelGroup, onComplete));
+            // Data-driven: iterate all steps, resolve animations by key
+            foreach (var step in steps)
+            {
+                var anim = ResolveAnimation(step.animationKey);
+                yield return sequencer.RunStep(step, anim);
+            }
 
             // Done — show replay
-            subtitleText.alpha = 0f;
-            subtitleText.text = "";
+            sequencer.End();
             playButtonGo.SetActive(true);
-        }
-
-        private IEnumerator RunStep(int stepIndex, System.Func<System.Action, IEnumerator> animFactory)
-        {
-            bool animDone = false, subDone = false;
-
-            if (animFactory != null)
-                StartCoroutine(animFactory(() => animDone = true));
-            else
-                animDone = true;
-
-            StartCoroutine(CoShowSubtitle(steps[stepIndex].subtitle, steps[stepIndex].subtitleDuration, () => subDone = true));
-            yield return new WaitUntil(() => animDone && subDone);
-            yield return new WaitForSeconds(0.5f);
         }
 
         // ── Step Animations ──────────────────────────────────────
 
-        private IEnumerator CoAnimateShowCircle(FractionCircle circle, CanvasGroup cg, System.Action onComplete)
+        private IEnumerator CoAnimateShowCircle(FractionCircle circle, CanvasGroup cg, Action onComplete)
         {
             float duration = 0.8f;
             float elapsed = 0f;
@@ -279,7 +307,7 @@ namespace BoardOfEducation.Game
             onComplete?.Invoke();
         }
 
-        private IEnumerator CoAnimateLines(FractionCircle circle, System.Action onComplete)
+        private IEnumerator CoAnimateLines(FractionCircle circle, Action onComplete)
         {
             float duration = 0.6f;
             float elapsed = 0f;
@@ -296,7 +324,7 @@ namespace BoardOfEducation.Game
             onComplete?.Invoke();
         }
 
-        private IEnumerator CoAnimateShading(FractionCircle circle, System.Action onComplete)
+        private IEnumerator CoAnimateShading(FractionCircle circle, Action onComplete)
         {
             float duration = 0.5f;
             float elapsed = 0f;
@@ -313,7 +341,7 @@ namespace BoardOfEducation.Game
             onComplete?.Invoke();
         }
 
-        private IEnumerator CoAnimateLabel(CanvasGroup labelGroup, System.Action onComplete)
+        private IEnumerator CoAnimateLabel(CanvasGroup labelGroup, Action onComplete)
         {
             float duration = 0.5f;
             float elapsed = 0f;
@@ -332,59 +360,6 @@ namespace BoardOfEducation.Game
 
             labelGroup.alpha = 1f;
             t.localScale = Vector3.one;
-            onComplete?.Invoke();
-        }
-
-        // ── Subtitle ─────────────────────────────────────────────
-
-        private IEnumerator CoShowSubtitle(string text, float duration, System.Action onComplete)
-        {
-            string[] words = text.Split(' ');
-            float perWord = duration / words.Length;
-
-            subtitleText.text = text;
-
-            // Fade in
-            float fadeTime = 0.25f;
-            float elapsed = 0f;
-            while (elapsed < fadeTime)
-            {
-                elapsed += Time.deltaTime;
-                subtitleText.alpha = Mathf.Clamp01(elapsed / fadeTime);
-                yield return null;
-            }
-            subtitleText.alpha = 1f;
-
-            // Karaoke word highlighting
-            for (int i = 0; i < words.Length; i++)
-            {
-                var sb = new System.Text.StringBuilder();
-                for (int w = 0; w < words.Length; w++)
-                {
-                    if (w > 0) sb.Append(' ');
-                    if (w == i)
-                        sb.Append("<color=#FF3333>").Append(words[w]).Append("</color>");
-                    else
-                        sb.Append(words[w]);
-                }
-                subtitleText.text = sb.ToString();
-                yield return new WaitForSeconds(perWord);
-            }
-
-            // Restore plain text briefly
-            subtitleText.text = text;
-            yield return new WaitForSeconds(0.15f);
-
-            // Fade out
-            elapsed = 0f;
-            while (elapsed < fadeTime)
-            {
-                elapsed += Time.deltaTime;
-                subtitleText.alpha = 1f - Mathf.Clamp01(elapsed / fadeTime);
-                yield return null;
-            }
-            subtitleText.alpha = 0f;
-
             onComplete?.Invoke();
         }
 

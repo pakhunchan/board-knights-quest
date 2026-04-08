@@ -151,11 +151,22 @@ namespace BoardOfEducation.UI
                 float angleRad = lineAngles[i] * Mathf.Deg2Rad;
                 Vector2 dir = new Vector2(Mathf.Cos(angleRad), Mathf.Sin(angleRad));
 
-                // Animate: lines grow from center outward in both directions
-                Vector2 end1 = center + dir * lineRadius * LineProgress;
-                Vector2 end2 = center - dir * lineRadius * LineProgress;
+                Vector2 top = center + dir * lineRadius;
+                Vector2 bottom = center - dir * lineRadius;
 
-                AddLine(vh, end1, end2, halfWidth);
+                if (Divisions == 2)
+                {
+                    // Animate: line draws from top to bottom
+                    Vector2 animBottom = Vector2.Lerp(top, bottom, LineProgress);
+                    AddLine(vh, top, animBottom, halfWidth);
+                }
+                else
+                {
+                    // Animate: lines grow from center outward in both directions
+                    Vector2 animTop = Vector2.Lerp(center, top, LineProgress);
+                    Vector2 animBottom = Vector2.Lerp(center, bottom, LineProgress);
+                    AddLine(vh, animTop, animBottom, halfWidth);
+                }
             }
         }
 
