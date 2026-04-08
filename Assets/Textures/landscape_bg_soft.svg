@@ -1,0 +1,191 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080">
+  <defs>
+    <!-- Sky gradient: softer, more muted teal — not as saturated -->
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9AD5CC"/>
+      <stop offset="45%" stop-color="#B5DACE"/>
+      <stop offset="100%" stop-color="#D6E4C8"/>
+    </linearGradient>
+    <!-- Mountain body gradients — slightly more muted/cool -->
+    <linearGradient id="mtnDark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A09590"/>
+      <stop offset="100%" stop-color="#968B86"/>
+    </linearGradient>
+    <linearGradient id="mtnLight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#AEA49C"/>
+      <stop offset="100%" stop-color="#A09590"/>
+    </linearGradient>
+    <!-- Grass gradient — muted greens, not as electric -->
+    <linearGradient id="grassFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6B9E4A"/>
+      <stop offset="100%" stop-color="#4E7A30"/>
+    </linearGradient>
+    <!-- Cloud shadow — slightly warmer -->
+    <linearGradient id="cloudShade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5F5F5"/>
+      <stop offset="100%" stop-color="#D4DCDE"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ======================== SKY ======================== -->
+  <rect width="1920" height="1080" fill="url(#sky)"/>
+
+  <!-- ======================== CLOUDS ======================== -->
+  <!-- Cloud far left top -->
+  <g opacity="0.75">
+    <ellipse cx="280" cy="160" rx="90" ry="40" fill="#F0F0F0"/>
+    <ellipse cx="340" cy="150" rx="70" ry="45" fill="#F4F4F4"/>
+    <ellipse cx="230" cy="155" rx="60" ry="35" fill="#ECECEC"/>
+    <ellipse cx="300" cy="170" rx="100" ry="30" fill="url(#cloudShade)"/>
+  </g>
+
+  <!-- Cloud center-right upper -->
+  <g opacity="0.75">
+    <ellipse cx="1150" cy="130" rx="80" ry="35" fill="#F0F0F0"/>
+    <ellipse cx="1210" cy="120" rx="65" ry="40" fill="#F4F4F4"/>
+    <ellipse cx="1100" cy="125" rx="55" ry="30" fill="#ECECEC"/>
+    <ellipse cx="1160" cy="140" rx="90" ry="28" fill="url(#cloudShade)"/>
+  </g>
+
+  <!-- Cloud right side middle -->
+  <g opacity="0.7">
+    <ellipse cx="1420" cy="220" rx="100" ry="38" fill="#F0F0F0"/>
+    <ellipse cx="1490" cy="210" rx="75" ry="42" fill="#F4F4F4"/>
+    <ellipse cx="1370" cy="215" rx="65" ry="32" fill="#ECECEC"/>
+    <ellipse cx="1430" cy="232" rx="110" ry="26" fill="url(#cloudShade)"/>
+  </g>
+
+  <!-- Small cloud left -->
+  <g opacity="0.65">
+    <ellipse cx="580" cy="240" rx="55" ry="22" fill="#F0F0F0"/>
+    <ellipse cx="620" cy="234" rx="45" ry="26" fill="#F4F4F4"/>
+    <ellipse cx="600" cy="248" rx="65" ry="18" fill="url(#cloudShade)"/>
+  </g>
+
+  <!-- Small cloud far right -->
+  <g opacity="0.6">
+    <ellipse cx="1700" cy="280" rx="50" ry="20" fill="#F0F0F0"/>
+    <ellipse cx="1740" cy="274" rx="40" ry="24" fill="#F4F4F4"/>
+    <ellipse cx="1720" cy="288" rx="60" ry="16" fill="url(#cloudShade)"/>
+  </g>
+
+  <!-- ======================== MOUNTAINS ======================== -->
+  <!-- Far right mountain (partially visible) -->
+  <path d="M1750,820 L1920,540 L2090,820 Z" fill="#A09894"/>
+  <path d="M1920,540 Q1890,560 1860,600 Q1880,590 1920,575 Q1960,590 1980,600 Q1950,560 1920,540 Z" fill="#E8E4E0"/>
+
+  <!-- Center-right tall mountain -->
+  <path d="M1050,820 L1320,460 L1590,820 Z" fill="url(#mtnDark)"/>
+  <path d="M1320,460 Q1280,500 1240,550 Q1255,560 1270,548 Q1285,565 1300,515 Q1320,495 1340,515 Q1355,565 1370,548 Q1385,560 1400,550 Q1360,500 1320,460 Z" fill="#E8E4E0"/>
+
+  <!-- Left mountain -->
+  <path d="M200,820 L430,500 L660,820 Z" fill="url(#mtnLight)"/>
+  <path d="M430,500 Q400,530 370,570 Q385,580 400,565 Q415,585 430,540 Q445,585 460,565 Q475,580 490,570 Q460,530 430,500 Z" fill="#E8E4E0"/>
+
+  <!-- Center-left mountain -->
+  <path d="M580,820 L820,480 L1060,820 Z" fill="url(#mtnDark)"/>
+  <path d="M820,480 Q790,510 760,550 Q775,565 790,548 Q805,568 820,520 Q835,568 850,548 Q865,565 880,550 Q850,510 820,480 Z" fill="#E8E4E0"/>
+
+  <!-- Far left small mountain (partially visible) -->
+  <path d="M-80,820 L100,560 L280,820 Z" fill="#AEA49C"/>
+  <path d="M100,560 Q80,580 60,610 Q80,595 100,582 Q120,595 140,610 Q120,580 100,560 Z" fill="#E8E4E0"/>
+
+  <!-- Far right mountain -->
+  <path d="M1500,820 L1720,510 L1940,820 Z" fill="url(#mtnLight)"/>
+  <path d="M1720,510 Q1695,535 1670,570 Q1685,582 1700,568 Q1712,585 1720,542 Q1728,585 1740,568 Q1755,582 1770,570 Q1745,535 1720,510 Z" fill="#E8E4E0"/>
+
+  <!-- ======================== BUSHES / TREES ======================== -->
+  <!-- Muted greens — less saturated, slightly dusty -->
+
+  <!-- Large bush cluster left -->
+  <g>
+    <circle cx="300" cy="770" r="70" fill="#6B9E4A"/>
+    <circle cx="370" cy="750" r="80" fill="#7AAD58"/>
+    <circle cx="250" cy="760" r="55" fill="#5C8C3A"/>
+    <circle cx="340" cy="730" r="60" fill="#88B868"/>
+    <circle cx="280" cy="740" r="50" fill="#7AAD58"/>
+  </g>
+
+  <!-- Bush cluster center-left -->
+  <g>
+    <circle cx="620" cy="780" r="50" fill="#6B9E4A"/>
+    <circle cx="670" cy="765" r="55" fill="#7AAD58"/>
+    <circle cx="590" cy="770" r="40" fill="#5C8C3A"/>
+    <circle cx="650" cy="750" r="45" fill="#88B868"/>
+  </g>
+
+  <!-- Large tree/bush center-right -->
+  <g>
+    <circle cx="1100" cy="760" r="75" fill="#5C8C3A"/>
+    <circle cx="1170" cy="740" r="85" fill="#6B9E4A"/>
+    <circle cx="1050" cy="755" r="60" fill="#4E7A30"/>
+    <circle cx="1140" cy="720" r="65" fill="#7AAD58"/>
+    <circle cx="1200" cy="750" r="55" fill="#6B9E4A"/>
+  </g>
+
+  <!-- Bush far right -->
+  <g>
+    <circle cx="1600" cy="770" r="60" fill="#6B9E4A"/>
+    <circle cx="1660" cy="755" r="65" fill="#7AAD58"/>
+    <circle cx="1560" cy="765" r="45" fill="#5C8C3A"/>
+    <circle cx="1640" cy="735" r="50" fill="#88B868"/>
+  </g>
+
+  <!-- Small bushes scattered -->
+  <circle cx="480" cy="790" r="35" fill="#7AAD58"/>
+  <circle cx="510" cy="780" r="30" fill="#88B868"/>
+  <circle cx="850" cy="785" r="40" fill="#6B9E4A"/>
+  <circle cx="890" cy="775" r="35" fill="#7AAD58"/>
+  <circle cx="1400" cy="780" r="40" fill="#6B9E4A"/>
+  <circle cx="1440" cy="770" r="35" fill="#7AAD58"/>
+  <circle cx="1800" cy="780" r="45" fill="#6B9E4A"/>
+  <circle cx="1840" cy="770" r="40" fill="#7AAD58"/>
+
+  <!-- ======================== GREEN GROUND ======================== -->
+  <path d="M0,880 Q100,840 200,860 Q350,830 500,850 Q650,820 800,840 Q950,810 1100,830 Q1250,810 1400,840 Q1550,820 1700,850 Q1850,830 1920,860 L1920,1080 L0,1080 Z" fill="#7AAD58"/>
+  <path d="M0,890 Q150,860 300,880 Q450,850 600,870 Q750,840 900,860 Q1050,840 1200,860 Q1350,840 1500,870 Q1650,850 1800,880 Q1900,860 1920,880 L1920,1080 L0,1080 Z" fill="#6B9E4A"/>
+  <path d="M0,910 Q200,890 400,905 Q600,880 800,895 Q1000,875 1200,890 Q1400,880 1600,900 Q1800,885 1920,900 L1920,1080 L0,1080 Z" fill="#5C8C3A"/>
+
+  <rect x="0" y="940" width="1920" height="140" fill="url(#grassFill)"/>
+
+  <!-- ======================== SMALL PLANTS ======================== -->
+  <g fill="#88B868" opacity="0.6">
+    <ellipse cx="150" cy="890" rx="8" ry="15" transform="rotate(-10 150 890)"/>
+    <ellipse cx="160" cy="890" rx="8" ry="15" transform="rotate(10 160 890)"/>
+    <ellipse cx="400" cy="880" rx="6" ry="12" transform="rotate(-15 400 880)"/>
+    <ellipse cx="408" cy="880" rx="6" ry="12" transform="rotate(15 408 880)"/>
+    <ellipse cx="700" cy="875" rx="7" ry="13" transform="rotate(-10 700 875)"/>
+    <ellipse cx="710" cy="875" rx="7" ry="13" transform="rotate(10 710 875)"/>
+    <ellipse cx="1000" cy="870" rx="6" ry="12" transform="rotate(-12 1000 870)"/>
+    <ellipse cx="1008" cy="870" rx="6" ry="12" transform="rotate(12 1008 870)"/>
+    <ellipse cx="1350" cy="878" rx="7" ry="14" transform="rotate(-10 1350 878)"/>
+    <ellipse cx="1360" cy="878" rx="7" ry="14" transform="rotate(10 1360 878)"/>
+    <ellipse cx="1650" cy="882" rx="6" ry="12" transform="rotate(-15 1650 882)"/>
+    <ellipse cx="1658" cy="882" rx="6" ry="12" transform="rotate(15 1658 882)"/>
+  </g>
+
+  <!-- Grass spots -->
+  <g fill="#98C470" opacity="0.35">
+    <ellipse cx="250" cy="900" rx="20" ry="5"/>
+    <ellipse cx="550" cy="890" rx="18" ry="4"/>
+    <ellipse cx="950" cy="885" rx="22" ry="5"/>
+    <ellipse cx="1250" cy="880" rx="16" ry="4"/>
+    <ellipse cx="1550" cy="890" rx="20" ry="5"/>
+    <ellipse cx="1850" cy="885" rx="18" ry="4"/>
+  </g>
+
+  <!-- ======================== FRONT BUSHES ======================== -->
+  <g>
+    <circle cx="50" cy="930" r="30" fill="#6B9E4A"/>
+    <circle cx="80" cy="920" r="35" fill="#7AAD58"/>
+    <circle cx="20" cy="925" r="25" fill="#5C8C3A"/>
+
+    <circle cx="750" cy="925" r="28" fill="#6B9E4A"/>
+    <circle cx="780" cy="915" r="32" fill="#7AAD58"/>
+    <circle cx="810" cy="922" r="26" fill="#88B868"/>
+
+    <circle cx="1850" cy="928" r="30" fill="#6B9E4A"/>
+    <circle cx="1880" cy="918" r="35" fill="#7AAD58"/>
+    <circle cx="1910" cy="925" r="28" fill="#5C8C3A"/>
+  </g>
+</svg>
