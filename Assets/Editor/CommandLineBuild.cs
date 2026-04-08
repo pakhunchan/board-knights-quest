@@ -12,6 +12,7 @@ public static class CommandLineBuild
             "Assets/Scenes/Circles.unity",
             "Assets/Scenes/Playground.unity",
             "Assets/Scenes/FractionsDemo.unity",
+            "Assets/Scenes/FractionsDemo2.unity",
         };
         var options = new BuildPlayerOptions
         {

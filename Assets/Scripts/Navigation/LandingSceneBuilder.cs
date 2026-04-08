@@ -80,28 +80,36 @@ namespace BoardOfEducation.Navigation
             SetAnchored(subtitleGo, new Vector2(0.15f, 0.72f), new Vector2(0.85f, 0.82f));
 
             // ══════════════════════════════════════════════════
-            // CIRCLES CARD (left)
+            // CIRCLES CARD
             // ══════════════════════════════════════════════════
             var circlesCardGo = CreateGameCard(canvasGo.transform, "CirclesCard",
                 "CIRCLES", "Combine to zero!",
                 HexColor("#e74c3c"), // red theme
-                new Vector2(0.04f, 0.1f), new Vector2(0.34f, 0.68f));
+                new Vector2(0.02f, 0.1f), new Vector2(0.24f, 0.68f));
 
             // ══════════════════════════════════════════════════
-            // FRACTIONS CARD (center)
+            // FRACTIONS CARD
             // ══════════════════════════════════════════════════
             var fractionsCardGo = CreateGameCard(canvasGo.transform, "FractionsCard",
                 "FRACTIONS", "Animated equations",
                 HexColor("#3498db"), // blue theme
-                new Vector2(0.36f, 0.1f), new Vector2(0.64f, 0.68f));
+                new Vector2(0.26f, 0.1f), new Vector2(0.48f, 0.68f));
 
             // ══════════════════════════════════════════════════
-            // PLAYGROUND CARD (right)
+            // PLAYGROUND CARD
             // ══════════════════════════════════════════════════
             var playgroundCardGo = CreateGameCard(canvasGo.transform, "PlaygroundCard",
                 "PAK'S\nPLAYGROUND", "Explore & experiment",
                 HexColor("#2ecc71"), // green theme
-                new Vector2(0.66f, 0.1f), new Vector2(0.96f, 0.68f));
+                new Vector2(0.52f, 0.1f), new Vector2(0.74f, 0.68f));
+
+            // ══════════════════════════════════════════════════
+            // FRACTIONS 2 CARD
+            // ══════════════════════════════════════════════════
+            var fractionsDemo2CardGo = CreateGameCard(canvasGo.transform, "FractionsDemo2Card",
+                "FRACTIONS 2", "Equivalent circles",
+                HexColor("#9b59b6"), // purple theme
+                new Vector2(0.76f, 0.1f), new Vector2(0.98f, 0.68f));
 
             // ══════════════════════════════════════════════════
             // WIRE UP SERIALIZED REFERENCES
@@ -111,9 +119,11 @@ namespace BoardOfEducation.Navigation
             SetRef(managerSO, "circlesCard", circlesCardGo.GetComponent<RectTransform>());
             SetRef(managerSO, "fractionsCard", fractionsCardGo.GetComponent<RectTransform>());
             SetRef(managerSO, "playgroundCard", playgroundCardGo.GetComponent<RectTransform>());
+            SetRef(managerSO, "fractionsDemo2Card", fractionsDemo2CardGo.GetComponent<RectTransform>());
             SetRef(managerSO, "circlesButton", circlesCardGo.GetComponent<Button>());
             SetRef(managerSO, "fractionsButton", fractionsCardGo.GetComponent<Button>());
             SetRef(managerSO, "playgroundButton", playgroundCardGo.GetComponent<Button>());
+            SetRef(managerSO, "fractionsDemo2Button", fractionsDemo2CardGo.GetComponent<Button>());
             SetRef(managerSO, "subtitleText", subtitleGo.GetComponent<TextMeshProUGUI>());
             managerSO.ApplyModifiedPropertiesWithoutUndo();
 
@@ -135,9 +145,10 @@ namespace BoardOfEducation.Navigation
                 new EditorBuildSettingsScene("Assets/Scenes/Circles.unity", true),
                 new EditorBuildSettingsScene("Assets/Scenes/Playground.unity", true),
                 new EditorBuildSettingsScene("Assets/Scenes/FractionsDemo.unity", true),
+                new EditorBuildSettingsScene("Assets/Scenes/FractionsDemo2.unity", true),
             };
             EditorBuildSettings.scenes = scenes;
-            Debug.Log("[LandingSceneBuilder] Build settings configured: LandingPage(0), Circles(1), Playground(2), FractionsDemo(3)");
+            Debug.Log("[LandingSceneBuilder] Build settings configured: LandingPage(0), Circles(1), Playground(2), FractionsDemo(3), FractionsDemo2(4)");
         }
 
         // ── Game Card Helper ─────────────────────────────────
