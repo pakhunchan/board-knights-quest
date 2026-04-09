@@ -186,9 +186,9 @@ namespace BoardOfEducation.Game
         private static readonly Color HandwriteColor = new Color(0.18f, 0.8f, 0.44f);
 
         // ── Answer Circle Constants ────────────────────────────────
-        private const float AnswerCircleSize = 120f;
-        private const float CircleSpacing = 160f;
-        private const float CircleY = -180f;
+        private const float AnswerCircleSize = 156f;
+        private const float CircleSpacing = 320f;
+        private const float CircleY = -240f;
         private const float DWELL_TIME = 1.0f;
 
         private static readonly Color CircleDefaultColor = new Color(0.85f, 0.85f, 0.85f, 1f);

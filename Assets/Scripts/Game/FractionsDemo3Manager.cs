@@ -96,9 +96,9 @@ namespace BoardOfEducation.Game
         private const float ZoomDuration = 0.8f;
 
         // ── Answer Circle Constants ────────────────────────────────
-        private const float CircleSize = 120f;
-        private const float CircleSpacing = 160f;
-        private const float CircleY = -180f;
+        private const float CircleSize = 156f;
+        private const float CircleSpacing = 320f;
+        private const float CircleY = -240f;
         private const float DWELL_TIME = 1.0f;
 
         private static readonly Color HandwriteColor = new Color(0.18f, 0.8f, 0.44f);

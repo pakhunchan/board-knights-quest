@@ -77,15 +77,15 @@ namespace BoardOfEducation.Game
             // ── ContentArea (shared by all phases) ──
             var contentAreaGo = CreateUIElement("ContentArea", canvasGo.transform);
             var contentAreaRect = contentAreaGo.GetComponent<RectTransform>();
-            contentAreaRect.anchorMin = new Vector2(0.05f, 0.25f);
-            contentAreaRect.anchorMax = new Vector2(0.95f, 0.8f);
+            contentAreaRect.anchorMin = new Vector2(0.05f, 0.18f);
+            contentAreaRect.anchorMax = new Vector2(0.95f, 0.82f);
             contentAreaRect.offsetMin = Vector2.zero;
             contentAreaRect.offsetMax = Vector2.zero;
 
             // ── SubtitleText ──
             var subtitleGo = CreateText(canvasGo.transform, "SubtitleText", "",
                 36, TextAlignmentOptions.Center, new Color(1, 1, 1, 0.9f));
-            SetAnchored(subtitleGo, new Vector2(0.1f, 0.08f), new Vector2(0.9f, 0.2f));
+            SetAnchored(subtitleGo, new Vector2(0.1f, 0.03f), new Vector2(0.9f, 0.14f));
 
             // ── PlayButton ──
             var playBtnGo = CreateButton(canvasGo.transform, "PlayButton",

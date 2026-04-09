@@ -77,21 +77,21 @@ namespace BoardOfEducation.Game
             // ── ContentArea ──
             var contentAreaGo = CreateUIElement("ContentArea", canvasGo.transform);
             var contentAreaRect = contentAreaGo.GetComponent<RectTransform>();
-            contentAreaRect.anchorMin = new Vector2(0.05f, 0.30f);
-            contentAreaRect.anchorMax = new Vector2(0.95f, 0.85f);
+            contentAreaRect.anchorMin = new Vector2(0.05f, 0.18f);
+            contentAreaRect.anchorMax = new Vector2(0.95f, 0.82f);
             contentAreaRect.offsetMin = Vector2.zero;
             contentAreaRect.offsetMax = Vector2.zero;
 
             // ── SubtitleText ──
             var subtitleGo = CreateText(canvasGo.transform, "SubtitleText", "",
                 36, TextAlignmentOptions.Center, new Color(1, 1, 1, 0.9f));
-            SetAnchored(subtitleGo, new Vector2(0.1f, 0.08f), new Vector2(0.9f, 0.2f));
+            SetAnchored(subtitleGo, new Vector2(0.1f, 0.03f), new Vector2(0.9f, 0.14f));
 
             // ── ScoreArea (bottom center, above subtitle) ──
             var scoreAreaGo = CreateUIElement("ScoreArea", canvasGo.transform);
             var scoreAreaRect = scoreAreaGo.GetComponent<RectTransform>();
-            scoreAreaRect.anchorMin = new Vector2(0.25f, 0.12f);
-            scoreAreaRect.anchorMax = new Vector2(0.75f, 0.20f);
+            scoreAreaRect.anchorMin = new Vector2(0.25f, 0.14f);
+            scoreAreaRect.anchorMax = new Vector2(0.75f, 0.22f);
             scoreAreaRect.offsetMin = Vector2.zero;
             scoreAreaRect.offsetMax = Vector2.zero;
 
