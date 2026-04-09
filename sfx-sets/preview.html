@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SFX Preview — Math Game Sound Effects</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #f8f6f3;
+    color: #3a3a3a;
+    padding: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #2c2c2c;
+  }
+  .subtitle {
+    font-size: 0.95rem;
+    color: #777;
+    margin-bottom: 28px;
+  }
+  .controls-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .controls-bar button {
+    padding: 8px 16px;
+    border: 1px solid #d0ccc6;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.15s;
+  }
+  .controls-bar button:hover { background: #eee; }
+  .controls-bar button.active { background: #5b8a72; color: #fff; border-color: #5b8a72; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+  .set-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 20px;
+    border: 1px solid #e5e1db;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s;
+  }
+  .set-card:hover { box-shadow: 0 3px 12px rgba(0,0,0,0.08); }
+  .set-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .set-num {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #2c2c2c;
+  }
+  .set-name {
+    font-size: 0.82rem;
+    color: #999;
+    font-style: italic;
+  }
+  .sfx-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .sfx-row:last-child { margin-bottom: 0; }
+  .play-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    color: #fff;
+  }
+  .play-btn:active { transform: scale(0.92); }
+  .play-btn.correct   { background: #6ab889; }
+  .play-btn.correct:hover { background: #5aa87a; }
+  .play-btn.incorrect { background: #d4956a; }
+  .play-btn.incorrect:hover { background: #c4855a; }
+  .play-btn.success-end { background: #7ba3d4; }
+  .play-btn.success-end:hover { background: #6b93c4; }
+  .play-btn.playing { animation: pulse 0.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+  .sfx-label {
+    font-size: 0.88rem;
+    font-weight: 500;
+    min-width: 90px;
+  }
+  .sfx-label.correct { color: #4a9468; }
+  .sfx-label.incorrect { color: #b8784e; }
+  .sfx-label.success-end { color: #5a83b4; }
+  .waveform-bar {
+    flex: 1;
+    height: 28px;
+    background: #f4f2ef;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+  }
+  .waveform-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 6px;
+    transition: width 0.05s linear;
+  }
+  .waveform-fill.correct { background: rgba(106,184,137,0.25); }
+  .waveform-fill.incorrect { background: rgba(212,149,106,0.25); }
+  .waveform-fill.success-end { background: rgba(123,163,212,0.25); }
+
+  /* Quick-play row mode */
+  .quick-row {
+    display: none;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .quick-row.visible { display: flex; }
+  .quick-row button {
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid #d0ccc6;
+    background: #fff;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.12s;
+  }
+  .quick-row button:hover { background: #f0f0f0; }
+
+  .stop-all-btn {
+    background: #e8665a !important;
+    color: #fff !important;
+    border-color: #e8665a !important;
+  }
+  .stop-all-btn:hover { background: #d5554a !important; }
+</style>
+</head>
+<body>
+
+<h1>SFX Preview</h1>
+<p class="subtitle">10 sound effect sets for 3rd-grade math game — click to play, compare, and choose</p>
+
+<div class="controls-bar">
+  <button onclick="playAllOfType('correct')" title="Play all 'correct' sounds in sequence">All Correct</button>
+  <button onclick="playAllOfType('incorrect')" title="Play all 'incorrect' sounds in sequence">All Incorrect</button>
+  <button onclick="playAllOfType('success-end')" title="Play all 'success-end' sounds in sequence">All Success</button>
+  <button class="stop-all-btn" onclick="stopAll()">Stop All</button>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const SET_NAMES = {
+  1: "Warm Marimba",
+  2: "Music Box",
+  3: "Soft Bells",
+  4: "Bright Xylophone",
+  5: "Gentle Harp",
+  6: "Soft Flute",
+  7: "Celesta Chime",
+  8: "Kalimba",
+  9: "Vibraphone",
+  10: "Wind Chimes"
+};
+const TYPES = ["correct", "incorrect", "success-end"];
+const LABELS = { "correct": "Correct", "incorrect": "Incorrect", "success-end": "Success" };
+
+let currentAudio = null;
+let currentBtn = null;
+let animFrame = null;
+let sequenceQueue = [];
+let sequencePlaying = false;
+
+function stopAll() {
+  sequenceQueue = [];
+  sequencePlaying = false;
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+    currentAudio = null;
+  }
+  if (currentBtn) {
+    currentBtn.classList.remove("playing");
+    currentBtn = null;
+  }
+  if (animFrame) cancelAnimationFrame(animFrame);
+  document.querySelectorAll(".waveform-fill").forEach(el => el.style.width = "0%");
+  document.querySelectorAll(".play-btn").forEach(el => el.classList.remove("playing"));
+}
+
+function playSfx(setNum, type, btn) {
+  stopAll();
+  const path = `sfx-set-${setNum}/${type}.wav`;
+  const audio = new Audio(path);
+  currentAudio = audio;
+  currentBtn = btn;
+  btn.classList.add("playing");
+
+  const fill = btn.closest(".sfx-row").querySelector(".waveform-fill");
+
+  audio.play().catch(e => console.warn("Play failed:", e));
+  function updateProgress() {
+    if (audio.duration && !audio.paused) {
+      fill.style.width = (audio.currentTime / audio.duration * 100) + "%";
+      animFrame = requestAnimationFrame(updateProgress);
+    }
+  }
+  audio.addEventListener("timeupdate", () => updateProgress());
+  audio.addEventListener("ended", () => {
+    btn.classList.remove("playing");
+    fill.style.width = "0%";
+    currentAudio = null;
+    currentBtn = null;
+    if (sequencePlaying && sequenceQueue.length > 0) {
+      const next = sequenceQueue.shift();
+      setTimeout(() => next(), 200);
+    } else {
+      sequencePlaying = false;
+    }
+  });
+}
+
+function playAllOfType(type) {
+  stopAll();
+  sequenceQueue = [];
+  sequencePlaying = true;
+  for (let i = 1; i <= 10; i++) {
+    const btn = document.querySelector(`[data-set="${i}"][data-type="${type}"]`);
+    if (btn) {
+      sequenceQueue.push(() => playSfx(i, type, btn));
+    }
+  }
+  if (sequenceQueue.length > 0) {
+    const first = sequenceQueue.shift();
+    first();
+  }
+}
+
+// Build cards
+const grid = document.getElementById("grid");
+for (let i = 1; i <= 10; i++) {
+  const card = document.createElement("div");
+  card.className = "set-card";
+  card.innerHTML = `
+    <div class="set-header">
+      <span class="set-num">Set ${i}</span>
+      <span class="set-name">${SET_NAMES[i]}</span>
+    </div>
+    ${TYPES.map(type => `
+      <div class="sfx-row">
+        <button class="play-btn ${type}" data-set="${i}" data-type="${type}"
+                onclick="playSfx(${i}, '${type}', this)">&#9654;</button>
+        <span class="sfx-label ${type}">${LABELS[type]}</span>
+        <div class="waveform-bar"><div class="waveform-fill ${type}"></div></div>
+      </div>
+    `).join("")}
+  `;
+  grid.appendChild(card);
+}
+
+// Keyboard shortcuts
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") stopAll();
+});
+</script>
+</body>
+</html>

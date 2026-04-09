@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knight Adventure BGM Preview</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    color: #e0e0e0;
+    padding: 2rem;
+  }
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(90deg, #ffd700, #ff9f43);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle {
+    text-align: center;
+    color: #8899aa;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+  .section-label {
+    max-width: 1100px;
+    margin: 1.5rem auto 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ffd700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-bottom: 1px solid rgba(255,215,0,0.2);
+    padding-bottom: 0.4rem;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 1.2rem;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .card:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
+  .card.playing {
+    border-color: #ffd700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.15);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.6rem;
+  }
+  .track-num {
+    background: linear-gradient(135deg, #ffd700, #ff9f43);
+    color: #1a1a2e;
+    font-weight: 700;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+  }
+  .track-title { font-weight: 600; font-size: 1.05rem; color: #fff; }
+  .track-meta {
+    font-size: 0.8rem;
+    color: #7788aa;
+    margin-bottom: 0.5rem;
+    line-height: 1.5;
+  }
+  .track-desc {
+    font-size: 0.85rem;
+    color: #99aabb;
+    line-height: 1.4;
+    margin-bottom: 0.8rem;
+  }
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .play-btn {
+    background: linear-gradient(135deg, #ffd700, #ff9f43);
+    border: none;
+    color: #1a1a2e;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.15s;
+  }
+  .play-btn:hover { transform: scale(1.1); }
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffd700, #ff9f43);
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.1s linear;
+  }
+  .time {
+    font-size: 0.75rem;
+    color: #667788;
+    min-width: 55px;
+    text-align: right;
+  }
+  .loop-badge {
+    font-size: 0.7rem;
+    color: #ffd700;
+    border: 1px solid rgba(255,215,0,0.3);
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin-left: auto;
+  }
+  .loop-count {
+    font-size: 0.7rem;
+    color: #667788;
+    min-width: 30px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Knight Adventure BGM</h1>
+<p class="subtitle">Background music tracks for Sum Fun — a math game for 3rd graders</p>
+
+<div class="section-label" id="label-short">Short Loops (15–25s) — Castle Garden style</div>
+<div class="grid" id="grid-short"></div>
+
+<div class="section-label" id="label-long">Full Tracks (35–65s)</div>
+<div class="grid" id="grid-long"></div>
+
+<script>
+const shortTracks = [
+  { id: 11, title: "Sunlit Glade", key: "F major", tempo: 112, dur: "17s",
+    instruments: "Piano",
+    desc: "Pure arpeggio warmth — the Castle Garden vibe distilled into a short, seamless loop." },
+  { id: 12, title: "Moonlit Tower", key: "G major", tempo: 108, dur: "18s",
+    instruments: "Piano",
+    desc: "Gentle arpeggios with sparse high-note touches — like wind chimes in a quiet tower." },
+  { id: 13, title: "Crystal Spring", key: "C major", tempo: 120, dur: "16s",
+    instruments: "Piano",
+    desc: "Alberti-style arpeggios with a deep bass root — clean and refreshing." },
+  { id: 14, title: "Whispering Woods", key: "D minor", tempo: 112, dur: "17s",
+    instruments: "Piano, Flute",
+    desc: "Gentle piano arpeggios with a wistful flute motif — slightly mysterious, still safe." },
+  { id: 15, title: "Golden Fields", key: "Eb major", tempo: 116, dur: "25s",
+    instruments: "Piano",
+    desc: "Warm arpeggios with occasional descending figures — rolling golden hills." },
+];
+
+const longTracks = [
+  { id: 1, title: "Morning Meadow", key: "C major", tempo: 108, dur: "48s",
+    instruments: "Piano, Flute",
+    desc: "Gentle piano arpeggios with a sweet flute melody — like morning sunlight on green hills." },
+  { id: 2, title: "Woodland Stroll", key: "G major", tempo: 100, dur: "66s",
+    instruments: "Recorder, Piano",
+    desc: "A leisurely walk through a friendly forest with lilting recorder and soft piano chords." },
+  { id: 3, title: "Castle Garden", key: "F major", tempo: 112, dur: "51s",
+    instruments: "Piano (two hands)",
+    desc: "Solo piano with music-box-like melody over flowing arpeggios — playful but soft." },
+  { id: 4, title: "Hilltop Breeze", key: "D major", tempo: 104, dur: "60s",
+    instruments: "Flute, Recorder, Piano",
+    desc: "All three instruments together — soaring flute, gentle recorder harmony, warm piano pads." },
+  { id: 5, title: "Puzzle Time", key: "Eb major", tempo: 116, dur: "45s",
+    instruments: "Recorder, Piano",
+    desc: "A catchy, cheerful hook over gentle piano oom-pah — perfect for thinking moments." },
+  { id: 6, title: "Starlight Waltz", key: "A major", tempo: 96, dur: "64s",
+    instruments: "Flute, Piano",
+    desc: "A graceful 3/4 waltz — delicate flute melody floating over piano accompaniment." },
+  { id: 7, title: "River Song", key: "C pentatonic", tempo: 120, dur: "47s",
+    instruments: "Flute, Piano",
+    desc: "Flowing pentatonic flute melody over babbling-brook piano arpeggios." },
+  { id: 8, title: "Enchanted Path", key: "Bb major", tempo: 108, dur: "58s",
+    instruments: "Recorder, Piano",
+    desc: "Sweet shepherd's recorder tune over Alberti bass piano — like humming along a trail." },
+  { id: 9, title: "Dreaming Knight", key: "G pentatonic", tempo: 92, dur: "65s",
+    instruments: "Piano, Flute, Recorder",
+    desc: "The gentlest track — sparse piano, dreamy flute, and soft recorder echoes." },
+  { id: 10, title: "Quest Complete", key: "C major", tempo: 126, dur: "36s",
+    instruments: "Piano, Flute, Recorder",
+    desc: "Warm, soft celebration — ascending melodies with gentle harmonies in thirds." },
+];
+
+function buildGrid(container, trackList) {
+  trackList.forEach(t => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.id = t.id;
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="track-num">${t.id}</div>
+        <div class="track-title">${t.title}</div>
+        <div class="loop-badge">${t.dur} loop</div>
+      </div>
+      <div class="track-meta">${t.key} · ${t.tempo} BPM · ${t.instruments}</div>
+      <div class="track-desc">${t.desc}</div>
+      <div class="controls">
+        <button class="play-btn" data-id="${t.id}">&#9654;</button>
+        <div class="progress-bar"><div class="progress-fill"></div></div>
+        <div class="time">0:00</div>
+        <div class="loop-count"></div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+buildGrid(document.getElementById('grid-short'), shortTracks);
+buildGrid(document.getElementById('grid-long'), longTracks);
+
+// --- Web Audio API gapless looping ---
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+const bufferCache = {};
+let currentSource = null;
+let currentCard = null;
+let currentStartTime = 0;
+let currentDuration = 0;
+let loopCount = 0;
+let animFrame = null;
+
+async function loadBuffer(id) {
+  if (bufferCache[id]) return bufferCache[id];
+  const resp = await fetch(`tracks/track-${id}.mp3`);
+  const arrayBuf = await resp.arrayBuffer();
+  const audioBuf = await audioCtx.decodeAudioData(arrayBuf);
+  bufferCache[id] = audioBuf;
+  return audioBuf;
+}
+
+function formatTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2, '0')}`;
+}
+
+function stopCurrent() {
+  if (currentSource) {
+    currentSource.stop();
+    currentSource.disconnect();
+    currentSource = null;
+  }
+  if (currentCard) {
+    currentCard.classList.remove('playing');
+    currentCard.querySelector('.play-btn').innerHTML = '&#9654;';
+    currentCard.querySelector('.progress-fill').style.width = '0%';
+    currentCard.querySelector('.time').textContent = '0:00';
+    currentCard.querySelector('.loop-count').textContent = '';
+    currentCard = null;
+  }
+  if (animFrame) cancelAnimationFrame(animFrame);
+}
+
+function updateProgress() {
+  if (!currentSource || !currentCard || !currentDuration) return;
+  const elapsed = audioCtx.currentTime - currentStartTime;
+  const loopPos = elapsed % currentDuration;
+  const loops = Math.floor(elapsed / currentDuration);
+  const pct = (loopPos / currentDuration) * 100;
+  currentCard.querySelector('.progress-fill').style.width = pct + '%';
+  currentCard.querySelector('.time').textContent = formatTime(loopPos);
+  if (loops > 0) {
+    currentCard.querySelector('.loop-count').textContent = `x${loops + 1}`;
+  }
+  animFrame = requestAnimationFrame(updateProgress);
+}
+
+async function playTrack(id, card) {
+  if (currentCard === card && currentSource) {
+    stopCurrent();
+    return;
+  }
+  stopCurrent();
+
+  // Resume audio context if suspended (browser autoplay policy)
+  if (audioCtx.state === 'suspended') await audioCtx.resume();
+
+  const buffer = await loadBuffer(id);
+  const source = audioCtx.createBufferSource();
+  source.buffer = buffer;
+  source.loop = true;
+  source.connect(audioCtx.destination);
+
+  currentSource = source;
+  currentCard = card;
+  currentDuration = buffer.duration;
+  currentStartTime = audioCtx.currentTime;
+
+  card.classList.add('playing');
+  card.querySelector('.play-btn').innerHTML = '&#9724;';
+
+  source.start();
+  updateProgress();
+}
+
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.play-btn');
+  const card = e.target.closest('.card');
+  if (!card) return;
+  e.stopPropagation();
+  const id = card.dataset.id;
+  playTrack(id, card);
+});
+</script>
+</body>
+</html>
