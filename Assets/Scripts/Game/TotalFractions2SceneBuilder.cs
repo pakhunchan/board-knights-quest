@@ -69,16 +69,11 @@ namespace BoardOfEducation.Game
             bgImg.color = HexColor("#0f0e2a");
             bgImg.raycastTarget = false;
 
-            // ── Title ──
-            var titleGo = CreateText(canvasGo.transform, "Title", "FRACTIONS",
-                48, TextAlignmentOptions.Center, Color.white);
-            SetAnchored(titleGo, new Vector2(0.1f, 0.85f), new Vector2(0.9f, 0.95f));
-
             // ── ContentArea (shared by all phases) ──
             var contentAreaGo = CreateUIElement("ContentArea", canvasGo.transform);
             var contentAreaRect = contentAreaGo.GetComponent<RectTransform>();
             contentAreaRect.anchorMin = new Vector2(0.05f, 0.18f);
-            contentAreaRect.anchorMax = new Vector2(0.95f, 0.82f);
+            contentAreaRect.anchorMax = new Vector2(0.95f, 0.95f);
             contentAreaRect.offsetMin = Vector2.zero;
             contentAreaRect.offsetMax = Vector2.zero;
 

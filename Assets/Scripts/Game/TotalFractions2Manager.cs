@@ -51,29 +51,29 @@ namespace BoardOfEducation.Game
         private readonly LessonStep[] steps = new LessonStep[]
         {
             // Phase 1: Circles (steps 0–11)
-            new LessonStep("This is a circle.",                                     "showCircle:left"),    // 0
-            new LessonStep("If we draw a line down the middle and",                 "lines:left"),         // 1
-            new LessonStep("shade the left side",                                   "shade:left"),         // 2
-            new LessonStep("we get one-half",                                       "label:left"),         // 3
-            new LessonStep("This is a circle.",                                     "showCircle:right"),   // 4
-            new LessonStep("If we draw lines to split the circle into 6 pieces",    "lines:right"),        // 5
-            new LessonStep("and shade the left side",                               "shade:right"),        // 6
-            new LessonStep("we get three-sixths",                                   "label:right"),        // 7
-            new LessonStep("You can see that these fractions are equal"),                                   // 8
-            new LessonStep("But how do we go from one fraction to another fraction?"),                      // 9
-            new LessonStep("We will learn that today"),                                                     // 10
+            new LessonStep("Let's start with a circle.",                             "showCircle:left"),    // 0
+            new LessonStep("If we draw a line down the middle and",                  "lines:left"),         // 1
+            new LessonStep("shade the left side, we'll have two pieces and one will be shaded", "shade:left"), // 2
+            new LessonStep("In math, we say that one-half is shaded",                 "label:left"),         // 3
+            new LessonStep("Here is another circle.",                                "showCircle:right"),   // 4
+            new LessonStep("If we draw lines to split the circle into 6 pieces",     "lines:right"),        // 5
+            new LessonStep("and shade the 3 pieces to the left",                     "shade:right"),        // 6
+            new LessonStep("we get three-sixths",                                    "label:right"),        // 7
+            new LessonStep("You can see that the shaded area in these two circles are equal. This means that their fractions, one half and three sixths, are equal too."), // 8
+            new LessonStep("But is there a simple way to go from one fraction to another fraction without drawing it out every time?"), // 9
+            new LessonStep("There is, and we will learn that today"),                                       // 10
             new LessonStep("Let's jump into an example"),                                                   // 11
 
             // Transition 1→2 (step 12)
             new LessonStep(" ",                                                     "transition1to2"),     // 12
 
             // Phase 2: Equation 1/2 = ?/6 (steps 13–21)
-            new LessonStep("One half equals how many sixths?"),                                                                                                // 13
-            new LessonStep("Let's shift this over to the right to make space",                                                              "slideApart"),     // 14
+            new LessonStep("One half equals how many sixths? We know the answer is three sixths because of the circles before, but let's see how we can calculate this in a mathematical way"), // 13
+            new LessonStep("Let's start by shifting this over to the right to make space",                                                  "slideApart"),     // 14
             new LessonStep("We need to multiply one half by something to turn it into something over six.",                                 "fadeInMultiply"), // 15
-            new LessonStep("Focus first on the bottom numbers, the denominators.",                                                          "zoomInDenom"),    // 16
+            new LessonStep("First, focus on the bottom numbers, the denominators.",                                                         "zoomInDenom"),    // 16
             new LessonStep("Two times three equals six.",                                                                                    "swapDenom3"),     // 17
-            new LessonStep("Coming back to the full equation, the rule is whatever you multiply the bottom by, you have to multiply the top by the same value.", "zoomOut"), // 18
+            new LessonStep("Let's now come back to the full equation. The rule is: whatever you multiply the bottom by, you have to multiply the top by the same value.", "zoomOut"), // 18
             new LessonStep("Since we multiplied the bottom by three, we have to multiply the top by three."),                                                   // 19
             new LessonStep("Multiplying the top is one times three, which is equal to three."),                                                                 // 20
             new LessonStep("So now we know that one-half is equal to three-sixths."),                                                                           // 21
@@ -82,7 +82,7 @@ namespace BoardOfEducation.Game
             new LessonStep(" ",                                                     "transition2to3"),     // 22
 
             // Phase 3: Equation 2/3 = ?/9 (steps 23–35)
-            new LessonStep("Let's try another example"),                                                                                    // 23
+            new LessonStep("You're doing amazing, so let's continue with another example"),                                                                                    // 23
             new LessonStep("Two thirds is equal to how many ninths?",               "p3_showEquation"),    // 24
             new LessonStep("First we'll make some space",                           "p3_slideApart"),      // 25
             new LessonStep("We have to multiply two thirds by something to figure out how many ninths it's equal to", "p3_fadeInMultiply"), // 26
@@ -100,11 +100,12 @@ namespace BoardOfEducation.Game
             new LessonStep(" ",                                                     "transition3to4"),     // 36
 
             // Phase 4: Equation 3/5 = ?/20 (steps 37–41)
-            new LessonStep("Let's try another example",                             "p4_showEquation"),    // 37
+            new LessonStep("You're doing great, so let's try another example",      "p4_showEquation"),    // 37
             new LessonStep("Three fifths is equal to how many twentieths?"),                                                                // 38
-            new LessonStep("First, figure out what you need to multiply five by to get to twenty"),                                         // 39
-            new LessonStep("Multiply the bottom to get to 20"),                                                                             // 40
-            new LessonStep("How many twentieths is three fifths?"),                                                                         // 41
+            new LessonStep("First, look at the bottom numbers, the denominators."),                                                          // 39
+            new LessonStep("Second, find the times number. Five times what number equals twenty?"),                                         // 40
+            new LessonStep("Third, multiple the top by that times number to get the answer"),                                               // 41
+            new LessonStep("How many twentieths is three fifths?"),                                                                         // 42
         };
 
         // ── Animation Registry ─────────────────────────────────────
