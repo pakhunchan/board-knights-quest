@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knight's Quest — Golden Treasury</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden}
+body{font-family:'Cinzel',serif}
+.scene{position:relative;width:100%;height:100%;background:linear-gradient(180deg,#1a1208 0%,#2a2010 20%,#3a2a18 40%,#4a3820 55%,#5a4828 70%,#3a2a18 100%)}
+
+/* Treasure glow from below */
+.treasure-glow{position:absolute;bottom:15%;left:50%;transform:translateX(-50%);width:500px;height:250px;background:radial-gradient(ellipse,rgba(248,200,80,0.15),transparent 65%);z-index:1}
+
+/* Cave ceiling stalactites */
+.stalactite{position:absolute;top:0;background:linear-gradient(180deg,#2a2010,#3a2a18);z-index:2}
+.st1{left:5%;width:30px;height:120px;clip-path:polygon(0 0,100% 0,70% 100%,30% 100%);border-radius:0 0 5px 5px}
+.st2{left:15%;width:20px;height:80px;clip-path:polygon(0 0,100% 0,65% 100%,35% 100%)}
+.st3{left:78%;width:25px;height:100px;clip-path:polygon(0 0,100% 0,70% 100%,30% 100%)}
+.st4{left:88%;width:35px;height:130px;clip-path:polygon(0 0,100% 0,65% 100%,35% 100%)}
+.st5{left:92%;width:18px;height:70px;clip-path:polygon(0 0,100% 0,60% 100%,40% 100%)}
+
+/* Cave walls */
+.cave-wall{position:absolute;background:#2a1a10;z-index:2}
+.cw-l{left:0;top:0;width:8%;height:100%;background:linear-gradient(90deg,#1a1008,#2a1a10,transparent)}
+.cw-r{right:0;top:0;width:8%;height:100%;background:linear-gradient(270deg,#1a1008,#2a1a10,transparent)}
+
+/* Treasure pile hint */
+.treasure{position:absolute;bottom:10%;left:50%;transform:translateX(-50%);z-index:3}
+.gold-pile{width:300px;height:60px;background:radial-gradient(ellipse at 50% 80%,#c8a030,#a08020,#806018);border-radius:50%;opacity:0.6}
+/* Coins */
+.coin{position:absolute;width:12px;height:10px;border-radius:50%;border:2px solid #e8c840;background:#d8b030;z-index:4}
+.cn1{bottom:calc(10% + 50px);left:calc(50% - 60px)}
+.cn2{bottom:calc(10% + 55px);left:calc(50% - 30px)}
+.cn3{bottom:calc(10% + 45px);left:calc(50% + 20px)}
+.cn4{bottom:calc(10% + 58px);left:calc(50% + 50px)}
+/* Gems */
+.gem{position:absolute;width:10px;height:10px;z-index:4}
+.gem-red{background:#c83030;clip-path:polygon(50% 0%,100% 40%,80% 100%,20% 100%,0% 40%);box-shadow:0 0 6px rgba(200,48,48,0.5)}
+.gem-blue{background:#3060c8;clip-path:polygon(50% 0%,100% 40%,80% 100%,20% 100%,0% 40%);box-shadow:0 0 6px rgba(48,96,200,0.5)}
+.gem-green{background:#30a848;clip-path:polygon(50% 0%,100% 40%,80% 100%,20% 100%,0% 40%);box-shadow:0 0 6px rgba(48,168,72,0.5)}
+.g1{bottom:calc(10% + 60px);left:calc(50% - 45px)}
+.g2{bottom:calc(10% + 52px);left:calc(50% + 35px)}
+.g3{bottom:calc(10% + 65px);left:calc(50% + 5px)}
+
+/* Torches */
+.torch{position:absolute;z-index:5}
+.torch-handle{width:8px;height:50px;background:linear-gradient(90deg,#5a3a20,#7a5030,#5a3a20);margin:0 auto;border-radius:2px}
+.torch-flame{width:20px;height:28px;background:radial-gradient(ellipse at 50% 70%,#f8e060,#f8a030,#c84010);border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;margin:0 auto;animation:flicker 0.5s ease-in-out infinite alternate;position:relative;top:-5px}
+.torch-glow{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:100px;height:100px;background:radial-gradient(circle,rgba(248,180,60,0.2),transparent 60%)}
+@keyframes flicker{0%{transform:scaleY(1) scaleX(1)}100%{transform:scaleY(1.1) scaleX(0.9)}}
+.torch-l{left:12%;bottom:30%}
+.torch-r{right:12%;bottom:30%}
+
+/* Gold sparkles */
+.sparkle{position:absolute;width:4px;height:4px;background:#f8d848;border-radius:50%;z-index:5;animation:goldsparkle 3s ease-in-out infinite}
+.sp1{bottom:18%;left:42%;animation-delay:0s}
+.sp2{bottom:15%;left:50%;animation-delay:0.5s}
+.sp3{bottom:17%;left:58%;animation-delay:1s}
+.sp4{bottom:20%;left:45%;animation-delay:1.5s}
+.sp5{bottom:16%;left:55%;animation-delay:2s}
+@keyframes goldsparkle{0%,100%{opacity:0;transform:scale(0)}50%{opacity:1;transform:scale(1)}}
+
+/* Ground */
+.ground{position:absolute;bottom:0;width:100%;height:15%;background:linear-gradient(180deg,#3a2818,#2a1a10);z-index:2}
+
+/* UI */
+.ui{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;z-index:10}
+.title{margin-top:10vh;text-align:center}
+.title h1{
+  font-family:'Cinzel Decorative',serif;font-size:clamp(2.5rem,6vw,5rem);
+  background:linear-gradient(180deg,#f8e080,#d8a030,#f8c848);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 3px 8px rgba(0,0,0,0.5));
+  letter-spacing:4px;line-height:1.1;
+}
+.title .sub{
+  font-family:'Cinzel',serif;font-size:clamp(0.9rem,2vw,1.4rem);
+  color:#c8a040;letter-spacing:8px;margin-top:8px;text-transform:uppercase;
+}
+
+.play-btn{
+  margin-top:auto;margin-bottom:32vh;position:relative;cursor:pointer;border:none;background:none;outline:none;
+}
+.play-btn .chest{
+  width:150px;height:55px;position:relative;
+  background:linear-gradient(180deg,#8a5a20,#6a4218);
+  border:3px solid #c8a040;border-radius:5px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 15px rgba(0,0,0,0.4),inset 0 -3px 6px rgba(0,0,0,0.2);
+  transition:transform 0.3s ease,box-shadow 0.3s ease;
+}
+.play-btn:hover .chest{transform:scale(1.08);box-shadow:0 6px 25px rgba(0,0,0,0.5),0 0 20px rgba(200,160,64,0.3)}
+.play-btn .chest::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:20px;height:16px;border:2px solid #d8b040;border-radius:3px}
+.play-btn .chest::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#c8a040,#e8c860,#c8a040);border-radius:3px 3px 0 0}
+.play-btn .play-text{
+  font-family:'Cinzel',serif;font-size:1.2rem;font-weight:700;
+  color:#f8e0a0;letter-spacing:4px;text-shadow:0 1px 3px rgba(0,0,0,0.5);
+}
+.play-btn .goldglow{
+  position:absolute;inset:-20px;background:radial-gradient(ellipse,rgba(248,200,80,0.2),transparent 60%);
+  animation:gglow 2s ease-in-out infinite;pointer-events:none;
+}
+@keyframes gglow{0%,100%{opacity:0.3;transform:scale(1)}50%{opacity:0.8;transform:scale(1.05)}}
+
+.back{position:fixed;top:20px;left:20px;z-index:100;font-family:'Cinzel',serif;font-size:0.85rem;color:#c8a040;text-decoration:none;opacity:0.6;transition:opacity 0.3s}
+.back:hover{opacity:1}
+</style>
+</head>
+<body>
+<a href="/" class="back">← Gallery</a>
+<div class="scene">
+  <div class="stalactite st1"></div><div class="stalactite st2"></div>
+  <div class="stalactite st3"></div><div class="stalactite st4"></div><div class="stalactite st5"></div>
+  <div class="cave-wall cw-l"></div><div class="cave-wall cw-r"></div>
+  <div class="torch torch-l"><div class="torch-glow"></div><div class="torch-flame"></div><div class="torch-handle"></div></div>
+  <div class="torch torch-r"><div class="torch-glow"></div><div class="torch-flame"></div><div class="torch-handle"></div></div>
+  <div class="treasure-glow"></div>
+  <div class="treasure"><div class="gold-pile"></div></div>
+  <div class="coin cn1"></div><div class="coin cn2"></div><div class="coin cn3"></div><div class="coin cn4"></div>
+  <div class="gem gem-red g1"></div><div class="gem gem-blue g2"></div><div class="gem gem-green g3"></div>
+  <div class="sparkle sp1"></div><div class="sparkle sp2"></div><div class="sparkle sp3"></div>
+  <div class="sparkle sp4"></div><div class="sparkle sp5"></div>
+  <div class="ground"></div>
+  <div class="ui">
+    <div class="title">
+      <h1>Knight's Quest</h1>
+      <div class="sub">Golden Treasury</div>
+    </div>
+    <button class="play-btn">
+      <div class="goldglow"></div>
+      <div class="chest">
+        <span class="play-text">PLAY</span>
+      </div>
+    </button>
+  </div>
+</div>
+</body>
+</html>

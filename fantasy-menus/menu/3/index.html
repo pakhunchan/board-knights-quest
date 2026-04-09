@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knight's Quest — Castle Dawn</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden}
+body{font-family:'Cinzel',serif}
+.scene{position:relative;width:100%;height:100%;background:linear-gradient(180deg,#f8c87c 0%,#f0a858 15%,#e8946c 30%,#c8a0b0 50%,#98b8c8 70%,#88b0a0 100%)}
+
+/* Sun glow */
+.sun{position:absolute;top:12%;left:50%;transform:translateX(-50%);width:120px;height:120px;background:radial-gradient(circle,#fff8e0 0%,#f8d888 40%,transparent 70%);border-radius:50%}
+.sun-halo{position:absolute;top:5%;left:50%;transform:translateX(-50%);width:300px;height:300px;background:radial-gradient(circle,rgba(255,240,200,0.3) 0%,transparent 60%);border-radius:50%}
+
+/* Clouds */
+.cloud{position:absolute;background:rgba(255,230,200,0.7);border-radius:50%}
+.cloud::before,.cloud::after{content:'';position:absolute;background:rgba(255,230,200,0.7);border-radius:50%}
+.c1{width:100px;height:35px;top:18%;left:15%}
+.c1::before{width:50px;height:30px;top:-15px;left:20px}
+.c2{width:80px;height:28px;top:22%;left:72%}
+.c2::before{width:40px;height:24px;top:-12px;left:15px}
+
+/* Mountains */
+.mountains{position:absolute;bottom:32%;width:100%;height:40%}
+.mt{position:absolute;bottom:0;width:0;height:0;border-style:solid}
+.mt1{border-width:0 180px 240px 180px;border-color:transparent transparent #8a98a8 transparent;left:0%}
+.mt2{border-width:0 150px 200px 150px;border-color:transparent transparent #98a0b0 transparent;left:25%}
+.mt3{border-width:0 200px 280px 200px;border-color:transparent transparent #8090a0 transparent;left:55%}
+.mt4{border-width:0 160px 220px 160px;border-color:transparent transparent #8a98a8 transparent;left:80%}
+
+/* Castle silhouette */
+.castle{position:absolute;bottom:35%;left:50%;transform:translateX(-50%);z-index:3}
+.castle-body{width:120px;height:100px;background:#5a6070;position:relative;margin:0 auto}
+.tower{position:absolute;width:30px;background:#4a5060;bottom:0}
+.tower-l{left:-25px;height:140px}
+.tower-r{right:-25px;height:130px}
+.tower::before{content:'';position:absolute;top:-20px;left:50%;transform:translateX(-50%);border-width:0 20px 20px 20px;border-style:solid;border-color:transparent transparent #4a5060 transparent;width:0;height:0}
+.tower-c{left:50%;transform:translateX(-50%);height:160px;width:25px;background:#4a5060}
+.tower-c::before{content:'';position:absolute;top:-25px;left:50%;transform:translateX(-50%);border-width:0 18px 25px 18px;border-style:solid;border-color:transparent transparent #4a5060 transparent;width:0;height:0}
+/* Castle windows */
+.castle-body::after{content:'';position:absolute;top:20px;left:50%;transform:translateX(-50%);width:20px;height:30px;background:#f8d888;border-radius:10px 10px 0 0;box-shadow:0 0 10px rgba(248,216,136,0.5)}
+.flag{position:absolute;top:-45px;left:50%;width:2px;height:20px;background:#666;transform:translateX(-50%)}
+.flag::after{content:'';position:absolute;top:0;left:2px;width:18px;height:12px;background:#c85050;clip-path:polygon(0 0,100% 25%,80% 50%,100% 75%,0 100%)}
+
+/* Trees */
+.trees{position:absolute;bottom:28%;width:100%;height:14%}
+.bush{position:absolute;border-radius:50%;bottom:0}
+.b1{width:90px;height:72px;background:radial-gradient(circle at 40% 40%,#6a9a68,#4a7a48);left:5%}
+.b2{width:75px;height:60px;background:radial-gradient(circle at 40% 40%,#5e8e5c,#3e6e3c);left:14%}
+.b3{width:85px;height:68px;background:radial-gradient(circle at 40% 40%,#6a9a68,#4a7a48);left:76%}
+.b4{width:95px;height:74px;background:radial-gradient(circle at 40% 40%,#5e8e5c,#3e6e3c);left:86%}
+
+/* Hills */
+.hills{position:absolute;bottom:0;width:100%;height:35%}
+.hill{position:absolute;border-radius:50%;bottom:-55%}
+.h1{width:130%;height:100%;background:linear-gradient(180deg,#5a8a50,#4a7a40);left:-15%}
+
+/* Water reflection hint */
+.water{position:absolute;bottom:0;width:100%;height:8%;background:linear-gradient(180deg,rgba(136,176,160,0.3),rgba(100,150,170,0.4));z-index:2}
+
+/* UI */
+.ui{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;z-index:10}
+.title{margin-top:8vh;text-align:center}
+.title h1{
+  font-family:'Cinzel Decorative',serif;font-size:clamp(2.5rem,6vw,5rem);
+  color:#4a2010;
+  text-shadow:0 2px 0 rgba(248,200,124,0.5),0 4px 12px rgba(0,0,0,0.15);
+  letter-spacing:4px;line-height:1.1;
+}
+.title .sub{
+  font-family:'Cinzel',serif;font-size:clamp(0.9rem,2vw,1.4rem);
+  color:#6a3a20;letter-spacing:8px;margin-top:8px;text-transform:uppercase;
+}
+
+.play-btn{
+  margin-top:auto;margin-bottom:28vh;position:relative;cursor:pointer;border:none;background:none;outline:none;
+}
+.play-btn .banner{
+  width:160px;height:60px;
+  background:linear-gradient(180deg,#c85050,#a83030);
+  clip-path:polygon(0 0,100% 0,95% 50%,100% 100%,0 100%,5% 50%);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 15px rgba(0,0,0,0.3);
+  transition:transform 0.3s ease,filter 0.3s ease;
+  position:relative;
+}
+.play-btn:hover .banner{transform:scale(1.08);filter:brightness(1.15)}
+.play-btn .banner::before{content:'';position:absolute;top:4px;left:10px;right:10px;bottom:4px;border:1px solid rgba(255,200,150,0.3);clip-path:polygon(0 0,100% 0,96% 50%,100% 100%,0 100%,4% 50%)}
+.play-btn .play-text{
+  font-family:'Cinzel',serif;font-size:1.3rem;font-weight:700;
+  color:#f8e8d0;letter-spacing:5px;text-shadow:0 1px 3px rgba(0,0,0,0.4);
+}
+.play-btn .rays{
+  position:absolute;inset:-25px;
+  background:radial-gradient(ellipse,rgba(248,200,100,0.2),transparent 65%);
+  animation:glow 2.5s ease-in-out infinite;pointer-events:none;
+}
+@keyframes glow{0%,100%{opacity:0.4}50%{opacity:0.9}}
+
+.back{position:fixed;top:20px;left:20px;z-index:100;font-family:'Cinzel',serif;font-size:0.85rem;color:#4a2010;text-decoration:none;opacity:0.6;transition:opacity 0.3s}
+.back:hover{opacity:1}
+</style>
+</head>
+<body>
+<a href="/" class="back">← Gallery</a>
+<div class="scene">
+  <div class="sun-halo"></div>
+  <div class="sun"></div>
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+  <div class="mountains">
+    <div class="mt mt1"></div>
+    <div class="mt mt2"></div>
+    <div class="mt mt3"></div>
+    <div class="mt mt4"></div>
+  </div>
+  <div class="castle">
+    <div class="tower tower-l"><div class="flag"></div></div>
+    <div class="tower tower-c"><div class="flag"></div></div>
+    <div class="tower tower-r"></div>
+    <div class="castle-body"></div>
+  </div>
+  <div class="trees">
+    <div class="bush b1"></div><div class="bush b2"></div>
+    <div class="bush b3"></div><div class="bush b4"></div>
+  </div>
+  <div class="hills"><div class="hill h1"></div></div>
+  <div class="water"></div>
+  <div class="ui">
+    <div class="title">
+      <h1>Knight's Quest</h1>
+      <div class="sub">Castle Dawn</div>
+    </div>
+    <button class="play-btn">
+      <div class="rays"></div>
+      <div class="banner">
+        <span class="play-text">PLAY</span>
+      </div>
+    </button>
+  </div>
+</div>
+</body>
+</html>

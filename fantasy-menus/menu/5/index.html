@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knight's Quest — Dragon's Pass</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden}
+body{font-family:'Cinzel',serif}
+.scene{position:relative;width:100%;height:100%;background:linear-gradient(180deg,#2a1010 0%,#4a1818 15%,#8a3828 35%,#c86838 55%,#d89848 70%,#a86838 100%)}
+
+/* Volcanic glow */
+.vglow{position:absolute;bottom:40%;left:50%;transform:translateX(-50%);width:400px;height:200px;background:radial-gradient(ellipse,rgba(255,120,40,0.2),transparent 70%);z-index:1}
+
+/* Embers */
+.ember{position:absolute;width:4px;height:4px;border-radius:50%;background:#f8a040;z-index:6;animation:rise 6s ease-out infinite}
+.e1{bottom:35%;left:45%;animation-delay:0s;background:#f8c060}
+.e2{bottom:38%;left:50%;animation-delay:1s}
+.e3{bottom:33%;left:55%;animation-delay:2s;background:#f8c060}
+.e4{bottom:36%;left:48%;animation-delay:3s}
+.e5{bottom:34%;left:52%;animation-delay:0.5s;background:#f8c060}
+.e6{bottom:37%;left:46%;animation-delay:4s}
+.e7{bottom:35%;left:54%;animation-delay:1.5s}
+.e8{bottom:40%;left:49%;animation-delay:2.5s;background:#f8c060}
+@keyframes rise{0%{transform:translateY(0) translateX(0);opacity:1}100%{transform:translateY(-200px) translateX(30px);opacity:0}}
+
+/* Craggy mountains */
+.mountains{position:absolute;bottom:25%;width:100%;height:55%}
+.mt{position:absolute;bottom:0;width:0;height:0;border-style:solid}
+.mt1{border-width:0 140px 300px 140px;border-color:transparent transparent #3a2018 transparent;left:0%}
+.mt2{border-width:0 180px 380px 180px;border-color:transparent transparent #2a1510 transparent;left:15%}
+.mt3{border-width:0 200px 420px 200px;border-color:transparent transparent #3a2018 transparent;left:35%;z-index:2}
+.mt4{border-width:0 170px 350px 170px;border-color:transparent transparent #2a1510 transparent;left:60%}
+.mt5{border-width:0 150px 280px 150px;border-color:transparent transparent #3a2018 transparent;left:82%}
+
+/* Lava rivers */
+.lava{position:absolute;bottom:25%;width:100%;height:4px;background:linear-gradient(90deg,transparent 10%,#f88030 30%,#f8a040 50%,#f88030 70%,transparent 90%);z-index:3;opacity:0.6;animation:lavaflow 4s ease-in-out infinite}
+@keyframes lavaflow{0%,100%{opacity:0.4}50%{opacity:0.8}}
+
+/* Rocky foreground */
+.fg{position:absolute;bottom:0;width:100%;height:30%;background:linear-gradient(180deg,#3a2018,#2a1510);z-index:3}
+.rock{position:absolute;background:#4a3028;border-radius:30% 40% 35% 45%;z-index:4}
+.rk1{width:60px;height:35px;bottom:22%;left:10%}
+.rk2{width:45px;height:28px;bottom:24%;left:75%}
+.rk3{width:55px;height:32px;bottom:20%;left:40%}
+
+/* Smoke */
+.smoke{position:absolute;bottom:55%;left:48%;width:60px;height:60px;border-radius:50%;background:rgba(80,60,50,0.15);animation:smokrise 8s ease-out infinite;z-index:5}
+.smoke2{position:absolute;bottom:58%;left:52%;width:50px;height:50px;border-radius:50%;background:rgba(80,60,50,0.1);animation:smokrise 10s ease-out infinite 3s;z-index:5}
+@keyframes smokrise{0%{transform:translateY(0) scale(1);opacity:0.4}100%{transform:translateY(-100px) scale(2);opacity:0}}
+
+/* UI */
+.ui{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;z-index:10}
+.title{margin-top:10vh;text-align:center}
+.title h1{
+  font-family:'Cinzel Decorative',serif;font-size:clamp(2.5rem,6vw,5rem);
+  color:#f8c860;
+  text-shadow:0 0 20px rgba(248,160,64,0.4),0 2px 0 #4a1810,0 4px 12px rgba(0,0,0,0.4);
+  letter-spacing:4px;line-height:1.1;
+}
+.title .sub{
+  font-family:'Cinzel',serif;font-size:clamp(0.9rem,2vw,1.4rem);
+  color:#d88840;letter-spacing:8px;margin-top:8px;text-transform:uppercase;
+}
+
+.play-btn{
+  margin-top:auto;margin-bottom:26vh;position:relative;cursor:pointer;border:none;background:none;outline:none;
+}
+.play-btn .flame-btn{
+  width:130px;height:130px;
+  background:radial-gradient(circle at 45% 45%,#f8a040,#c85020,#8a2810);
+  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  border:3px solid rgba(248,180,80,0.4);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 30px rgba(248,120,40,0.4),inset 0 -5px 10px rgba(0,0,0,0.3);
+  transition:transform 0.3s ease,box-shadow 0.3s ease;
+}
+.play-btn:hover .flame-btn{transform:scale(1.1);box-shadow:0 0 50px rgba(248,120,40,0.6),inset 0 -5px 10px rgba(0,0,0,0.3)}
+.play-btn .play-text{
+  font-family:'Cinzel',serif;font-size:1.3rem;font-weight:700;
+  color:#f8e8c0;letter-spacing:3px;text-shadow:0 1px 4px rgba(0,0,0,0.5);
+}
+.play-btn .heat{
+  position:absolute;inset:-25px;
+  background:radial-gradient(ellipse,rgba(248,120,40,0.2),transparent 60%);
+  animation:heat 1.5s ease-in-out infinite;pointer-events:none;
+}
+@keyframes heat{0%,100%{opacity:0.3;transform:scale(1)}50%{opacity:0.8;transform:scale(1.08)}}
+
+.back{position:fixed;top:20px;left:20px;z-index:100;font-family:'Cinzel',serif;font-size:0.85rem;color:#d88840;text-decoration:none;opacity:0.6;transition:opacity 0.3s}
+.back:hover{opacity:1}
+</style>
+</head>
+<body>
+<a href="/" class="back">← Gallery</a>
+<div class="scene">
+  <div class="vglow"></div>
+  <div class="smoke"></div><div class="smoke2"></div>
+  <div class="mountains">
+    <div class="mt mt1"></div><div class="mt mt2"></div><div class="mt mt3"></div>
+    <div class="mt mt4"></div><div class="mt mt5"></div>
+  </div>
+  <div class="lava"></div>
+  <div class="ember e1"></div><div class="ember e2"></div><div class="ember e3"></div>
+  <div class="ember e4"></div><div class="ember e5"></div><div class="ember e6"></div>
+  <div class="ember e7"></div><div class="ember e8"></div>
+  <div class="rock rk1"></div><div class="rock rk2"></div><div class="rock rk3"></div>
+  <div class="fg"></div>
+  <div class="ui">
+    <div class="title">
+      <h1>Knight's Quest</h1>
+      <div class="sub">Dragon's Pass</div>
+    </div>
+    <button class="play-btn">
+      <div class="heat"></div>
+      <div class="flame-btn">
+        <span class="play-text">PLAY</span>
+      </div>
+    </button>
+  </div>
+</div>
+</body>
+</html>

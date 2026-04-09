@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fantasy Knight Adventure — Title Screen Gallery</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=MedievalSharp&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    font-family: 'Cinzel', serif;
+    color: #e8dcc8;
+    padding: 40px 20px;
+  }
+  h1 {
+    text-align: center;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    background: linear-gradient(to bottom, #f4e4bc, #c9a84c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 1rem;
+    color: #8899aa;
+    margin-bottom: 50px;
+    font-family: 'Cinzel', serif;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 16/9;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid rgba(201, 168, 76, 0.3);
+  }
+  .card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(201, 168, 76, 0.2);
+    border-color: rgba(201, 168, 76, 0.6);
+  }
+  .card iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    pointer-events: none;
+    transform: scale(1);
+  }
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 16px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .card:hover .card-overlay { opacity: 1; }
+  .card-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    color: #f4e4bc;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  a { text-decoration: none; color: inherit; }
+</style>
+</head>
+<body>
+  <h1>Knight's Quest</h1>
+  <p class="subtitle">10 Title Screen Variations — Click any to view full screen</p>
+  <div class="grid">
+    <a href="/menu/1/" class="card">
+      <iframe src="/menu/1/" loading="lazy"></iframe>
+      <div class="card-overlay"><span class="card-label">I — Emerald Valley</span></div>
+    </a>
+    <a href="/menu/2/" class="card">
+      <iframe src="/menu/2/" loading="lazy"></iframe>
+      <div class="card-overlay"><span class="card-label">II — Twilight Peaks</span></div>
+    </a>
+    <a href="/menu/3/" class="card">
+      <iframe src="/menu/3/" loading="lazy"></iframe>
+      <div class="card-overlay"><span class="card-label">III — Castle Dawn</span></div>
+    </a>
+    <a href="/menu/4/" class="card">
+      <iframe src="/menu/4/" loading="lazy"></iframe>
+      <div class="card-overlay"><span class="card-label">IV — Enchanted Forest</span></div>
+    </a>
+    <a href="/menu/5/" class="card">
+      <iframe src="/menu/5/" loading="lazy"></iframe>
+      <div class="card-overlay"><span class="card-label">V — Dragon's Pass</span></div>
+    </a>
+    <a href="/menu/6/" class="card">
+      <iframe src="/menu/6/" loading="lazy"></iframe>
+      <div class="card-overlay"><span class="card-label">VI — Moonlit Ruins</span></div>
+    </a>
+    <a href="/menu/7/" class="card">
+      <iframe src="/menu/7/" loading="lazy"></iframe>
+      <div class="card-overlay"><span class="card-label">VII — Golden Treasury</span></div>
+    </a>
+    <a href="/menu/8/" class="card">
+      <iframe src="/menu/8/" loading="lazy"></iframe>
+      <div class="card-overlay"><span class="card-label">VIII — Storm Banner</span></div>
+    </a>
+    <a href="/menu/9/" class="card">
+      <iframe src="/menu/9/" loading="lazy"></iframe>
+      <div class="card-overlay"><span class="card-label">IX — Ancient Scroll</span></div>
+    </a>
+    <a href="/menu/10/" class="card">
+      <iframe src="/menu/10/" loading="lazy"></iframe>
+      <div class="card-overlay"><span class="card-label">X — The Quest Begins</span></div>
+    </a>
+  </div>
+</body>
+</html>

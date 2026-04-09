@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knight's Quest — The Quest Begins</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden}
+body{font-family:'Cinzel',serif}
+.scene{position:relative;width:100%;height:100%;background:linear-gradient(180deg,#f8c878 0%,#f0b060 10%,#e8a868 20%,#b8d0c0 40%,#90c0a0 55%,#70a878 70%,#508850 100%)}
+
+/* Sun rise */
+.sun{position:absolute;top:5%;left:50%;transform:translateX(-50%);width:100px;height:100px;background:radial-gradient(circle,#fff8e0 0%,#f8d070 50%,transparent 70%);border-radius:50%}
+.sun-rays{position:absolute;top:-5%;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse at 50% 20%,rgba(255,240,180,0.25),transparent 55%);z-index:0}
+
+/* Soft clouds */
+.cloud{position:absolute;background:rgba(255,240,210,0.6);border-radius:50%}
+.cloud::before,.cloud::after{content:'';position:absolute;background:rgba(255,240,210,0.6);border-radius:50%}
+.c1{width:110px;height:40px;top:12%;left:18%;animation:drift 50s linear infinite}
+.c1::before{width:55px;height:35px;top:-18px;left:25px}
+.c1::after{width:45px;height:28px;top:-10px;left:55px}
+.c2{width:80px;height:30px;top:8%;left:68%;animation:drift 65s linear infinite}
+.c2::before{width:40px;height:25px;top:-12px;left:15px}
+.c3{width:90px;height:33px;top:15%;left:45%;animation:drift 55s linear infinite}
+.c3::before{width:45px;height:28px;top:-14px;left:20px}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(80px)}}
+
+/* Rolling hills - layered */
+.hills-far{position:absolute;bottom:35%;width:100%;height:25%}
+.hf{position:absolute;border-radius:50%;bottom:-60%}
+.hf1{width:80%;height:100%;background:#90c0a0;left:0%}
+.hf2{width:70%;height:90%;background:#85b898;left:35%}
+
+.hills-mid{position:absolute;bottom:28%;width:100%;height:25%}
+.hm{position:absolute;border-radius:50%;bottom:-60%}
+.hm1{width:90%;height:100%;background:#70a878;left:-5%}
+.hm2{width:75%;height:90%;background:#68a070;left:30%}
+
+/* Small mountains in distance */
+.dist-mt{position:absolute;bottom:48%;width:0;height:0;border-style:solid;opacity:0.5}
+.dm1{border-width:0 80px 120px 80px;border-color:transparent transparent #98b8a8 transparent;left:8%}
+.dm2{border-width:0 100px 150px 100px;border-color:transparent transparent #88b098 transparent;left:25%}
+.dm3{border-width:0 90px 130px 90px;border-color:transparent transparent #98b8a8 transparent;left:60%}
+.dm4{border-width:0 70px 100px 70px;border-color:transparent transparent #88b098 transparent;left:80%}
+
+/* Winding path */
+.path{position:absolute;bottom:0;z-index:3}
+.path-seg{position:absolute;background:#c8b890;border-radius:50%}
+.ps1{width:60px;height:20px;bottom:15%;left:48%}
+.ps2{width:55px;height:18px;bottom:22%;left:45%}
+.ps3{width:50px;height:16px;bottom:28%;left:48%}
+.ps4{width:45px;height:14px;bottom:33%;left:46%}
+.ps5{width:40px;height:12px;bottom:37%;left:49%}
+
+/* Trees - storybook rounded */
+.tree-row{position:absolute;bottom:20%;width:100%;height:16%;z-index:2}
+.bush{position:absolute;border-radius:50%;bottom:0}
+.b1{width:100px;height:80px;background:radial-gradient(circle at 40% 40%,#5a9a58,#3a7a38);left:3%}
+.b2{width:85px;height:68px;background:radial-gradient(circle at 40% 40%,#4e8e4c,#2e6e2c);left:12%}
+.b3{width:110px;height:85px;background:radial-gradient(circle at 40% 40%,#5a9a58,#3a7a38);left:22%}
+.b4{width:75px;height:62px;background:radial-gradient(circle at 40% 40%,#4e8e4c,#2e6e2c);left:35%}
+.b5{width:90px;height:72px;background:radial-gradient(circle at 40% 40%,#5a9a58,#3a7a38);left:58%}
+.b6{width:105px;height:82px;background:radial-gradient(circle at 40% 40%,#4e8e4c,#2e6e2c);left:68%}
+.b7{width:80px;height:65px;background:radial-gradient(circle at 40% 40%,#5a9a58,#3a7a38);left:80%}
+.b8{width:95px;height:75px;background:radial-gradient(circle at 40% 40%,#4e8e4c,#2e6e2c);left:90%}
+
+/* Foreground */
+.fg{position:absolute;bottom:0;width:100%;height:24%}
+.fg-hill{position:absolute;border-radius:50%;bottom:-55%}
+.fgh1{width:130%;height:100%;background:linear-gradient(180deg,#508850,#3a7038);left:-15%}
+
+/* Birds */
+.bird{position:absolute;z-index:5;animation:fly 15s linear infinite}
+.bird::before,.bird::after{content:'';position:absolute;width:12px;height:3px;background:#4a3020;border-radius:50%;animation:flap 0.8s ease-in-out infinite alternate}
+.bird::before{transform:rotate(-20deg);left:-12px}
+.bird::after{transform:rotate(20deg)}
+@keyframes flap{0%{transform:rotate(-30deg)}100%{transform:rotate(10deg)}}
+@keyframes fly{from{transform:translateX(-50px)}to{transform:translateX(calc(100vw + 50px))}}
+.bird1{top:20%;left:0;animation-delay:0s}
+.bird2{top:16%;left:0;animation-delay:5s}
+.bird3{top:23%;left:0;animation-delay:10s}
+
+/* Flowers */
+.flower{position:absolute;width:8px;height:8px;border-radius:50%;z-index:4}
+.fl1{background:#e8d848;bottom:20%;left:30%}
+.fl2{background:#e87070;bottom:18%;left:42%}
+.fl3{background:#e8d848;bottom:21%;left:55%}
+.fl4{background:#d0a0d0;bottom:19%;left:65%}
+.fl5{background:#e8d848;bottom:22%;left:78%}
+.fl6{background:#70a0e8;bottom:20%;left:85%}
+
+/* Butterflies */
+.butterfly{position:absolute;width:10px;height:6px;z-index:5;animation:flutter 8s ease-in-out infinite}
+.butterfly::before,.butterfly::after{content:'';position:absolute;border-radius:50%;animation:wingbeat 0.3s ease-in-out infinite alternate}
+.butterfly::before{width:6px;height:8px;background:rgba(230,180,80,0.7);left:-5px;top:-1px}
+.butterfly::after{width:6px;height:8px;background:rgba(230,180,80,0.7);right:-5px;top:-1px}
+@keyframes wingbeat{0%{transform:scaleX(1)}100%{transform:scaleX(0.5)}}
+@keyframes flutter{0%,100%{transform:translate(0,0)}25%{transform:translate(15px,-10px)}50%{transform:translate(5px,-18px)}75%{transform:translate(-10px,-8px)}}
+.bf1{top:40%;left:35%;animation-delay:0s}
+.bf2{top:38%;left:60%;animation-delay:3s}
+
+/* UI */
+.ui{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;z-index:10}
+.title{margin-top:8vh;text-align:center}
+.title h1{
+  font-family:'Cinzel Decorative',serif;font-size:clamp(2.5rem,6vw,5rem);
+  color:#3a2810;
+  text-shadow:0 2px 0 rgba(248,200,120,0.6),0 4px 12px rgba(0,0,0,0.1);
+  letter-spacing:4px;line-height:1.1;
+}
+.title .sub{
+  font-family:'Cinzel',serif;font-size:clamp(0.9rem,2vw,1.4rem);
+  color:#5a4020;letter-spacing:6px;margin-top:8px;text-transform:uppercase;
+}
+
+.play-btn{
+  margin-top:auto;margin-bottom:22vh;position:relative;cursor:pointer;border:none;background:none;outline:none;
+}
+.play-btn .adventure{
+  width:160px;height:60px;position:relative;
+  background:linear-gradient(180deg,#d8a040,#b88030);
+  border:3px solid #e8c060;
+  border-radius:30px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 15px rgba(0,0,0,0.2),inset 0 2px 0 rgba(255,255,255,0.2),inset 0 -2px 4px rgba(0,0,0,0.15);
+  transition:transform 0.3s ease,box-shadow 0.3s ease;
+}
+.play-btn:hover .adventure{transform:scale(1.08);box-shadow:0 6px 25px rgba(0,0,0,0.3),0 0 15px rgba(216,160,64,0.3),inset 0 2px 0 rgba(255,255,255,0.2)}
+.play-btn .play-text{
+  font-family:'Cinzel',serif;font-size:1.3rem;font-weight:700;
+  color:#fff8e0;letter-spacing:4px;text-shadow:0 1px 3px rgba(0,0,0,0.3);
+}
+.play-btn .sunburst{
+  position:absolute;inset:-20px;background:radial-gradient(ellipse,rgba(248,200,100,0.2),transparent 60%);
+  animation:burst 2.5s ease-in-out infinite;pointer-events:none;
+}
+@keyframes burst{0%,100%{opacity:0.3;transform:scale(1)}50%{opacity:0.7;transform:scale(1.08)}}
+
+.back{position:fixed;top:20px;left:20px;z-index:100;font-family:'Cinzel',serif;font-size:0.85rem;color:#5a4020;text-decoration:none;opacity:0.6;transition:opacity 0.3s}
+.back:hover{opacity:1}
+</style>
+</head>
+<body>
+<a href="/" class="back">← Gallery</a>
+<div class="scene">
+  <div class="sun-rays"></div>
+  <div class="sun"></div>
+  <div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div>
+  <div class="dist-mt dm1"></div><div class="dist-mt dm2"></div>
+  <div class="dist-mt dm3"></div><div class="dist-mt dm4"></div>
+  <div class="hills-far"><div class="hf hf1"></div><div class="hf hf2"></div></div>
+  <div class="hills-mid"><div class="hm hm1"></div><div class="hm hm2"></div></div>
+  <div class="path-seg ps1"></div><div class="path-seg ps2"></div><div class="path-seg ps3"></div>
+  <div class="path-seg ps4"></div><div class="path-seg ps5"></div>
+  <div class="tree-row">
+    <div class="bush b1"></div><div class="bush b2"></div><div class="bush b3"></div>
+    <div class="bush b4"></div><div class="bush b5"></div><div class="bush b6"></div>
+    <div class="bush b7"></div><div class="bush b8"></div>
+  </div>
+  <div class="flower fl1"></div><div class="flower fl2"></div><div class="flower fl3"></div>
+  <div class="flower fl4"></div><div class="flower fl5"></div><div class="flower fl6"></div>
+  <div class="fg"><div class="fg-hill fgh1"></div></div>
+  <div class="bird bird1"></div><div class="bird bird2"></div><div class="bird bird3"></div>
+  <div class="butterfly bf1"></div><div class="butterfly bf2"></div>
+  <div class="ui">
+    <div class="title">
+      <h1>Knight's Quest</h1>
+      <div class="sub">The Quest Begins</div>
+    </div>
+    <button class="play-btn">
+      <div class="sunburst"></div>
+      <div class="adventure">
+        <span class="play-text">PLAY</span>
+      </div>
+    </button>
+  </div>
+</div>
+</body>
+</html>
