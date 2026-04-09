@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300">
+  <!-- Antenna stem -->
+  <rect x="96" y="18" width="8" height="20" rx="3" ry="3" fill="#5A1F8E"/>
+  <!-- Antenna ball -->
+  <circle cx="100" cy="14" r="10" fill="#9B4FDE"/>
+  <circle cx="97" cy="11" r="3" fill="#B47FEE" opacity="0.6"/>
+
+  <!-- Head -->
+  <rect x="58" y="38" width="84" height="60" rx="18" ry="18" fill="#7B2FBE"/>
+  <!-- Head highlight -->
+  <rect x="64" y="42" width="72" height="28" rx="14" ry="14" fill="#9B4FDE" opacity="0.35"/>
+
+  <!-- Left eye socket -->
+  <circle cx="80" cy="65" r="16" fill="#5A1F8E"/>
+  <!-- Left eye white -->
+  <circle cx="80" cy="65" r="12" fill="#EEEEFF"/>
+  <!-- Left pupil -->
+  <circle cx="83" cy="64" r="6" fill="#2A1050"/>
+  <!-- Left eye shine -->
+  <circle cx="86" cy="61" r="2.5" fill="#FFFFFF"/>
+
+  <!-- Right eye socket -->
+  <circle cx="120" cy="65" r="16" fill="#5A1F8E"/>
+  <!-- Right eye white -->
+  <circle cx="120" cy="65" r="12" fill="#EEEEFF"/>
+  <!-- Right pupil -->
+  <circle cx="123" cy="64" r="6" fill="#2A1050"/>
+  <!-- Right eye shine -->
+  <circle cx="126" cy="61" r="2.5" fill="#FFFFFF"/>
+
+  <!-- Mouth -->
+  <rect x="85" y="82" width="30" height="6" rx="3" ry="3" fill="#5A1F8E"/>
+  <rect x="90" y="83" width="6" height="4" rx="1" ry="1" fill="#9B4FDE" opacity="0.5"/>
+  <rect x="104" y="83" width="6" height="4" rx="1" ry="1" fill="#9B4FDE" opacity="0.5"/>
+
+  <!-- Neck / collar band -->
+  <rect x="70" y="98" width="60" height="14" rx="5" ry="5" fill="#5A1F8E"/>
+  <rect x="76" y="101" width="48" height="8" rx="3" ry="3" fill="#9B4FDE" opacity="0.3"/>
+
+  <!-- Body -->
+  <rect x="48" y="112" width="104" height="110" rx="22" ry="22" fill="#7B2FBE"/>
+  <!-- Body highlight -->
+  <rect x="56" y="118" width="88" height="50" rx="16" ry="16" fill="#9B4FDE" opacity="0.25"/>
+
+  <!-- Chest panel -->
+  <rect x="72" y="135" width="56" height="45" rx="10" ry="10" fill="#5A1F8E"/>
+  <!-- Chest buttons -->
+  <circle cx="88" cy="150" r="6" fill="#9B4FDE"/>
+  <circle cx="88" cy="150" r="3" fill="#B47FEE"/>
+  <circle cx="112" cy="150" r="6" fill="#9B4FDE"/>
+  <circle cx="112" cy="150" r="3" fill="#B47FEE"/>
+  <!-- Chest meter -->
+  <rect x="82" y="164" width="36" height="8" rx="4" ry="4" fill="#3A0F5E"/>
+  <rect x="84" y="166" width="20" height="4" rx="2" ry="2" fill="#9B4FDE"/>
+
+  <!-- Left arm -->
+  <rect x="28" y="120" width="24" height="60" rx="12" ry="12" fill="#7B2FBE"/>
+  <rect x="30" y="122" width="20" height="24" rx="10" ry="10" fill="#9B4FDE" opacity="0.25"/>
+  <!-- Left hand -->
+  <circle cx="40" cy="182" r="12" fill="#5A1F8E"/>
+  <circle cx="38" cy="179" r="3" fill="#9B4FDE" opacity="0.3"/>
+
+  <!-- Right arm -->
+  <rect x="148" y="120" width="24" height="60" rx="12" ry="12" fill="#7B2FBE"/>
+  <rect x="150" y="122" width="20" height="24" rx="10" ry="10" fill="#9B4FDE" opacity="0.25"/>
+  <!-- Right hand -->
+  <circle cx="160" cy="182" r="12" fill="#5A1F8E"/>
+  <circle cx="158" cy="179" r="3" fill="#9B4FDE" opacity="0.3"/>
+
+  <!-- Left leg -->
+  <rect x="62" y="218" width="30" height="45" rx="12" ry="12" fill="#5A1F8E"/>
+  <rect x="64" y="220" width="26" height="18" rx="10" ry="10" fill="#9B4FDE" opacity="0.2"/>
+  <!-- Left foot -->
+  <rect x="56" y="255" width="40" height="22" rx="10" ry="10" fill="#7B2FBE"/>
+  <rect x="58" y="257" width="36" height="10" rx="8" ry="8" fill="#9B4FDE" opacity="0.25"/>
+
+  <!-- Right leg -->
+  <rect x="108" y="218" width="30" height="45" rx="12" ry="12" fill="#5A1F8E"/>
+  <rect x="110" y="220" width="26" height="18" rx="10" ry="10" fill="#9B4FDE" opacity="0.2"/>
+  <!-- Right foot -->
+  <rect x="104" y="255" width="40" height="22" rx="10" ry="10" fill="#7B2FBE"/>
+  <rect x="106" y="257" width="36" height="10" rx="8" ry="8" fill="#9B4FDE" opacity="0.25"/>
+</svg>

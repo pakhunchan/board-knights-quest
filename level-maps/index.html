@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Level Map Gallery</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1a1a2e; color: #eee; font-family: system-ui, sans-serif; }
+  .header { padding: 24px 32px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #333; }
+  .header h1 { font-size: 22px; font-weight: 600; }
+  .nav { display: flex; gap: 8px; padding: 16px 32px; flex-wrap: wrap; position: sticky; top: 0; background: #1a1a2e; z-index: 10; border-bottom: 1px solid #222; }
+  .nav a {
+    display: inline-block; padding: 8px 18px; border-radius: 8px;
+    background: #2a2a4a; color: #ccc; text-decoration: none; font-size: 14px; font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav a:hover, .nav a.active { background: #c9a96e; color: #1a1a2e; }
+  .viewer { padding: 16px 32px; }
+  .card { margin-bottom: 32px; border-radius: 12px; overflow: hidden; background: #222; }
+  .card-header { padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; background: #2a2a4a; }
+  .card-header h2 { font-size: 16px; font-weight: 500; }
+  .card-header span { font-size: 13px; color: #999; }
+  .card-wrapper {
+    position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden;
+  }
+  .card-wrapper iframe {
+    position: absolute; top: 0; left: 0; border: none;
+    width: 1920px; height: 1080px;
+    transform-origin: 0 0;
+  }
+  .open-link { font-size: 13px; color: #c9a96e; text-decoration: none; }
+  .open-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Fantasy Level Map Gallery</h1>
+</div>
+<div class="nav" id="nav"></div>
+<div class="viewer" id="viewer"></div>
+<script>
+const maps = [
+  { id: '01', title: 'S-Curve', desc: 'Castle silhouette at end' },
+  { id: '02', title: 'Switchback Zigzag', desc: 'Wooden bridge over stream' },
+  { id: '03', title: 'Reverse Spiral', desc: 'Pond + flag at level 10' },
+  { id: '04', title: 'Figure-8 Loop', desc: 'Knight camp at start' },
+  { id: '05', title: 'Sine Wave', desc: 'Waterfall + dragon at end' },
+  { id: '06', title: 'Valley Ascent', desc: 'Village to castle' },
+  { id: '07', title: 'Horseshoe Path', desc: 'Forest center + torches' },
+  { id: '08', title: 'Diagonal', desc: 'Sword-in-stone + throne' },
+  { id: '09', title: 'Wide Zigzag', desc: 'Mini-biomes + shields' },
+  { id: '10', title: 'Terraced Plateaus', desc: 'Waterfalls + boss skull' },
+  { id: '11', title: 'Wide S-Curve v2', desc: 'Path on grass only, castle bg' },
+  { id: '12', title: 'Zigzag 3-Pass', desc: '3 horizontal passes in grass' },
+  { id: '13', title: 'Sine Wave v2', desc: 'Gentle wave left-to-right' },
+  { id: '14', title: 'Horseshoe v2', desc: 'U-shape with forest center' },
+  { id: '15', title: 'Spiral Inward', desc: 'Rectangular spiral to treasure' },
+  { id: '16', title: 'Meandering River', desc: 'Lazy bends with bridge' },
+  { id: '17', title: 'Diagonal Switchbacks', desc: 'Z-pattern with camp + dragon' },
+  { id: '18', title: 'Figure-8 v2', desc: 'Stone crossing at center' },
+  { id: '19', title: 'Crescent Arc', desc: 'Elegant arc with pond' },
+  { id: '20', title: 'Classic S-Curve v3', desc: 'Refined S-curve, extra polish' },
+  { id: '21', title: 'S-Curve Redesign A', desc: 'Castle right, edge-to-edge path' },
+  { id: '22', title: 'S-Curve Redesign B', desc: 'Castle left, relaxed curves' },
+  { id: '23', title: 'S-Curve Redesign C', desc: 'Tight bends, more trees' },
+  { id: '24', title: 'S-Curve Redesign D', desc: 'Deep bends, pond detail' },
+  { id: '25', title: 'S-Curve Redesign E', desc: 'Flat gentle curves, lush meadow' },
+  { id: '26', title: 'S-Curve Redesign F', desc: 'Asymmetric bends, fence posts' },
+  { id: '27', title: 'S-Curve Redesign G', desc: 'Double-dip W-pattern' },
+  { id: '28', title: 'S-Curve Redesign H', desc: 'Inverted S, moat castle' },
+  { id: '29', title: 'S-Curve Redesign I', desc: 'Gradual ascent to castle' },
+  { id: '30', title: 'S-Curve Redesign J', desc: 'Most polished, extra detail' },
+  { id: '31', title: 'Map-21 Fix A', desc: 'Estimated path positions' },
+  { id: '32', title: 'Map-21 Fix B', desc: 'JS getPointAtLength' },
+  { id: '33', title: 'Map-21 Fix C', desc: 'Segment midpoints' },
+  { id: '34', title: 'Map-21 Fix D', desc: 'JS even distribution' },
+  { id: '35', title: 'Map-21 Fix E', desc: 'JS + inner glow aura' },
+];
+
+const nav = document.getElementById('nav');
+const viewer = document.getElementById('viewer');
+
+maps.forEach(m => {
+  const a = document.createElement('a');
+  a.href = `#map-${m.id}`;
+  a.textContent = `${m.id} — ${m.title}`;
+  nav.appendChild(a);
+});
+
+maps.forEach(m => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.id = `map-${m.id}`;
+  card.innerHTML = `
+    <div class="card-header">
+      <h2>Map ${m.id} — ${m.title}</h2>
+      <span>${m.desc} &nbsp;|&nbsp; <a class="open-link" href="map-${m.id}.html" target="_blank">Open fullscreen</a></span>
+    </div>
+    <div class="card-wrapper">
+      <iframe src="map-${m.id}.html" loading="lazy"></iframe>
+    </div>`;
+  viewer.appendChild(card);
+});
+
+// Scale iframes to fit their wrappers
+function scaleIframes() {
+  document.querySelectorAll('.card-wrapper').forEach(wrapper => {
+    const iframe = wrapper.querySelector('iframe');
+    if (iframe) {
+      const scale = wrapper.clientWidth / 1920;
+      iframe.style.transform = `scale(${scale})`;
+    }
+  });
+}
+window.addEventListener('resize', scaleIframes);
+scaleIframes();
+setTimeout(scaleIframes, 100);
+
+// Highlight nav on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      nav.querySelectorAll('a').forEach(a => a.classList.toggle('active', a.hash === `#${e.target.id}`));
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.card').forEach(c => observer.observe(c));
+</script>
+</body>
+</html>

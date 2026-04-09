@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300">
+  <!-- Robot 3: Sunset Orange — Twin Antenna, Tilted Head, Asymmetric Eyes -->
+
+  <!-- Left Antenna -->
+  <rect x="68" y="18" width="6" height="30" rx="3" fill="#B84E08"/>
+  <circle cx="71" cy="14" r="9" fill="#FF9838"/>
+  <circle cx="71" cy="12" r="4" fill="#FFB870"/>
+
+  <!-- Right Antenna -->
+  <rect x="126" y="22" width="6" height="26" rx="3" fill="#B84E08"/>
+  <circle cx="129" cy="18" r="8" fill="#FF9838"/>
+  <circle cx="129" cy="16" r="3.5" fill="#FFB870"/>
+
+  <!-- Head (slightly tilted) -->
+  <g transform="rotate(-3, 100, 70)">
+    <rect x="52" y="48" width="96" height="62" rx="22" fill="#E8700A"/>
+    <rect x="56" y="52" width="88" height="20" rx="10" fill="#FF9838" opacity="0.4"/>
+
+    <!-- Left Eye (bigger) -->
+    <ellipse cx="76" cy="74" rx="16" ry="17" fill="#B84E08"/>
+    <ellipse cx="76" cy="74" rx="13" ry="14" fill="white"/>
+    <ellipse cx="79" cy="76" rx="7" ry="8" fill="#222"/>
+    <circle cx="73" cy="70" r="3.5" fill="white"/>
+
+    <!-- Right Eye (smaller) -->
+    <ellipse cx="124" cy="76" rx="12" ry="13" fill="#B84E08"/>
+    <ellipse cx="124" cy="76" rx="10" ry="11" fill="white"/>
+    <circle cx="126" cy="78" r="5.5" fill="#222"/>
+    <circle cx="122" cy="74" r="2.8" fill="white"/>
+
+    <!-- Mouth (playful grin) -->
+    <path d="M78 94 Q90 106 104 98 Q110 95 116 97" stroke="#B84E08" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Neck / Collar -->
+  <rect x="78" y="110" width="44" height="14" rx="7" fill="#B84E08"/>
+  <rect x="82" y="112" width="36" height="10" rx="5" fill="#FF9838" opacity="0.5"/>
+
+  <!-- Body -->
+  <rect x="48" y="122" width="104" height="90" rx="24" fill="#E8700A"/>
+  <rect x="54" y="126" width="92" height="30" rx="12" fill="#FF9838" opacity="0.3"/>
+
+  <!-- Chest Panel -->
+  <rect x="68" y="142" width="64" height="52" rx="14" fill="#B84E08"/>
+  <rect x="72" y="146" width="56" height="44" rx="11" fill="#FF9838"/>
+
+  <!-- Buttons on chest -->
+  <circle cx="88" cy="158" r="6" fill="#E8700A"/>
+  <circle cx="88" cy="158" r="3.5" fill="#FFB870"/>
+  <circle cx="112" cy="158" r="6" fill="#E8700A"/>
+  <circle cx="112" cy="158" r="3.5" fill="#FFB870"/>
+  <!-- Dial -->
+  <rect x="86" y="172" width="28" height="10" rx="5" fill="#E8700A"/>
+  <rect x="90" y="174" width="8" height="6" rx="3" fill="#FFB870"/>
+
+  <!-- Left Arm -->
+  <g transform="rotate(8, 48, 140)">
+    <rect x="20" y="135" width="30" height="16" rx="8" fill="#E8700A"/>
+    <rect x="10" y="132" width="18" height="22" rx="9" fill="#B84E08"/>
+    <!-- Hand -->
+    <circle cx="14" cy="158" r="12" fill="#FF9838"/>
+    <circle cx="14" cy="158" r="7" fill="#FFB870"/>
+  </g>
+
+  <!-- Right Arm -->
+  <g transform="rotate(-12, 152, 140)">
+    <rect x="150" y="135" width="30" height="16" rx="8" fill="#E8700A"/>
+    <rect x="172" y="130" width="18" height="22" rx="9" fill="#B84E08"/>
+    <!-- Hand -->
+    <circle cx="186" cy="156" r="12" fill="#FF9838"/>
+    <circle cx="186" cy="156" r="7" fill="#FFB870"/>
+  </g>
+
+  <!-- Left Leg (slightly angled for uneven stance) -->
+  <g transform="rotate(4, 78, 212)">
+    <rect x="62" y="210" width="22" height="46" rx="11" fill="#E8700A"/>
+    <!-- Foot -->
+    <rect x="48" y="250" width="42" height="20" rx="10" fill="#B84E08"/>
+    <rect x="50" y="254" width="38" height="12" rx="6" fill="#FF9838" opacity="0.5"/>
+  </g>
+
+  <!-- Right Leg (angled opposite) -->
+  <g transform="rotate(-6, 122, 212)">
+    <rect x="116" y="210" width="22" height="46" rx="11" fill="#E8700A"/>
+    <!-- Foot -->
+    <rect x="110" y="250" width="42" height="20" rx="10" fill="#B84E08"/>
+    <rect x="112" y="254" width="38" height="12" rx="6" fill="#FF9838" opacity="0.5"/>
+  </g>
+
+  <!-- Belly highlight -->
+  <ellipse cx="100" cy="170" rx="30" ry="8" fill="#FFB870" opacity="0.15"/>
+</svg>

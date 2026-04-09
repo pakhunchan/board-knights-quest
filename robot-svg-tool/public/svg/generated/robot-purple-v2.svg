@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 300">
+
+  <!-- ANTENNA -->
+  <!-- Antenna ball -->
+  <circle cx="60" cy="12" r="8" fill="#9B7FC7"/>
+  <!-- Antenna stem -->
+  <rect x="57" y="20" width="6" height="28" rx="3" ry="3" fill="#7B5EA7"/>
+  <!-- Stem ridges/rings -->
+  <rect x="54" y="25" width="12" height="3" rx="1.5" ry="1.5" fill="#5E4585"/>
+  <rect x="54" y="32" width="12" height="3" rx="1.5" ry="1.5" fill="#5E4585"/>
+  <rect x="54" y="39" width="12" height="3" rx="1.5" ry="1.5" fill="#5E4585"/>
+
+  <!-- HEAD -->
+  <rect x="20" y="50" width="80" height="60" rx="12" ry="12" fill="#7B5EA7"/>
+  <!-- Eye sockets (darker recessed area) -->
+  <rect x="27" y="58" width="66" height="40" rx="8" ry="8" fill="#5E4585"/>
+  <!-- Left eye white -->
+  <circle cx="44" cy="78" r="17" fill="#FFFFFF"/>
+  <!-- Left pupil -->
+  <circle cx="47" cy="78" r="9" fill="#3A2A5A"/>
+  <!-- Left eye shine -->
+  <circle cx="51" cy="74" r="3.5" fill="#FFFFFF"/>
+  <!-- Right eye white -->
+  <circle cx="76" cy="78" r="17" fill="#FFFFFF"/>
+  <!-- Right pupil -->
+  <circle cx="79" cy="78" r="9" fill="#3A2A5A"/>
+  <!-- Right eye shine -->
+  <circle cx="83" cy="74" r="3.5" fill="#FFFFFF"/>
+
+  <!-- NECK -->
+  <rect x="40" y="110" width="40" height="10" rx="5" ry="5" fill="#5E4585"/>
+
+  <!-- BODY -->
+  <rect x="20" y="120" width="80" height="80" rx="12" ry="12" fill="#7B5EA7"/>
+  <!-- Belly panel (lighter accent) -->
+  <rect x="32" y="134" width="56" height="48" rx="8" ry="8" fill="#9B7FC7"/>
+  <!-- Belly line detail -->
+  <rect x="42" y="160" width="36" height="3" rx="1.5" ry="1.5" fill="#7B5EA7"/>
+
+  <!-- LEGS -->
+  <!-- Left leg -->
+  <rect x="24" y="200" width="28" height="60" rx="14" ry="14" fill="#7B5EA7"/>
+  <!-- Left leg subtle highlight -->
+  <rect x="30" y="210" width="16" height="24" rx="8" ry="8" fill="#9B7FC7" opacity="0.35"/>
+  <!-- Right leg -->
+  <rect x="68" y="200" width="28" height="60" rx="14" ry="14" fill="#7B5EA7"/>
+  <!-- Right leg subtle highlight -->
+  <rect x="74" y="210" width="16" height="24" rx="8" ry="8" fill="#9B7FC7" opacity="0.35"/>
+  <!-- Arch shadow between legs -->
+  <ellipse cx="60" cy="204" rx="12" ry="6" fill="#5E4585"/>
+  <!-- Body bottom overlap to clean up leg join -->
+  <rect x="20" y="194" width="80" height="10" rx="0" ry="0" fill="#7B5EA7"/>
+
+</svg>

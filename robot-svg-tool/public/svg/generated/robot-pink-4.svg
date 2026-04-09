@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300">
+  <defs>
+    <linearGradient id="pk4-body-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E86080"/>
+      <stop offset="100%" stop-color="#CC4060"/>
+    </linearGradient>
+    <linearGradient id="pk4-head-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E86080"/>
+      <stop offset="100%" stop-color="#CC4060"/>
+    </linearGradient>
+    <linearGradient id="pk4-panel-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9A2040"/>
+      <stop offset="100%" stop-color="#801030"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Antenna stem (tiny cute) -->
+  <rect x="97" y="38" width="6" height="16" rx="3" ry="3" fill="#CC4060"/>
+  <!-- Antenna ball (big bouncy) -->
+  <circle cx="100" cy="34" r="10" fill="#FF88A0"/>
+  <circle cx="96" cy="30" r="4" fill="#FFB8C8" opacity="0.7"/>
+  <!-- Antenna ball extra sparkle -->
+  <circle cx="104" cy="32" r="2" fill="#FFFFFF" opacity="0.5"/>
+
+  <!-- Oversized head -->
+  <rect x="28" y="52" width="144" height="110" rx="36" ry="36" fill="url(#pk4-head-grad)" stroke="#9A2040" stroke-width="2"/>
+  <!-- Head highlight -->
+  <rect x="46" y="60" width="60" height="12" rx="6" ry="6" fill="#FF88A0" opacity="0.35"/>
+
+  <!-- Cheek blush left -->
+  <ellipse cx="48" cy="120" rx="14" ry="9" fill="#FF88A0" opacity="0.4"/>
+  <!-- Cheek blush right -->
+  <ellipse cx="152" cy="120" rx="14" ry="9" fill="#FF88A0" opacity="0.4"/>
+
+  <!-- Left eye socket (big sparkly) -->
+  <ellipse cx="72" cy="100" rx="24" ry="23" fill="#9A2040"/>
+  <!-- Left eye white -->
+  <ellipse cx="72" cy="100" rx="20" ry="19" fill="#FFFFFF"/>
+  <!-- Left pupil (big cute) -->
+  <circle cx="76" cy="102" r="11" fill="#4A0020"/>
+  <!-- Left eye shine (big) -->
+  <circle cx="82" cy="94" r="5" fill="#FFFFFF"/>
+  <!-- Left eye shine (small sparkle) -->
+  <circle cx="78" cy="104" r="2.5" fill="#FFFFFF" opacity="0.7"/>
+  <!-- Left eye sparkle star -->
+  <polygon points="68,90 69.5,93 73,93 70,95.5 71,99 68,97 65,99 66,95.5 63,93 66.5,93" fill="#FFFFFF" opacity="0.5"/>
+
+  <!-- Right eye socket (big sparkly) -->
+  <ellipse cx="128" cy="100" rx="24" ry="23" fill="#9A2040"/>
+  <!-- Right eye white -->
+  <ellipse cx="128" cy="100" rx="20" ry="19" fill="#FFFFFF"/>
+  <!-- Right pupil (big cute) -->
+  <circle cx="132" cy="102" r="11" fill="#4A0020"/>
+  <!-- Right eye shine (big) -->
+  <circle cx="138" cy="94" r="5" fill="#FFFFFF"/>
+  <!-- Right eye shine (small sparkle) -->
+  <circle cx="134" cy="104" r="2.5" fill="#FFFFFF" opacity="0.7"/>
+  <!-- Right eye sparkle star -->
+  <polygon points="124,90 125.5,93 129,93 126,95.5 127,99 124,97 121,99 122,95.5 119,93 122.5,93" fill="#FFFFFF" opacity="0.5"/>
+
+  <!-- Mouth (tiny happy) -->
+  <ellipse cx="100" cy="132" rx="14" ry="8" fill="#9A2040"/>
+  <!-- Tongue -->
+  <ellipse cx="100" cy="135" rx="8" ry="5" fill="#FF88A0"/>
+  <!-- Mouth highlight -->
+  <ellipse cx="100" cy="130" rx="10" ry="3" fill="#CC4060" opacity="0.4"/>
+
+  <!-- Tiny neck -->
+  <rect x="90" y="162" width="20" height="8" rx="6" ry="6" fill="#CC4060"/>
+  <!-- Mini collar -->
+  <rect x="82" y="168" width="36" height="8" rx="4" ry="4" fill="#9A2040"/>
+  <!-- Collar dots -->
+  <circle cx="92" cy="172" r="2" fill="#FFB8C8"/>
+  <circle cx="108" cy="172" r="2" fill="#FFB8C8"/>
+
+  <!-- Tiny body -->
+  <rect x="62" y="174" width="76" height="56" rx="18" ry="18" fill="url(#pk4-body-grad)" stroke="#9A2040" stroke-width="2"/>
+  <!-- Body highlight -->
+  <rect x="72" y="180" width="30" height="6" rx="3" ry="3" fill="#FF88A0" opacity="0.3"/>
+
+  <!-- Mini chest panel -->
+  <rect x="78" y="186" width="44" height="32" rx="10" ry="10" fill="url(#pk4-panel-grad)"/>
+  <rect x="78" y="186" width="44" height="32" rx="10" ry="10" fill="none" stroke="#FF88A0" stroke-width="1" opacity="0.4"/>
+
+  <!-- Tiny buttons -->
+  <circle cx="92" cy="198" r="5" fill="#FF6B8A"/>
+  <circle cx="92" cy="198" r="2.5" fill="#FF8FA8" opacity="0.6"/>
+  <circle cx="108" cy="198" r="5" fill="#FFD93D"/>
+  <circle cx="108" cy="198" r="2.5" fill="#FFE57A" opacity="0.6"/>
+
+  <!-- Mini heart on panel -->
+  <path d="M96,208 C96,206 98,204 100,206 C102,204 104,206 104,208 C104,211 100,214 100,214 C100,214 96,211 96,208Z" fill="#FFB8C8" opacity="0.7"/>
+
+  <!-- Left micro arm -->
+  <rect x="40" y="180" width="16" height="32" rx="8" ry="8" fill="#E86080" stroke="#9A2040" stroke-width="1.5"/>
+  <!-- Left tiny hand -->
+  <circle cx="48" cy="216" r="10" fill="#FF88A0" stroke="#CC4060" stroke-width="1.5"/>
+  <circle cx="48" cy="216" r="5" fill="#E86080"/>
+
+  <!-- Right micro arm -->
+  <rect x="144" y="180" width="16" height="32" rx="8" ry="8" fill="#E86080" stroke="#9A2040" stroke-width="1.5"/>
+  <!-- Right tiny hand -->
+  <circle cx="152" cy="216" r="10" fill="#FF88A0" stroke="#CC4060" stroke-width="1.5"/>
+  <circle cx="152" cy="216" r="5" fill="#E86080"/>
+
+  <!-- Left micro leg -->
+  <rect x="72" y="228" width="20" height="28" rx="10" ry="10" fill="#CC4060" stroke="#9A2040" stroke-width="1.5"/>
+  <!-- Left tiny foot -->
+  <ellipse cx="78" cy="264" rx="16" ry="10" fill="#E86080" stroke="#9A2040" stroke-width="1.5"/>
+  <ellipse cx="74" cy="262" rx="4" ry="3" fill="#FF88A0" opacity="0.4"/>
+
+  <!-- Right micro leg -->
+  <rect x="108" y="228" width="20" height="28" rx="10" ry="10" fill="#CC4060" stroke="#9A2040" stroke-width="1.5"/>
+  <!-- Right tiny foot -->
+  <ellipse cx="122" cy="264" rx="16" ry="10" fill="#E86080" stroke="#9A2040" stroke-width="1.5"/>
+  <ellipse cx="118" cy="262" rx="4" ry="3" fill="#FF88A0" opacity="0.4"/>
+
+  <!-- Belly button -->
+  <circle cx="100" cy="224" r="3" fill="#FFB8C8"/>
+  <circle cx="100" cy="224" r="1.5" fill="#CC4060"/>
+</svg>

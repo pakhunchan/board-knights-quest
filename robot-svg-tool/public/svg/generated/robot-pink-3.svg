@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300">
+  <defs>
+    <linearGradient id="pk3-body-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D8508A"/>
+      <stop offset="100%" stop-color="#B0306A"/>
+    </linearGradient>
+    <linearGradient id="pk3-head-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D8508A"/>
+      <stop offset="100%" stop-color="#B0306A"/>
+    </linearGradient>
+    <linearGradient id="pk3-panel-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8A1848"/>
+      <stop offset="100%" stop-color="#6E0E38"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Crown-like antenna -->
+  <!-- Center stem -->
+  <rect x="97" y="8" width="6" height="20" rx="3" ry="3" fill="#B0306A"/>
+  <!-- Crown prongs -->
+  <rect x="85" y="4" width="5" height="16" rx="2.5" ry="2.5" fill="#B0306A" transform="rotate(-10,87.5,12)"/>
+  <rect x="110" y="4" width="5" height="16" rx="2.5" ry="2.5" fill="#B0306A" transform="rotate(10,112.5,12)"/>
+  <!-- Crown jewels -->
+  <circle cx="100" cy="5" r="6" fill="#FFB0CC"/>
+  <circle cx="100" cy="5" r="3" fill="#FFD0E0" opacity="0.7"/>
+  <circle cx="86" cy="4" r="4" fill="#F080AA"/>
+  <circle cx="86" cy="4" r="2" fill="#FFB0CC" opacity="0.6"/>
+  <circle cx="114" cy="4" r="4" fill="#F080AA"/>
+  <circle cx="114" cy="4" r="2" fill="#FFB0CC" opacity="0.6"/>
+
+  <!-- Head (elegant, slightly narrower) -->
+  <rect x="52" y="28" width="96" height="68" rx="22" ry="22" fill="url(#pk3-head-grad)" stroke="#8A1848" stroke-width="2"/>
+  <!-- Head highlight -->
+  <rect x="62" y="34" width="54" height="10" rx="5" ry="5" fill="#F080AA" opacity="0.35"/>
+
+  <!-- Left eye socket -->
+  <ellipse cx="78" cy="60" rx="16" ry="15" fill="#8A1848"/>
+  <!-- Left eye white -->
+  <ellipse cx="78" cy="60" rx="12" ry="11" fill="#FFFFFF"/>
+  <!-- Left pupil -->
+  <circle cx="81" cy="60" r="6" fill="#4A0020"/>
+  <!-- Left eye shine -->
+  <circle cx="84" cy="57" r="2.5" fill="#FFFFFF"/>
+  <!-- Left eyelash (elegant) -->
+  <line x1="66" y1="48" x2="72" y2="52" stroke="#8A1848" stroke-width="2" stroke-linecap="round"/>
+  <line x1="70" y1="46" x2="75" y2="51" stroke="#8A1848" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Right eye socket -->
+  <ellipse cx="122" cy="60" rx="16" ry="15" fill="#8A1848"/>
+  <!-- Right eye white -->
+  <ellipse cx="122" cy="60" rx="12" ry="11" fill="#FFFFFF"/>
+  <!-- Right pupil -->
+  <circle cx="125" cy="60" r="6" fill="#4A0020"/>
+  <!-- Right eye shine -->
+  <circle cx="128" cy="57" r="2.5" fill="#FFFFFF"/>
+  <!-- Right eyelash (elegant) -->
+  <line x1="134" y1="48" x2="128" y2="52" stroke="#8A1848" stroke-width="2" stroke-linecap="round"/>
+  <line x1="130" y1="46" x2="125" y2="51" stroke="#8A1848" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Mouth (gentle smile arc) -->
+  <path d="M82,80 Q100,94 118,80" fill="none" stroke="#8A1848" stroke-width="3" stroke-linecap="round"/>
+  <!-- Small lip highlight -->
+  <path d="M90,82 Q100,90 110,82" fill="#FFB0CC" opacity="0.5"/>
+
+  <!-- Long elegant neck -->
+  <rect x="82" y="96" width="36" height="22" rx="10" ry="10" fill="#B0306A"/>
+  <!-- Collar decoration -->
+  <rect x="74" y="112" width="52" height="10" rx="5" ry="5" fill="#8A1848"/>
+  <!-- Collar gem -->
+  <ellipse cx="100" cy="117" rx="6" ry="4" fill="#FFB0CC"/>
+  <ellipse cx="100" cy="117" rx="3" ry="2" fill="#FFD0E0" opacity="0.7"/>
+
+  <!-- Body (tall slender) -->
+  <rect x="52" y="120" width="96" height="104" rx="20" ry="20" fill="url(#pk3-body-grad)" stroke="#8A1848" stroke-width="2"/>
+  <!-- Body highlight -->
+  <rect x="62" y="126" width="42" height="8" rx="4" ry="4" fill="#F080AA" opacity="0.3"/>
+
+  <!-- Chest panel (tall elegant) -->
+  <rect x="68" y="136" width="64" height="68" rx="12" ry="12" fill="url(#pk3-panel-grad)"/>
+  <rect x="68" y="136" width="64" height="68" rx="12" ry="12" fill="none" stroke="#F080AA" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- Chest diamond decorations -->
+  <polygon points="100,146 108,156 100,166 92,156" fill="#FFB0CC" opacity="0.7"/>
+  <polygon points="100,149 105,156 100,163 95,156" fill="#FFD0E0" opacity="0.5"/>
+
+  <!-- Chest buttons (vertical elegant row) -->
+  <circle cx="100" cy="176" r="5" fill="#FF6B8A"/>
+  <circle cx="100" cy="176" r="2.5" fill="#FF8FA8" opacity="0.6"/>
+  <circle cx="100" cy="190" r="5" fill="#FFD93D"/>
+  <circle cx="100" cy="190" r="2.5" fill="#FFE57A" opacity="0.6"/>
+
+  <!-- Left arm (long slender, graceful angle) -->
+  <rect x="24" y="130" width="18" height="58" rx="9" ry="9" fill="#D8508A" stroke="#8A1848" stroke-width="1.5" transform="rotate(12,33,130)"/>
+  <!-- Left hand (delicate) -->
+  <circle cx="28" cy="196" r="11" fill="#F080AA" stroke="#B0306A" stroke-width="1.5"/>
+  <circle cx="28" cy="196" r="5" fill="#D8508A"/>
+
+  <!-- Right arm (long slender, graceful angle) -->
+  <rect x="158" y="130" width="18" height="58" rx="9" ry="9" fill="#D8508A" stroke="#8A1848" stroke-width="1.5" transform="rotate(-12,167,130)"/>
+  <!-- Right hand (delicate) -->
+  <circle cx="172" cy="196" r="11" fill="#F080AA" stroke="#B0306A" stroke-width="1.5"/>
+  <circle cx="172" cy="196" r="5" fill="#D8508A"/>
+
+  <!-- Left leg (slender) -->
+  <rect x="64" y="220" width="24" height="42" rx="10" ry="10" fill="#B0306A" stroke="#8A1848" stroke-width="1.5"/>
+  <!-- Left foot (small delicate) -->
+  <ellipse cx="72" cy="270" rx="18" ry="10" fill="#D8508A" stroke="#8A1848" stroke-width="1.5"/>
+  <ellipse cx="68" cy="268" rx="4" ry="3" fill="#F080AA" opacity="0.4"/>
+
+  <!-- Right leg (slender) -->
+  <rect x="112" y="220" width="24" height="42" rx="10" ry="10" fill="#B0306A" stroke="#8A1848" stroke-width="1.5"/>
+  <!-- Right foot (small delicate) -->
+  <ellipse cx="128" cy="270" rx="18" ry="10" fill="#D8508A" stroke="#8A1848" stroke-width="1.5"/>
+  <ellipse cx="124" cy="268" rx="4" ry="3" fill="#F080AA" opacity="0.4"/>
+
+  <!-- Waist gem -->
+  <circle cx="100" cy="216" r="4" fill="#FFB0CC"/>
+  <circle cx="100" cy="216" r="2" fill="#B0306A"/>
+</svg>

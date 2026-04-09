@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300">
+  <defs>
+    <linearGradient id="y2body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE04A"/>
+      <stop offset="100%" stop-color="#FFCC00"/>
+    </linearGradient>
+    <linearGradient id="y2head" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE04A"/>
+      <stop offset="100%" stop-color="#FFCC00"/>
+    </linearGradient>
+    <linearGradient id="y2panel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4A010"/>
+      <stop offset="100%" stop-color="#B89000"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Slight lean: entire robot group tilted 3 degrees forward -->
+  <g transform="rotate(3, 100, 280)">
+
+    <!-- Antenna stem - angled for dynamism -->
+    <rect x="94" y="14" width="7" height="22" rx="3.5" ry="3.5" fill="#D4A010" transform="rotate(-8, 97, 25)"/>
+    <!-- Lightning bolt antenna tip -->
+    <polygon points="97,4 103,12 99,12 104,22 95,13 99,13" fill="#FFF0A0" stroke="#D4A010" stroke-width="1"/>
+    <polygon points="97,6 102,12 99,12 103,19 96,13 99,13" fill="#FFE04A"/>
+
+    <!-- Head - slightly wider, more assertive -->
+    <rect x="48" y="38" width="104" height="70" rx="20" ry="20" fill="url(#y2head)" stroke="#D4A010" stroke-width="2"/>
+    <!-- Head highlight -->
+    <rect x="56" y="42" width="56" height="14" rx="7" ry="7" fill="#FFF0A0" opacity="0.45"/>
+
+    <!-- Left eye socket - bolder, slightly angled for determined look -->
+    <ellipse cx="74" cy="68" rx="17" ry="16" fill="#D4A010"/>
+    <!-- Left eye white -->
+    <ellipse cx="74" cy="69" rx="14" ry="13" fill="#FFFFFF"/>
+    <!-- Left pupil - looking forward/down for adventurer focus -->
+    <circle cx="77" cy="71" r="7.5" fill="#2D2D2D"/>
+    <!-- Left shine -->
+    <circle cx="80" cy="67" r="3" fill="#FFFFFF"/>
+    <!-- Left eyebrow - bold determined brow -->
+    <rect x="60" y="54" width="28" height="5" rx="2.5" ry="2.5" fill="#D4A010" transform="rotate(-6, 74, 56)"/>
+
+    <!-- Right eye socket -->
+    <ellipse cx="126" cy="68" rx="17" ry="16" fill="#D4A010"/>
+    <!-- Right eye white -->
+    <ellipse cx="126" cy="69" rx="14" ry="13" fill="#FFFFFF"/>
+    <!-- Right pupil -->
+    <circle cx="129" cy="71" r="7.5" fill="#2D2D2D"/>
+    <!-- Right shine -->
+    <circle cx="132" cy="67" r="3" fill="#FFFFFF"/>
+    <!-- Right eyebrow -->
+    <rect x="112" y="54" width="28" height="5" rx="2.5" ry="2.5" fill="#D4A010" transform="rotate(6, 126, 56)"/>
+
+    <!-- Mouth - confident grin -->
+    <path d="M74 90 Q100 108 126 90" fill="none" stroke="#D4A010" stroke-width="3.5" stroke-linecap="round"/>
+    <!-- Tooth / fang detail for character -->
+    <rect x="94" y="94" width="12" height="6" rx="2" ry="2" fill="#FFFFFF" stroke="#D4A010" stroke-width="0.8"/>
+
+    <!-- Neck / collar - sturdier -->
+    <rect x="76" y="108" width="48" height="12" rx="6" ry="6" fill="#D4A010"/>
+    <rect x="70" y="116" width="60" height="12" rx="6" ry="6" fill="#FFCC00" stroke="#D4A010" stroke-width="1.5"/>
+    <!-- Collar bolts -->
+    <circle cx="78" cy="122" r="3" fill="#D4A010"/>
+    <circle cx="122" cy="122" r="3" fill="#D4A010"/>
+
+    <!-- Body - slightly wider, adventurer build -->
+    <rect x="42" y="126" width="116" height="98" rx="22" ry="22" fill="url(#y2body)" stroke="#D4A010" stroke-width="2"/>
+    <!-- Body highlight -->
+    <rect x="50" y="130" width="52" height="14" rx="7" ry="7" fill="#FFF0A0" opacity="0.35"/>
+
+    <!-- Chest panel -->
+    <rect x="62" y="144" width="76" height="58" rx="14" ry="14" fill="url(#y2panel)"/>
+    <rect x="66" y="148" width="68" height="50" rx="12" ry="12" fill="#D4A010" stroke="#A08000" stroke-width="1"/>
+
+    <!-- Gear emblem on chest -->
+    <!-- Outer gear teeth -->
+    <g transform="translate(100, 170)">
+      <circle cx="0" cy="0" r="16" fill="#FFE04A" stroke="#A08000" stroke-width="1"/>
+      <!-- Gear teeth (8 teeth around the circle) -->
+      <rect x="-4" y="-20" width="8" height="8" rx="2" ry="2" fill="#FFE04A" stroke="#A08000" stroke-width="0.8"/>
+      <rect x="-4" y="12" width="8" height="8" rx="2" ry="2" fill="#FFE04A" stroke="#A08000" stroke-width="0.8"/>
+      <rect x="-20" y="-4" width="8" height="8" rx="2" ry="2" fill="#FFE04A" stroke="#A08000" stroke-width="0.8"/>
+      <rect x="12" y="-4" width="8" height="8" rx="2" ry="2" fill="#FFE04A" stroke="#A08000" stroke-width="0.8"/>
+      <rect x="8" y="-17" width="8" height="8" rx="2" ry="2" fill="#FFE04A" stroke="#A08000" stroke-width="0.8" transform="rotate(45)"/>
+      <rect x="-16" y="-17" width="8" height="8" rx="2" ry="2" fill="#FFE04A" stroke="#A08000" stroke-width="0.8" transform="rotate(45)"/>
+      <rect x="8" y="9" width="8" height="8" rx="2" ry="2" fill="#FFE04A" stroke="#A08000" stroke-width="0.8" transform="rotate(45)"/>
+      <rect x="-16" y="9" width="8" height="8" rx="2" ry="2" fill="#FFE04A" stroke="#A08000" stroke-width="0.8" transform="rotate(45)"/>
+      <!-- Inner gear circle -->
+      <circle cx="0" cy="0" r="8" fill="#FFF0A0"/>
+      <circle cx="0" cy="0" r="4" fill="#D4A010"/>
+    </g>
+
+    <!-- Chest indicator lights -->
+    <circle cx="78" cy="192" r="3.5" fill="#FF6B6B" stroke="#A08000" stroke-width="0.8"/>
+    <circle cx="90" cy="192" r="3.5" fill="#5BDE5B" stroke="#A08000" stroke-width="0.8"/>
+    <circle cx="110" cy="192" r="3.5" fill="#5BDE5B" stroke="#A08000" stroke-width="0.8"/>
+    <circle cx="122" cy="192" r="3.5" fill="#FFE04A" stroke="#A08000" stroke-width="0.8"/>
+
+    <!-- Left arm - angled outward, ready for action -->
+    <g transform="rotate(12, 40, 136)">
+      <rect x="18" y="136" width="24" height="58" rx="12" ry="12" fill="#FFCC00" stroke="#D4A010" stroke-width="2"/>
+      <!-- Left hand -->
+      <circle cx="30" cy="200" r="15" fill="#FFE04A" stroke="#D4A010" stroke-width="2"/>
+      <circle cx="30" cy="200" r="7" fill="#FFF0A0" opacity="0.4"/>
+    </g>
+
+    <!-- Right arm - slightly different angle for dynamism -->
+    <g transform="rotate(-8, 160, 136)">
+      <rect x="158" y="136" width="24" height="58" rx="12" ry="12" fill="#FFCC00" stroke="#D4A010" stroke-width="2"/>
+      <!-- Right hand -->
+      <circle cx="170" cy="200" r="15" fill="#FFE04A" stroke="#D4A010" stroke-width="2"/>
+      <circle cx="170" cy="200" r="7" fill="#FFF0A0" opacity="0.4"/>
+    </g>
+
+    <!-- Left leg - wider stance -->
+    <rect x="54" y="220" width="28" height="44" rx="14" ry="14" fill="#FFCC00" stroke="#D4A010" stroke-width="2" transform="rotate(-4, 68, 242)"/>
+    <!-- Left foot - slightly turned out -->
+    <ellipse cx="62" cy="272" rx="24" ry="13" fill="#D4A010" transform="rotate(-4, 62, 272)"/>
+    <ellipse cx="62" cy="270" rx="24" ry="13" fill="#FFCC00" stroke="#D4A010" stroke-width="2" transform="rotate(-4, 62, 270)"/>
+    <ellipse cx="58" cy="268" rx="10" ry="5" fill="#FFF0A0" opacity="0.35" transform="rotate(-4, 58, 268)"/>
+
+    <!-- Right leg - wider stance -->
+    <rect x="118" y="220" width="28" height="44" rx="14" ry="14" fill="#FFCC00" stroke="#D4A010" stroke-width="2" transform="rotate(4, 132, 242)"/>
+    <!-- Right foot -->
+    <ellipse cx="138" cy="272" rx="24" ry="13" fill="#D4A010" transform="rotate(4, 138, 272)"/>
+    <ellipse cx="138" cy="270" rx="24" ry="13" fill="#FFCC00" stroke="#D4A010" stroke-width="2" transform="rotate(4, 138, 270)"/>
+    <ellipse cx="134" cy="268" rx="10" ry="5" fill="#FFF0A0" opacity="0.35" transform="rotate(4, 134, 268)"/>
+
+  </g>
+</svg>

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>Level Map - Horseshoe Path</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { overflow: hidden; background: #1a1a2e; width: 1920px; height: 1080px; }
+  svg { display: block; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <!-- Sky gradient: soft teal-mint -->
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b5d8c0"/>
+      <stop offset="60%" stop-color="#bfdfc8"/>
+      <stop offset="100%" stop-color="#c8e6cf"/>
+    </linearGradient>
+
+    <!-- Grass gradient -->
+    <linearGradient id="grassGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7aaa6a"/>
+      <stop offset="100%" stop-color="#5a8a4a"/>
+    </linearGradient>
+
+    <!-- Path fill -->
+    <linearGradient id="pathGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c9a96e"/>
+      <stop offset="100%" stop-color="#b89458"/>
+    </linearGradient>
+
+    <!-- Mountain gradients -->
+    <linearGradient id="mtnGrad1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9a9a8e"/>
+      <stop offset="100%" stop-color="#8a8a7e"/>
+    </linearGradient>
+    <linearGradient id="mtnGrad2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8a8a7e"/>
+      <stop offset="100%" stop-color="#7a7a6e"/>
+    </linearGradient>
+    <linearGradient id="mtnGrad3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7a7a6e"/>
+      <stop offset="100%" stop-color="#6a6a5e"/>
+    </linearGradient>
+
+    <!-- Sun glow -->
+    <radialGradient id="sunGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#fff8dc"/>
+      <stop offset="40%" stop-color="#ffe066"/>
+      <stop offset="70%" stop-color="#ffcc33" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#ffcc33" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Current level glow -->
+    <radialGradient id="currentGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffe066" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#ffcc33" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#ffaa00" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Stone platform: completed -->
+    <radialGradient id="stoneCompleted" cx="0.35" cy="0.3" r="0.65">
+      <stop offset="0%" stop-color="#d4c8a8"/>
+      <stop offset="50%" stop-color="#bfb08a"/>
+      <stop offset="100%" stop-color="#a89870"/>
+    </radialGradient>
+
+    <!-- Stone platform: current -->
+    <radialGradient id="stoneCurrent" cx="0.35" cy="0.3" r="0.65">
+      <stop offset="0%" stop-color="#ffe8a0"/>
+      <stop offset="50%" stop-color="#f0d070"/>
+      <stop offset="100%" stop-color="#d4a830"/>
+    </radialGradient>
+
+    <!-- Stone platform: locked -->
+    <radialGradient id="stoneLocked" cx="0.35" cy="0.3" r="0.65">
+      <stop offset="0%" stop-color="#8a8070"/>
+      <stop offset="50%" stop-color="#706858"/>
+      <stop offset="100%" stop-color="#585048"/>
+    </radialGradient>
+
+    <!-- Torch flame gradient -->
+    <radialGradient id="flameGrad" cx="0.5" cy="0.7" r="0.5">
+      <stop offset="0%" stop-color="#ffe066"/>
+      <stop offset="40%" stop-color="#ff9933"/>
+      <stop offset="100%" stop-color="#cc4400" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Torch glow -->
+    <radialGradient id="torchGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#ffe066" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#ff9933" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Drop shadow filter -->
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+
+    <!-- Soft glow filter -->
+    <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="8"/>
+    </filter>
+  </defs>
+
+  <!-- ==================== SKY ==================== -->
+  <rect x="0" y="0" width="1920" height="1080" fill="url(#skyGrad)"/>
+
+  <!-- Subtle clouds -->
+  <g opacity="0.25">
+    <ellipse cx="250" cy="100" rx="110" ry="32" fill="#fff"/>
+    <ellipse cx="310" cy="90" rx="75" ry="28" fill="#fff"/>
+    <ellipse cx="190" cy="95" rx="60" ry="22" fill="#fff"/>
+
+    <ellipse cx="800" cy="65" rx="95" ry="26" fill="#fff"/>
+    <ellipse cx="855" cy="55" rx="65" ry="22" fill="#fff"/>
+
+    <ellipse cx="1400" cy="120" rx="85" ry="28" fill="#fff"/>
+    <ellipse cx="1460" cy="110" rx="60" ry="20" fill="#fff"/>
+
+    <ellipse cx="600" cy="150" rx="70" ry="18" fill="#fff"/>
+    <ellipse cx="1100" cy="135" rx="80" ry="22" fill="#fff"/>
+  </g>
+
+  <!-- ==================== SUN ==================== -->
+  <g>
+    <circle cx="1650" cy="140" r="130" fill="url(#sunGlow)" filter="url(#softGlow)" opacity="0.45"/>
+    <circle cx="1650" cy="140" r="70" fill="url(#sunGlow)"/>
+    <circle cx="1650" cy="140" r="42" fill="#fff8dc"/>
+    <g opacity="0.12" stroke="#ffe066" stroke-width="2.5" fill="none">
+      <line x1="1650" y1="55" x2="1650" y2="28"/>
+      <line x1="1650" y1="225" x2="1650" y2="252"/>
+      <line x1="1565" y1="140" x2="1538" y2="140"/>
+      <line x1="1735" y1="140" x2="1762" y2="140"/>
+      <line x1="1590" y1="80" x2="1570" y2="60"/>
+      <line x1="1710" y1="80" x2="1730" y2="60"/>
+      <line x1="1590" y1="200" x2="1570" y2="220"/>
+      <line x1="1710" y1="200" x2="1730" y2="220"/>
+    </g>
+  </g>
+
+  <!-- ==================== DISTANT MOUNTAINS ==================== -->
+  <g>
+    <!-- Far range -->
+    <polygon points="0,480 120,300 280,480" fill="url(#mtnGrad1)" opacity="0.55"/>
+    <polygon points="180,480 380,320 550,480" fill="url(#mtnGrad2)" opacity="0.6"/>
+    <polygon points="450,480 650,280 850,480" fill="url(#mtnGrad3)" opacity="0.65"/>
+    <polygon points="750,480 950,310 1150,480" fill="url(#mtnGrad1)" opacity="0.6"/>
+    <polygon points="1050,480 1280,260 1480,480" fill="url(#mtnGrad2)" opacity="0.7"/>
+    <polygon points="1380,480 1550,340 1720,480" fill="url(#mtnGrad3)" opacity="0.6"/>
+    <polygon points="1620,480 1780,300 1920,440 1920,480" fill="url(#mtnGrad1)" opacity="0.55"/>
+
+    <!-- Snow caps -->
+    <polygon points="120,300 100,340 140,340" fill="#e8e8e0" opacity="0.5"/>
+    <polygon points="380,320 358,358 402,358" fill="#e8e8e0" opacity="0.5"/>
+    <polygon points="650,280 625,322 675,322" fill="#e8e8e0" opacity="0.5"/>
+    <polygon points="950,310 928,348 972,348" fill="#e8e8e0" opacity="0.5"/>
+    <polygon points="1280,260 1252,305 1308,305" fill="#e8e8e0" opacity="0.55"/>
+    <polygon points="1550,340 1530,374 1570,374" fill="#e8e8e0" opacity="0.5"/>
+    <polygon points="1780,300 1760,338 1800,338" fill="#e8e8e0" opacity="0.5"/>
+  </g>
+
+  <!-- ==================== BUSH ROW (tree line between mountains and grass) ==================== -->
+  <g>
+    <!-- Row of round bushes/trees at y=440-560 -->
+    <!-- Layer 1: darker background bushes -->
+    <g fill="#5a8a4a" opacity="0.8">
+      <circle cx="40" cy="520" r="38"/>
+      <circle cx="120" cy="510" r="44"/>
+      <circle cx="210" cy="525" r="36"/>
+      <circle cx="310" cy="508" r="42"/>
+      <circle cx="400" cy="518" r="38"/>
+      <circle cx="500" cy="505" r="45"/>
+      <circle cx="600" cy="520" r="40"/>
+      <circle cx="710" cy="510" r="42"/>
+      <circle cx="820" cy="522" r="38"/>
+      <circle cx="920" cy="508" r="44"/>
+      <circle cx="1030" cy="518" r="40"/>
+      <circle cx="1140" cy="510" r="42"/>
+      <circle cx="1250" cy="522" r="38"/>
+      <circle cx="1350" cy="505" r="45"/>
+      <circle cx="1460" cy="515" r="40"/>
+      <circle cx="1560" cy="508" r="42"/>
+      <circle cx="1660" cy="520" r="38"/>
+      <circle cx="1760" cy="512" r="44"/>
+      <circle cx="1860" cy="518" r="40"/>
+      <circle cx="1940" cy="510" r="42"/>
+    </g>
+    <!-- Layer 2: lighter foreground bushes -->
+    <g fill="#6b9a5a" opacity="0.9">
+      <circle cx="70" cy="535" r="34"/>
+      <circle cx="160" cy="530" r="38"/>
+      <circle cx="260" cy="540" r="32"/>
+      <circle cx="350" cy="528" r="36"/>
+      <circle cx="450" cy="535" r="34"/>
+      <circle cx="550" cy="525" r="40"/>
+      <circle cx="650" cy="538" r="36"/>
+      <circle cx="760" cy="530" r="38"/>
+      <circle cx="870" cy="540" r="34"/>
+      <circle cx="970" cy="528" r="38"/>
+      <circle cx="1080" cy="535" r="36"/>
+      <circle cx="1190" cy="530" r="38"/>
+      <circle cx="1300" cy="540" r="34"/>
+      <circle cx="1400" cy="525" r="40"/>
+      <circle cx="1510" cy="535" r="36"/>
+      <circle cx="1610" cy="530" r="38"/>
+      <circle cx="1710" cy="540" r="34"/>
+      <circle cx="1810" cy="528" r="38"/>
+      <circle cx="1910" cy="535" r="36"/>
+    </g>
+    <!-- Highlights on bushes -->
+    <g fill="#7aaa6a" opacity="0.6">
+      <circle cx="115" cy="505" r="18"/>
+      <circle cx="305" cy="500" r="16"/>
+      <circle cx="495" cy="498" r="20"/>
+      <circle cx="705" cy="503" r="18"/>
+      <circle cx="915" cy="500" r="16"/>
+      <circle cx="1135" cy="503" r="18"/>
+      <circle cx="1345" cy="498" r="20"/>
+      <circle cx="1555" cy="500" r="18"/>
+      <circle cx="1755" cy="504" r="16"/>
+    </g>
+  </g>
+
+  <!-- ==================== GRASS HILLS ==================== -->
+  <g>
+    <!-- Main grass body -->
+    <path d="M0,550 Q200,540 400,555 Q600,545 800,558 Q1000,542 1200,555 Q1400,545 1600,552 Q1800,540 1920,550 L1920,1080 L0,1080 Z" fill="url(#grassGrad)"/>
+    <!-- Darker grass at bottom -->
+    <rect x="0" y="900" width="1920" height="180" fill="#4a7a3a" opacity="0.3"/>
+    <!-- Rolling hill highlights -->
+    <path d="M0,560 Q250,548 500,565 Q750,552 1000,568 Q1250,550 1500,562 Q1750,548 1920,560 L1920,580 Q1750,570 1500,582 Q1250,572 1000,588 Q750,574 500,585 Q250,570 0,580 Z" fill="#7aaa6a" opacity="0.4"/>
+    <!-- Grass texture lines -->
+    <g stroke="#5a8a4a" stroke-width="1" opacity="0.15">
+      <line x1="100" y1="600" x2="130" y2="590"/>
+      <line x1="300" y1="650" x2="330" y2="640"/>
+      <line x1="500" y1="700" x2="530" y2="690"/>
+      <line x1="700" y1="750" x2="730" y2="740"/>
+      <line x1="900" y1="680" x2="930" y2="670"/>
+      <line x1="1100" y1="630" x2="1130" y2="620"/>
+      <line x1="1300" y1="700" x2="1330" y2="690"/>
+      <line x1="1500" y1="660" x2="1530" y2="650"/>
+      <line x1="1700" y1="620" x2="1730" y2="610"/>
+      <line x1="200" y1="850" x2="230" y2="840"/>
+      <line x1="600" y1="900" x2="630" y2="890"/>
+      <line x1="1000" y1="870" x2="1030" y2="860"/>
+      <line x1="1400" y1="950" x2="1430" y2="940"/>
+      <line x1="1800" y1="880" x2="1830" y2="870"/>
+    </g>
+  </g>
+
+  <!-- ==================== PATH (Horseshoe/U-shape) ==================== -->
+  <!-- Path stays entirely in grass: y > 560 at all points -->
+  <!-- Route: bottom-left (200,980) -> right across bottom -> up right edge -> left across upper grass -> upper-left -->
+  <g>
+    <!-- Path shadow (darker edge) -->
+    <path d="M140,985 Q400,960 700,958 Q1000,955 1300,958 Q1500,960 1650,950
+             Q1760,930 1780,880 Q1800,820 1790,760 Q1780,700 1750,660
+             Q1720,625 1650,610 Q1550,595 1400,598 Q1200,600 1000,605
+             Q800,608 600,610 Q400,615 280,618 Q200,622 160,625"
+           fill="none" stroke="#a08050" stroke-width="62" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Main path fill -->
+    <path d="M140,985 Q400,960 700,958 Q1000,955 1300,958 Q1500,960 1650,950
+             Q1760,930 1780,880 Q1800,820 1790,760 Q1780,700 1750,660
+             Q1720,625 1650,610 Q1550,595 1400,598 Q1200,600 1000,605
+             Q800,608 600,610 Q400,615 280,618 Q200,622 160,625"
+           fill="none" stroke="url(#pathGrad)" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- Path center highlight -->
+    <path d="M140,985 Q400,960 700,958 Q1000,955 1300,958 Q1500,960 1650,950
+             Q1760,930 1780,880 Q1800,820 1790,760 Q1780,700 1750,660
+             Q1720,625 1650,610 Q1550,595 1400,598 Q1200,600 1000,605
+             Q800,608 600,610 Q400,615 280,618 Q200,622 160,625"
+           fill="none" stroke="#d4b878" stroke-width="28" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+
+    <!-- Path texture: scattered dots -->
+    <g fill="#a08050" opacity="0.2">
+      <circle cx="300" cy="970" r="3"/>
+      <circle cx="500" cy="960" r="2.5"/>
+      <circle cx="700" cy="958" r="3"/>
+      <circle cx="900" cy="957" r="2"/>
+      <circle cx="1100" cy="957" r="3"/>
+      <circle cx="1300" cy="958" r="2.5"/>
+      <circle cx="1500" cy="958" r="3"/>
+      <circle cx="1680" cy="940" r="2.5"/>
+      <circle cx="1770" cy="860" r="3"/>
+      <circle cx="1785" cy="760" r="2.5"/>
+      <circle cx="1760" cy="670" r="3"/>
+      <circle cx="1680" cy="620" r="2.5"/>
+      <circle cx="1500" cy="600" r="3"/>
+      <circle cx="1300" cy="602" r="2.5"/>
+      <circle cx="1100" cy="605" r="3"/>
+      <circle cx="900" cy="608" r="2.5"/>
+      <circle cx="700" cy="610" r="3"/>
+      <circle cx="500" cy="614" r="2.5"/>
+      <circle cx="300" cy="618" r="3"/>
+    </g>
+  </g>
+
+  <!-- ==================== FOREST CLUSTER (center of U-shape) ==================== -->
+  <g>
+    <!-- Tree trunks -->
+    <g fill="#6b5030">
+      <rect x="750" y="720" width="10" height="35" rx="3"/>
+      <rect x="850" y="700" width="12" height="40" rx="3"/>
+      <rect x="950" y="710" width="10" height="38" rx="3"/>
+      <rect x="1050" y="695" width="12" height="42" rx="3"/>
+      <rect x="1150" y="715" width="10" height="36" rx="3"/>
+      <rect x="800" y="770" width="11" height="38" rx="3"/>
+      <rect x="900" y="760" width="12" height="40" rx="3"/>
+      <rect x="1000" y="750" width="10" height="38" rx="3"/>
+      <rect x="1100" y="765" width="11" height="36" rx="3"/>
+      <rect x="700" y="780" width="10" height="35" rx="3"/>
+      <rect x="1200" y="770" width="10" height="35" rx="3"/>
+      <rect x="850" y="830" width="11" height="36" rx="3"/>
+      <rect x="950" y="820" width="12" height="38" rx="3"/>
+      <rect x="1050" y="835" width="10" height="34" rx="3"/>
+      <rect x="1150" y="825" width="11" height="36" rx="3"/>
+    </g>
+
+    <!-- Tree canopy layer 1 (back, darker) -->
+    <g fill="#4a7a3a">
+      <circle cx="755" cy="710" r="30"/>
+      <circle cx="855" cy="688" r="35"/>
+      <circle cx="955" cy="700" r="32"/>
+      <circle cx="1055" cy="683" r="36"/>
+      <circle cx="1155" cy="705" r="30"/>
+      <circle cx="805" cy="760" r="33"/>
+      <circle cx="905" cy="748" r="35"/>
+      <circle cx="1005" cy="740" r="32"/>
+      <circle cx="1105" cy="755" r="33"/>
+      <circle cx="705" cy="770" r="28"/>
+      <circle cx="1205" cy="760" r="28"/>
+    </g>
+
+    <!-- Tree canopy layer 2 (mid, medium green) -->
+    <g fill="#5a8a4a">
+      <circle cx="755" cy="705" r="26"/>
+      <circle cx="855" cy="682" r="30"/>
+      <circle cx="955" cy="694" r="28"/>
+      <circle cx="1055" cy="678" r="32"/>
+      <circle cx="1155" cy="700" r="26"/>
+      <circle cx="805" cy="754" r="28"/>
+      <circle cx="905" cy="742" r="30"/>
+      <circle cx="1005" cy="734" r="28"/>
+      <circle cx="1105" cy="750" r="28"/>
+      <circle cx="855" cy="820" r="28"/>
+      <circle cx="955" cy="810" r="30"/>
+      <circle cx="1055" cy="825" r="26"/>
+      <circle cx="1155" cy="815" r="28"/>
+    </g>
+
+    <!-- Tree canopy layer 3 (front highlights) -->
+    <g fill="#6b9a5a" opacity="0.7">
+      <circle cx="850" cy="678" r="22"/>
+      <circle cx="950" cy="690" r="20"/>
+      <circle cx="1050" cy="674" r="24"/>
+      <circle cx="900" cy="738" r="22"/>
+      <circle cx="1000" cy="730" r="20"/>
+      <circle cx="1100" cy="746" r="22"/>
+      <circle cx="950" cy="806" r="22"/>
+      <circle cx="1050" cy="821" r="18"/>
+    </g>
+
+    <!-- Top highlights on canopy -->
+    <g fill="#7aaa6a" opacity="0.5">
+      <circle cx="845" cy="672" r="12"/>
+      <circle cx="1045" cy="668" r="14"/>
+      <circle cx="895" cy="732" r="12"/>
+      <circle cx="1095" cy="740" r="12"/>
+      <circle cx="945" cy="800" r="12"/>
+    </g>
+  </g>
+
+  <!-- ==================== SCATTERED BUSHES ==================== -->
+  <g>
+    <!-- Bushes along path edges and in grass -->
+    <!-- Bottom area bushes -->
+    <circle cx="100" cy="1020" r="18" fill="#5a8a4a" opacity="0.8"/>
+    <circle cx="100" cy="1015" r="14" fill="#6b9a5a" opacity="0.7"/>
+    <circle cx="1850" cy="1010" r="20" fill="#5a8a4a" opacity="0.8"/>
+    <circle cx="1850" cy="1005" r="16" fill="#6b9a5a" opacity="0.7"/>
+
+    <!-- Right side bushes -->
+    <circle cx="1870" cy="870" r="18" fill="#5a8a4a" opacity="0.8"/>
+    <circle cx="1870" cy="865" r="14" fill="#6b9a5a" opacity="0.7"/>
+    <circle cx="1900" cy="740" r="16" fill="#5a8a4a" opacity="0.7"/>
+
+    <!-- Upper area bushes -->
+    <circle cx="80" cy="650" r="20" fill="#5a8a4a" opacity="0.8"/>
+    <circle cx="80" cy="645" r="16" fill="#6b9a5a" opacity="0.7"/>
+    <circle cx="1880" cy="630" r="18" fill="#5a8a4a" opacity="0.8"/>
+    <circle cx="1880" cy="625" r="14" fill="#6b9a5a" opacity="0.7"/>
+
+    <!-- Interior scattered bushes near forest -->
+    <circle cx="620" cy="850" r="16" fill="#5a8a4a" opacity="0.7"/>
+    <circle cx="620" cy="846" r="12" fill="#6b9a5a" opacity="0.6"/>
+    <circle cx="1300" cy="860" r="18" fill="#5a8a4a" opacity="0.7"/>
+    <circle cx="1300" cy="856" r="14" fill="#6b9a5a" opacity="0.6"/>
+    <circle cx="680" cy="680" r="15" fill="#5a8a4a" opacity="0.7"/>
+    <circle cx="680" cy="676" r="11" fill="#6b9a5a" opacity="0.6"/>
+    <circle cx="1350" cy="700" r="16" fill="#5a8a4a" opacity="0.7"/>
+    <circle cx="1350" cy="696" r="12" fill="#6b9a5a" opacity="0.6"/>
+
+    <!-- Extra grass-area bushes -->
+    <circle cx="400" cy="1050" r="14" fill="#5a8a4a" opacity="0.6"/>
+    <circle cx="1600" cy="1040" r="16" fill="#5a8a4a" opacity="0.6"/>
+    <circle cx="960" cy="1060" r="15" fill="#5a8a4a" opacity="0.5"/>
+  </g>
+
+  <!-- ==================== TORCHES ==================== -->
+  <g>
+    <!-- Torch helper: post + flame + glow -->
+    <!-- Bottom segment torches -->
+    <!-- Torch 1: between level 1 and 2 -->
+    <rect x="298" y="950" width="5" height="22" rx="1" fill="#5a4020"/>
+    <ellipse cx="300" cy="945" rx="8" ry="12" fill="url(#flameGrad)" opacity="0.8"/>
+    <circle cx="300" cy="945" r="22" fill="url(#torchGlow)"/>
+
+    <!-- Torch 2: between level 2 and 3 -->
+    <rect x="598" y="940" width="5" height="22" rx="1" fill="#5a4020"/>
+    <ellipse cx="600" cy="935" rx="8" ry="12" fill="url(#flameGrad)" opacity="0.8"/>
+    <circle cx="600" cy="935" r="22" fill="url(#torchGlow)"/>
+
+    <!-- Torch 3: between level 3 and 4 -->
+    <rect x="998" y="938" width="5" height="22" rx="1" fill="#5a4020"/>
+    <ellipse cx="1000" cy="933" rx="8" ry="12" fill="url(#flameGrad)" opacity="0.8"/>
+    <circle cx="1000" cy="933" r="22" fill="url(#torchGlow)"/>
+
+    <!-- Torch 4: between level 4 and 5 -->
+    <rect x="1398" y="942" width="5" height="22" rx="1" fill="#5a4020"/>
+    <ellipse cx="1400" cy="937" rx="8" ry="12" fill="url(#flameGrad)" opacity="0.8"/>
+    <circle cx="1400" cy="937" r="22" fill="url(#torchGlow)"/>
+
+    <!-- Torch 5: right ascending curve -->
+    <rect x="1768" y="850" width="5" height="22" rx="1" fill="#5a4020"/>
+    <ellipse cx="1770" cy="845" rx="8" ry="12" fill="url(#flameGrad)" opacity="0.8"/>
+    <circle cx="1770" cy="845" r="22" fill="url(#torchGlow)"/>
+
+    <!-- Torch 6: right curve upper -->
+    <rect x="1778" y="720" width="5" height="22" rx="1" fill="#5a4020"/>
+    <ellipse cx="1780" cy="715" rx="8" ry="12" fill="url(#flameGrad)" opacity="0.8"/>
+    <circle cx="1780" cy="715" r="22" fill="url(#torchGlow)"/>
+
+    <!-- Torch 7: upper segment -->
+    <rect x="1498" y="580" width="5" height="22" rx="1" fill="#5a4020"/>
+    <ellipse cx="1500" cy="575" rx="8" ry="12" fill="url(#flameGrad)" opacity="0.8"/>
+    <circle cx="1500" cy="575" r="22" fill="url(#torchGlow)"/>
+
+    <!-- Torch 8: upper segment -->
+    <rect x="1098" y="585" width="5" height="22" rx="1" fill="#5a4020"/>
+    <ellipse cx="1100" cy="580" rx="8" ry="12" fill="url(#flameGrad)" opacity="0.8"/>
+    <circle cx="1100" cy="580" r="22" fill="url(#torchGlow)"/>
+
+    <!-- Torch 9: upper segment -->
+    <rect x="698" y="590" width="5" height="22" rx="1" fill="#5a4020"/>
+    <ellipse cx="700" cy="585" rx="8" ry="12" fill="url(#flameGrad)" opacity="0.8"/>
+    <circle cx="700" cy="585" r="22" fill="url(#torchGlow)"/>
+
+    <!-- Torch 10: upper-left area -->
+    <rect x="348" y="598" width="5" height="22" rx="1" fill="#5a4020"/>
+    <ellipse cx="350" cy="593" rx="8" ry="12" fill="url(#flameGrad)" opacity="0.8"/>
+    <circle cx="350" cy="593" r="22" fill="url(#torchGlow)"/>
+  </g>
+
+  <!-- ==================== LEVEL NODES ==================== -->
+  <!-- Level positions along the U-shape path -->
+  <!-- Bottom row (L-R): 1,2,3,4,5 | Right curve: 6 | Top row (R-L): 7,8,9,10 -->
+  <g>
+    <!-- ===== Level 1 (bottom-left, completed) ===== -->
+    <g>
+      <ellipse cx="200" cy="985" rx="30" ry="12" fill="#000" opacity="0.15"/>
+      <ellipse cx="200" cy="978" rx="28" ry="18" fill="url(#stoneCompleted)" filter="url(#dropShadow)"/>
+      <ellipse cx="200" cy="974" rx="24" ry="14" fill="url(#stoneCompleted)"/>
+      <!-- Check mark -->
+      <polyline points="190,975 197,982 212,968" fill="none" stroke="#5a8a4a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="200" y="1010" text-anchor="middle" fill="#e8e0d0" font-family="Georgia, serif" font-size="14" font-weight="bold" opacity="0.9">1</text>
+    </g>
+
+    <!-- ===== Level 2 (completed) ===== -->
+    <g>
+      <ellipse cx="440" cy="968" rx="30" ry="12" fill="#000" opacity="0.15"/>
+      <ellipse cx="440" cy="961" rx="28" ry="18" fill="url(#stoneCompleted)" filter="url(#dropShadow)"/>
+      <ellipse cx="440" cy="957" rx="24" ry="14" fill="url(#stoneCompleted)"/>
+      <polyline points="430,958 437,965 452,951" fill="none" stroke="#5a8a4a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="440" y="993" text-anchor="middle" fill="#e8e0d0" font-family="Georgia, serif" font-size="14" font-weight="bold" opacity="0.9">2</text>
+    </g>
+
+    <!-- ===== Level 3 (completed) ===== -->
+    <g>
+      <ellipse cx="750" cy="960" rx="30" ry="12" fill="#000" opacity="0.15"/>
+      <ellipse cx="750" cy="953" rx="28" ry="18" fill="url(#stoneCompleted)" filter="url(#dropShadow)"/>
+      <ellipse cx="750" cy="949" rx="24" ry="14" fill="url(#stoneCompleted)"/>
+      <polyline points="740,950 747,957 762,943" fill="none" stroke="#5a8a4a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="750" y="985" text-anchor="middle" fill="#e8e0d0" font-family="Georgia, serif" font-size="14" font-weight="bold" opacity="0.9">3</text>
+    </g>
+
+    <!-- ===== Level 4 (current) ===== -->
+    <g>
+      <circle cx="1100" cy="955" r="40" fill="url(#currentGlow)" filter="url(#softGlow)" opacity="0.6"/>
+      <ellipse cx="1100" cy="962" rx="30" ry="12" fill="#000" opacity="0.15"/>
+      <ellipse cx="1100" cy="955" rx="28" ry="18" fill="url(#stoneCurrent)" filter="url(#dropShadow)"/>
+      <ellipse cx="1100" cy="951" rx="24" ry="14" fill="url(#stoneCurrent)"/>
+      <!-- Star for current -->
+      <polygon points="1100,943 1103,950 1110,950 1105,955 1107,962 1100,958 1093,962 1095,955 1090,950 1097,950" fill="#fff8dc" opacity="0.9"/>
+      <text x="1100" y="987" text-anchor="middle" fill="#ffe066" font-family="Georgia, serif" font-size="14" font-weight="bold">4</text>
+    </g>
+
+    <!-- ===== Level 5 (locked) ===== -->
+    <g>
+      <ellipse cx="1450" cy="960" rx="30" ry="12" fill="#000" opacity="0.15"/>
+      <ellipse cx="1450" cy="953" rx="28" ry="18" fill="url(#stoneLocked)" filter="url(#dropShadow)"/>
+      <ellipse cx="1450" cy="949" rx="24" ry="14" fill="url(#stoneLocked)"/>
+      <!-- Lock icon -->
+      <rect x="1444" y="949" width="12" height="9" rx="2" fill="#555040"/>
+      <path d="M1447,949 L1447,945 Q1447,940 1450,940 Q1453,940 1453,945 L1453,949" fill="none" stroke="#555040" stroke-width="2"/>
+      <text x="1450" y="985" text-anchor="middle" fill="#888070" font-family="Georgia, serif" font-size="14" font-weight="bold" opacity="0.7">5</text>
+    </g>
+
+    <!-- ===== Level 6 (right curve, locked) ===== -->
+    <g>
+      <ellipse cx="1750" cy="880" rx="30" ry="12" fill="#000" opacity="0.15"/>
+      <ellipse cx="1750" cy="873" rx="28" ry="18" fill="url(#stoneLocked)" filter="url(#dropShadow)"/>
+      <ellipse cx="1750" cy="869" rx="24" ry="14" fill="url(#stoneLocked)"/>
+      <rect x="1744" y="869" width="12" height="9" rx="2" fill="#555040"/>
+      <path d="M1747,869 L1747,865 Q1747,860 1750,860 Q1753,860 1753,865 L1753,869" fill="none" stroke="#555040" stroke-width="2"/>
+      <text x="1750" y="905" text-anchor="middle" fill="#888070" font-family="Georgia, serif" font-size="14" font-weight="bold" opacity="0.7">6</text>
+    </g>
+
+    <!-- ===== Level 7 (right curve upper, locked) ===== -->
+    <g>
+      <ellipse cx="1780" cy="710" rx="30" ry="12" fill="#000" opacity="0.15"/>
+      <ellipse cx="1780" cy="703" rx="28" ry="18" fill="url(#stoneLocked)" filter="url(#dropShadow)"/>
+      <ellipse cx="1780" cy="699" rx="24" ry="14" fill="url(#stoneLocked)"/>
+      <rect x="1774" y="699" width="12" height="9" rx="2" fill="#555040"/>
+      <path d="M1777,699 L1777,695 Q1777,690 1780,690 Q1783,690 1783,695 L1783,699" fill="none" stroke="#555040" stroke-width="2"/>
+      <text x="1780" y="735" text-anchor="middle" fill="#888070" font-family="Georgia, serif" font-size="14" font-weight="bold" opacity="0.7">7</text>
+    </g>
+
+    <!-- ===== Level 8 (top row, locked) ===== -->
+    <g>
+      <ellipse cx="1400" cy="600" rx="30" ry="12" fill="#000" opacity="0.15"/>
+      <ellipse cx="1400" cy="593" rx="28" ry="18" fill="url(#stoneLocked)" filter="url(#dropShadow)"/>
+      <ellipse cx="1400" cy="589" rx="24" ry="14" fill="url(#stoneLocked)"/>
+      <rect x="1394" y="589" width="12" height="9" rx="2" fill="#555040"/>
+      <path d="M1397,589 L1397,585 Q1397,580 1400,580 Q1403,580 1403,585 L1403,589" fill="none" stroke="#555040" stroke-width="2"/>
+      <text x="1400" y="625" text-anchor="middle" fill="#888070" font-family="Georgia, serif" font-size="14" font-weight="bold" opacity="0.7">8</text>
+    </g>
+
+    <!-- ===== Level 9 (top row, locked) ===== -->
+    <g>
+      <ellipse cx="900" cy="610" rx="30" ry="12" fill="#000" opacity="0.15"/>
+      <ellipse cx="900" cy="603" rx="28" ry="18" fill="url(#stoneLocked)" filter="url(#dropShadow)"/>
+      <ellipse cx="900" cy="599" rx="24" ry="14" fill="url(#stoneLocked)"/>
+      <rect x="894" y="599" width="12" height="9" rx="2" fill="#555040"/>
+      <path d="M897,599 L897,595 Q897,590 900,590 Q903,590 903,595 L903,599" fill="none" stroke="#555040" stroke-width="2"/>
+      <text x="900" y="635" text-anchor="middle" fill="#888070" font-family="Georgia, serif" font-size="14" font-weight="bold" opacity="0.7">9</text>
+    </g>
+
+    <!-- ===== Level 10 (upper-left, locked) ===== -->
+    <g>
+      <ellipse cx="400" cy="618" rx="30" ry="12" fill="#000" opacity="0.15"/>
+      <ellipse cx="400" cy="611" rx="28" ry="18" fill="url(#stoneLocked)" filter="url(#dropShadow)"/>
+      <ellipse cx="400" cy="607" rx="24" ry="14" fill="url(#stoneLocked)"/>
+      <rect x="394" y="607" width="12" height="9" rx="2" fill="#555040"/>
+      <path d="M397,607 L397,603 Q397,598 400,598 Q403,598 403,603 L403,607" fill="none" stroke="#555040" stroke-width="2"/>
+      <text x="400" y="643" text-anchor="middle" fill="#888070" font-family="Georgia, serif" font-size="14" font-weight="bold" opacity="0.7">10</text>
+    </g>
+  </g>
+
+  <!-- ==================== FOREGROUND GRASS TUFTS ==================== -->
+  <g fill="#4a7a3a" opacity="0.4">
+    <ellipse cx="50" cy="1070" rx="30" ry="12"/>
+    <ellipse cx="180" cy="1075" rx="25" ry="10"/>
+    <ellipse cx="400" cy="1072" rx="28" ry="11"/>
+    <ellipse cx="650" cy="1068" rx="32" ry="12"/>
+    <ellipse cx="900" cy="1074" rx="26" ry="10"/>
+    <ellipse cx="1150" cy="1070" rx="30" ry="11"/>
+    <ellipse cx="1400" cy="1073" rx="28" ry="10"/>
+    <ellipse cx="1650" cy="1068" rx="32" ry="12"/>
+    <ellipse cx="1880" cy="1072" rx="26" ry="11"/>
+  </g>
+
+</svg>
+</body>
+</html>

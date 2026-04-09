@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300">
+  <!-- Antenna stem (shorter for small head) -->
+  <rect x="96" y="22" width="8" height="16" rx="3" ry="3" fill="#D4600A"/>
+  <!-- Antenna ball -->
+  <circle cx="100" cy="18" r="9" fill="#FF9F4A"/>
+  <circle cx="97" cy="15" r="3" fill="#FFCC80" opacity="0.6"/>
+
+  <!-- Head (smaller for chunky body proportion) -->
+  <rect x="66" y="38" width="68" height="52" rx="16" ry="16" fill="#FF7518"/>
+  <!-- Head highlight -->
+  <rect x="72" y="42" width="56" height="22" rx="11" ry="11" fill="#FF9F4A" opacity="0.35"/>
+
+  <!-- Left eye socket -->
+  <circle cx="84" cy="62" r="14" fill="#D4600A"/>
+  <!-- Left eye white -->
+  <circle cx="84" cy="62" r="10" fill="#EEEEFF"/>
+  <!-- Left pupil -->
+  <circle cx="86" cy="61" r="5" fill="#2A1A08"/>
+  <!-- Left eye shine -->
+  <circle cx="89" cy="58" r="2" fill="#FFFFFF"/>
+
+  <!-- Right eye socket -->
+  <circle cx="116" cy="62" r="14" fill="#D4600A"/>
+  <!-- Right eye white -->
+  <circle cx="116" cy="62" r="10" fill="#EEEEFF"/>
+  <!-- Right pupil -->
+  <circle cx="118" cy="61" r="5" fill="#2A1A08"/>
+  <!-- Right eye shine -->
+  <circle cx="121" cy="58" r="2" fill="#FFFFFF"/>
+
+  <!-- Mouth (determined grin) -->
+  <rect x="88" y="78" width="24" height="5" rx="2.5" ry="2.5" fill="#D4600A"/>
+  <rect x="92" y="79" width="5" height="3" rx="1" ry="1" fill="#FF9F4A" opacity="0.5"/>
+  <rect x="103" y="79" width="5" height="3" rx="1" ry="1" fill="#FF9F4A" opacity="0.5"/>
+
+  <!-- Neck / collar band (wide to match shoulders) -->
+  <rect x="55" y="90" width="90" height="16" rx="6" ry="6" fill="#D4600A"/>
+  <rect x="62" y="93" width="76" height="9" rx="4" ry="4" fill="#FF9F4A" opacity="0.3"/>
+
+  <!-- Body (wide and chunky) -->
+  <rect x="34" y="106" width="132" height="118" rx="24" ry="24" fill="#FF7518"/>
+  <!-- Body highlight -->
+  <rect x="44" y="112" width="112" height="48" rx="18" ry="18" fill="#FF9F4A" opacity="0.25"/>
+
+  <!-- Chest panel (larger for chunky body) -->
+  <rect x="62" y="132" width="76" height="54" rx="12" ry="12" fill="#D4600A"/>
+  <!-- Chest panel inner -->
+  <rect x="68" y="138" width="64" height="42" rx="8" ry="8" fill="#B04E08"/>
+  <!-- Chest vent lines -->
+  <rect x="76" y="145" width="48" height="4" rx="2" ry="2" fill="#FF9F4A" opacity="0.5"/>
+  <rect x="76" y="153" width="48" height="4" rx="2" ry="2" fill="#FF9F4A" opacity="0.4"/>
+  <rect x="76" y="161" width="48" height="4" rx="2" ry="2" fill="#FF9F4A" opacity="0.3"/>
+  <!-- Chest power indicator -->
+  <circle cx="100" cy="174" r="5" fill="#FFCC80"/>
+  <circle cx="100" cy="174" r="3" fill="#FFE8B8"/>
+
+  <!-- Left arm (thick) -->
+  <rect x="14" y="114" width="28" height="68" rx="14" ry="14" fill="#FF7518"/>
+  <rect x="16" y="116" width="24" height="28" rx="12" ry="12" fill="#FF9F4A" opacity="0.25"/>
+  <!-- Left shoulder bolt -->
+  <circle cx="34" cy="116" r="6" fill="#D4600A"/>
+  <circle cx="34" cy="116" r="3" fill="#FF9F4A" opacity="0.4"/>
+  <!-- Left hand -->
+  <circle cx="28" cy="186" r="14" fill="#D4600A"/>
+  <circle cx="26" cy="183" r="3.5" fill="#FF9F4A" opacity="0.3"/>
+
+  <!-- Right arm (thick) -->
+  <rect x="158" y="114" width="28" height="68" rx="14" ry="14" fill="#FF7518"/>
+  <rect x="160" y="116" width="24" height="28" rx="12" ry="12" fill="#FF9F4A" opacity="0.25"/>
+  <!-- Right shoulder bolt -->
+  <circle cx="166" cy="116" r="6" fill="#D4600A"/>
+  <circle cx="166" cy="116" r="3" fill="#FF9F4A" opacity="0.4"/>
+  <!-- Right hand -->
+  <circle cx="172" cy="186" r="14" fill="#D4600A"/>
+  <circle cx="170" cy="183" r="3.5" fill="#FF9F4A" opacity="0.3"/>
+
+  <!-- Left leg (sturdy) -->
+  <rect x="54" y="220" width="34" height="42" rx="14" ry="14" fill="#D4600A"/>
+  <rect x="56" y="222" width="30" height="18" rx="12" ry="12" fill="#FF9F4A" opacity="0.2"/>
+  <!-- Left foot (big) -->
+  <rect x="44" y="254" width="50" height="24" rx="12" ry="12" fill="#FF7518"/>
+  <rect x="46" y="256" width="46" height="12" rx="10" ry="10" fill="#FF9F4A" opacity="0.25"/>
+
+  <!-- Right leg (sturdy) -->
+  <rect x="112" y="220" width="34" height="42" rx="14" ry="14" fill="#D4600A"/>
+  <rect x="114" y="222" width="30" height="18" rx="12" ry="12" fill="#FF9F4A" opacity="0.2"/>
+  <!-- Right foot (big) -->
+  <rect x="106" y="254" width="50" height="24" rx="12" ry="12" fill="#FF7518"/>
+  <rect x="108" y="256" width="46" height="12" rx="10" ry="10" fill="#FF9F4A" opacity="0.25"/>
+</svg>

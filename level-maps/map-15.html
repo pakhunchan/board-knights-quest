@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>Level Map - World 15</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #b5d8c0; }
+  svg { display: block; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <!-- Sky gradient: soft teal-mint -->
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b5d8c0"/>
+      <stop offset="60%" stop-color="#bfdfca"/>
+      <stop offset="100%" stop-color="#c8e6cf"/>
+    </linearGradient>
+
+    <!-- Mountain gradients: muted gray-brown -->
+    <linearGradient id="mtGrad1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9a9a8e"/>
+      <stop offset="100%" stop-color="#7a7a6e"/>
+    </linearGradient>
+    <linearGradient id="mtGrad2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8a8a7e"/>
+      <stop offset="100%" stop-color="#6a6a5e"/>
+    </linearGradient>
+    <linearGradient id="mtGrad3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7a7a6e"/>
+      <stop offset="100%" stop-color="#5a5a4e"/>
+    </linearGradient>
+
+    <!-- Grass gradients: sage green -->
+    <linearGradient id="grassGrad1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7aaa6a"/>
+      <stop offset="100%" stop-color="#6b9a5a"/>
+    </linearGradient>
+    <linearGradient id="grassGrad2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6b9a5a"/>
+      <stop offset="100%" stop-color="#5a8a4a"/>
+    </linearGradient>
+
+    <!-- Path fill -->
+    <linearGradient id="pathGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c9a96e"/>
+      <stop offset="100%" stop-color="#b89458"/>
+    </linearGradient>
+
+    <!-- Stone node gradients -->
+    <radialGradient id="stoneCompleted" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#a0a098"/>
+      <stop offset="100%" stop-color="#707068"/>
+    </radialGradient>
+    <radialGradient id="stoneCurrent" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#ffd966"/>
+      <stop offset="100%" stop-color="#e6b830"/>
+    </radialGradient>
+    <radialGradient id="stoneLocked" cx="40%" cy="35%" r="60%">
+      <stop offset="0%" stop-color="#6e6e68"/>
+      <stop offset="100%" stop-color="#4a4a46"/>
+    </radialGradient>
+
+    <!-- Glow for current level -->
+    <filter id="goldGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feFlood flood-color="#ffd966" flood-opacity="0.6" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Node shadow -->
+    <filter id="nodeShadow" x="-20%" y="-10%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+
+    <!-- Bush shadow -->
+    <filter id="bushShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-color="#000" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- ===== SKY ===== -->
+  <rect x="0" y="0" width="1920" height="1080" fill="url(#skyGrad)"/>
+
+  <!-- ===== DISTANT MOUNTAINS (far back row) ===== -->
+  <polygon points="50,440 180,320 310,440" fill="#8a8a7e" opacity="0.5"/>
+  <polygon points="160,440 320,280 480,440" fill="#7a7a6e" opacity="0.55"/>
+  <polygon points="350,440 500,300 650,440" fill="#8a8a7e" opacity="0.5"/>
+  <polygon points="520,440 680,260 840,440" fill="#7a7a6e" opacity="0.55"/>
+  <polygon points="700,440 840,310 980,440" fill="#8a8a7e" opacity="0.5"/>
+  <polygon points="900,440 1050,290 1200,440" fill="#7a7a6e" opacity="0.5"/>
+  <polygon points="1100,440 1250,310 1400,440" fill="#8a8a7e" opacity="0.5"/>
+  <polygon points="1350,440 1500,300 1650,440" fill="#7a7a6e" opacity="0.55"/>
+  <polygon points="1550,440 1700,320 1850,440" fill="#8a8a7e" opacity="0.5"/>
+
+  <!-- Main mountain row -->
+  <polygon points="-60,480 140,260 340,480" fill="url(#mtGrad2)"/>
+  <polygon points="80,480 280,220 480,480" fill="url(#mtGrad1)"/>
+  <polygon points="240,480 420,240 600,480" fill="url(#mtGrad3)"/>
+  <polygon points="400,480 580,270 760,480" fill="url(#mtGrad2)"/>
+  <polygon points="560,480 720,290 880,480" fill="url(#mtGrad1)"/>
+  <polygon points="750,480 920,250 1090,480" fill="url(#mtGrad3)"/>
+  <polygon points="980,480 1140,300 1300,480" fill="url(#mtGrad2)"/>
+  <polygon points="1200,480 1380,280 1560,480" fill="url(#mtGrad1)"/>
+  <polygon points="1450,480 1620,310 1790,480" fill="url(#mtGrad2)"/>
+  <polygon points="1680,480 1830,330 1980,480" fill="url(#mtGrad3)" opacity="0.8"/>
+
+  <!-- Snow caps -->
+  <polygon points="280,220 255,255 305,255" fill="#ddd" opacity="0.5"/>
+  <polygon points="420,240 397,270 443,270" fill="#ddd" opacity="0.5"/>
+  <polygon points="580,270 558,298 602,298" fill="#ddd" opacity="0.45"/>
+  <polygon points="920,250 898,280 942,280" fill="#ddd" opacity="0.5"/>
+  <polygon points="140,260 118,290 162,290" fill="#ddd" opacity="0.45"/>
+  <polygon points="1140,300 1120,328 1160,328" fill="#ddd" opacity="0.45"/>
+  <polygon points="1380,280 1358,310 1402,310" fill="#ddd" opacity="0.5"/>
+
+  <!-- ===== BUSH ROW (transition between mountains and grass) y=440-560 ===== -->
+  <g filter="url(#bushShadow)">
+    <!-- Round bush clusters across the scene -->
+    <circle cx="80" cy="500" r="35" fill="#6b9a5a"/>
+    <circle cx="110" cy="490" r="30" fill="#7aaa6a"/>
+    <circle cx="55" cy="495" r="28" fill="#5a8a4a"/>
+
+    <circle cx="250" cy="510" r="32" fill="#6b9a5a"/>
+    <circle cx="280" cy="502" r="28" fill="#7aaa6a"/>
+    <circle cx="225" cy="505" r="26" fill="#5a8a4a"/>
+
+    <circle cx="430" cy="495" r="34" fill="#6b9a5a"/>
+    <circle cx="460" cy="487" r="29" fill="#7aaa6a"/>
+    <circle cx="405" cy="490" r="27" fill="#5a8a4a"/>
+
+    <circle cx="620" cy="505" r="33" fill="#6b9a5a"/>
+    <circle cx="650" cy="497" r="28" fill="#7aaa6a"/>
+    <circle cx="595" cy="500" r="26" fill="#5a8a4a"/>
+
+    <circle cx="810" cy="490" r="35" fill="#6b9a5a"/>
+    <circle cx="840" cy="482" r="30" fill="#7aaa6a"/>
+    <circle cx="785" cy="486" r="27" fill="#5a8a4a"/>
+
+    <circle cx="1000" cy="500" r="32" fill="#6b9a5a"/>
+    <circle cx="1028" cy="493" r="27" fill="#7aaa6a"/>
+    <circle cx="975" cy="496" r="25" fill="#5a8a4a"/>
+
+    <circle cx="1180" cy="505" r="34" fill="#6b9a5a"/>
+    <circle cx="1210" cy="497" r="29" fill="#7aaa6a"/>
+    <circle cx="1155" cy="500" r="26" fill="#5a8a4a"/>
+
+    <circle cx="1370" cy="495" r="33" fill="#6b9a5a"/>
+    <circle cx="1398" cy="488" r="28" fill="#7aaa6a"/>
+    <circle cx="1345" cy="491" r="25" fill="#5a8a4a"/>
+
+    <circle cx="1560" cy="502" r="35" fill="#6b9a5a"/>
+    <circle cx="1590" cy="494" r="30" fill="#7aaa6a"/>
+    <circle cx="1535" cy="497" r="27" fill="#5a8a4a"/>
+
+    <circle cx="1740" cy="498" r="32" fill="#6b9a5a"/>
+    <circle cx="1768" cy="491" r="27" fill="#7aaa6a"/>
+    <circle cx="1715" cy="494" r="25" fill="#5a8a4a"/>
+
+    <circle cx="1890" cy="505" r="30" fill="#6b9a5a"/>
+    <circle cx="1915" cy="498" r="26" fill="#7aaa6a"/>
+  </g>
+
+  <!-- ===== GREEN HILLS / GRASS (y=550 to y=1080) ===== -->
+  <!-- Back hill layer -->
+  <ellipse cx="300" cy="570" rx="500" ry="140" fill="#6b9a5a"/>
+  <ellipse cx="900" cy="560" rx="550" ry="135" fill="#7aaa6a"/>
+  <ellipse cx="1500" cy="565" rx="500" ry="140" fill="#6b9a5a"/>
+
+  <!-- Main ground fill -->
+  <rect x="0" y="570" width="1920" height="510" fill="#5a8a4a"/>
+
+  <!-- Rolling foreground hills -->
+  <ellipse cx="200" cy="590" rx="450" ry="110" fill="#6b9a5a"/>
+  <ellipse cx="750" cy="605" rx="500" ry="120" fill="#7aaa6a"/>
+  <ellipse cx="1300" cy="595" rx="480" ry="115" fill="#6b9a5a"/>
+  <ellipse cx="1750" cy="610" rx="400" ry="105" fill="#7aaa6a"/>
+
+  <!-- Foreground hill bumps -->
+  <ellipse cx="100" cy="850" rx="300" ry="70" fill="#6b9a5a"/>
+  <ellipse cx="500" cy="880" rx="350" ry="80" fill="#7aaa6a"/>
+  <ellipse cx="960" cy="860" rx="400" ry="75" fill="#6b9a5a"/>
+  <ellipse cx="1450" cy="870" rx="350" ry="70" fill="#7aaa6a"/>
+  <ellipse cx="1800" cy="885" rx="300" ry="75" fill="#6b9a5a"/>
+
+  <!-- Bottom edge fill -->
+  <rect x="0" y="930" width="1920" height="150" fill="#5a8a4a"/>
+  <ellipse cx="480" cy="1000" rx="500" ry="55" fill="#4f7f45"/>
+  <ellipse cx="1400" cy="1010" rx="500" ry="50" fill="#4f7f45"/>
+
+  <!-- ===== WINDING PATH - SPIRAL INWARD ===== -->
+  <!--
+    Spiral path (rectangular/rounded):
+    Start: bottom-right (1750, 980) = Level 1
+    Goes LEFT along bottom to (200, 980) = near Level 3
+    Goes UP the left side to (200, 620) = near Level 5
+    Goes RIGHT across upper grass to (1700, 620) = near Level 7
+    Goes DOWN toward center-right to (1400, 800) = near Level 8
+    Goes LEFT toward center to (960, 800) = near Level 9
+    Ends at center (960, 740) = Level 10
+
+    Node positions (all y > 560):
+    L1:  (1750, 975)
+    L2:  (1200, 975)
+    L3:  (400, 975)
+    L4:  (200, 800)
+    L5:  (200, 625)
+    L6:  (700, 625)
+    L7:  (1400, 625)
+    L8:  (1550, 800)
+    L9:  (1150, 800)
+    L10: (960, 720)
+  -->
+
+  <!-- Path shadow -->
+  <path d="M 1750,975
+           C 1650,975 1350,978 1200,975
+           C 1000,972 600,978 400,975
+           C 280,973 200,970 195,950
+           C 185,900 190,850 195,800
+           C 198,740 195,680 195,650
+           C 195,625 210,612 250,610
+           C 400,608 600,618 700,622
+           C 900,628 1200,620 1400,622
+           C 1500,623 1580,625 1620,650
+           C 1660,680 1660,730 1620,770
+           C 1590,800 1500,805 1400,802
+           C 1300,800 1200,800 1150,800
+           C 1080,800 1020,785 990,760
+           C 968,742 960,730 960,720"
+        stroke="#8a7040" stroke-width="58" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.3"/>
+
+  <!-- Path dark edge -->
+  <path d="M 1750,975
+           C 1650,975 1350,978 1200,975
+           C 1000,972 600,978 400,975
+           C 280,973 200,970 195,950
+           C 185,900 190,850 195,800
+           C 198,740 195,680 195,650
+           C 195,625 210,612 250,610
+           C 400,608 600,618 700,622
+           C 900,628 1200,620 1400,622
+           C 1500,623 1580,625 1620,650
+           C 1660,680 1660,730 1620,770
+           C 1590,800 1500,805 1400,802
+           C 1300,800 1200,800 1150,800
+           C 1080,800 1020,785 990,760
+           C 968,742 960,730 960,720"
+        stroke="#a08050" stroke-width="52" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Path main fill -->
+  <path d="M 1750,975
+           C 1650,975 1350,978 1200,975
+           C 1000,972 600,978 400,975
+           C 280,973 200,970 195,950
+           C 185,900 190,850 195,800
+           C 198,740 195,680 195,650
+           C 195,625 210,612 250,610
+           C 400,608 600,618 700,622
+           C 900,628 1200,620 1400,622
+           C 1500,623 1580,625 1620,650
+           C 1660,680 1660,730 1620,770
+           C 1590,800 1500,805 1400,802
+           C 1300,800 1200,800 1150,800
+           C 1080,800 1020,785 990,760
+           C 968,742 960,730 960,720"
+        stroke="#c9a96e" stroke-width="44" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Path highlight (center light strip) -->
+  <path d="M 1750,975
+           C 1650,975 1350,978 1200,975
+           C 1000,972 600,978 400,975
+           C 280,973 200,970 195,950
+           C 185,900 190,850 195,800
+           C 198,740 195,680 195,650
+           C 195,625 210,612 250,610
+           C 400,608 600,618 700,622
+           C 900,628 1200,620 1400,622
+           C 1500,623 1580,625 1620,650
+           C 1660,680 1660,730 1620,770
+           C 1590,800 1500,805 1400,802
+           C 1300,800 1200,800 1150,800
+           C 1080,800 1020,785 990,760
+           C 968,742 960,730 960,720"
+        stroke="#d4b87e" stroke-width="28" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+
+  <!-- ===== SCATTERED BUSHES around the spiral ===== -->
+  <g filter="url(#bushShadow)">
+    <!-- Inside the spiral - center area -->
+    <circle cx="850" cy="710" r="22" fill="#5a8a4a"/>
+    <circle cx="870" cy="703" r="19" fill="#6b9a5a"/>
+
+    <circle cx="1060" cy="700" r="24" fill="#5a8a4a"/>
+    <circle cx="1082" cy="693" r="20" fill="#6b9a5a"/>
+
+    <circle cx="1280" cy="720" r="20" fill="#5a8a4a"/>
+    <circle cx="1298" cy="714" r="17" fill="#6b9a5a"/>
+
+    <!-- Outside spiral edges -->
+    <circle cx="100" cy="700" r="26" fill="#5a8a4a"/>
+    <circle cx="125" cy="692" r="22" fill="#6b9a5a"/>
+    <circle cx="78" cy="696" r="20" fill="#4f7f45"/>
+
+    <circle cx="1850" cy="700" r="28" fill="#5a8a4a"/>
+    <circle cx="1875" cy="692" r="24" fill="#6b9a5a"/>
+    <circle cx="1830" cy="696" r="22" fill="#4f7f45"/>
+
+    <circle cx="1850" cy="900" r="25" fill="#5a8a4a"/>
+    <circle cx="1873" cy="893" r="21" fill="#6b9a5a"/>
+
+    <circle cx="100" cy="580" r="24" fill="#5a8a4a"/>
+    <circle cx="123" cy="573" r="20" fill="#6b9a5a"/>
+
+    <!-- Between path segments -->
+    <circle cx="500" cy="700" r="22" fill="#5a8a4a"/>
+    <circle cx="522" cy="694" r="18" fill="#6b9a5a"/>
+
+    <circle cx="700" cy="850" r="25" fill="#5a8a4a"/>
+    <circle cx="723" cy="843" r="21" fill="#6b9a5a"/>
+    <circle cx="680" cy="846" r="19" fill="#4f7f45"/>
+
+    <circle cx="1000" cy="900" r="24" fill="#5a8a4a"/>
+    <circle cx="1023" cy="893" r="20" fill="#6b9a5a"/>
+
+    <circle cx="1600" cy="900" r="26" fill="#5a8a4a"/>
+    <circle cx="1625" cy="893" r="22" fill="#6b9a5a"/>
+    <circle cx="1580" cy="896" r="20" fill="#4f7f45"/>
+
+    <circle cx="350" cy="800" r="23" fill="#5a8a4a"/>
+    <circle cx="372" cy="793" r="19" fill="#6b9a5a"/>
+
+    <circle cx="900" cy="580" r="22" fill="#5a8a4a"/>
+    <circle cx="920" cy="574" r="18" fill="#6b9a5a"/>
+
+    <circle cx="1100" cy="580" r="20" fill="#5a8a4a"/>
+    <circle cx="1118" cy="574" r="17" fill="#6b9a5a"/>
+  </g>
+
+  <!-- ===== SMALL TREES (round lollipop style) ===== -->
+  <!-- Tree 1 - left of spiral -->
+  <rect x="68" y="625" width="8" height="40" rx="3" fill="#5a4a30"/>
+  <circle cx="72" cy="610" r="30" fill="#5a8a4a"/>
+  <circle cx="83" cy="605" r="25" fill="#6b9a5a"/>
+
+  <!-- Tree 2 - right side -->
+  <rect x="1845" y="640" width="8" height="38" rx="3" fill="#5a4a30"/>
+  <circle cx="1849" cy="626" r="28" fill="#5a8a4a"/>
+  <circle cx="1859" cy="622" r="23" fill="#6b9a5a"/>
+
+  <!-- Tree 3 - bottom left -->
+  <rect x="120" y="920" width="9" height="42" rx="3" fill="#5a4a30"/>
+  <circle cx="124" cy="904" r="32" fill="#5a8a4a"/>
+  <circle cx="136" cy="899" r="27" fill="#6b9a5a"/>
+
+  <!-- Tree 4 - bottom center -->
+  <rect x="760" cy="950" y="935" width="8" height="38" rx="3" fill="#5a4a30"/>
+  <circle cx="764" cy="921" r="28" fill="#5a8a4a"/>
+  <circle cx="774" cy="917" r="23" fill="#6b9a5a"/>
+
+  <!-- Tree 5 - inside spiral upper -->
+  <rect x="1050" y="650" width="7" height="35" rx="3" fill="#5a4a30"/>
+  <circle cx="1053" cy="637" r="26" fill="#5a8a4a"/>
+  <circle cx="1063" cy="633" r="22" fill="#6b9a5a"/>
+
+  <!-- ===== TREASURE CHEST near Level 10 (center) ===== -->
+  <g transform="translate(960, 670)">
+    <!-- Chest body -->
+    <rect x="-22" y="-5" width="44" height="26" rx="3" fill="#8B6914"/>
+    <rect x="-22" y="-5" width="44" height="13" rx="3" fill="#A07818"/>
+    <!-- Chest lid (slightly open, angled) -->
+    <rect x="-24" y="-18" width="48" height="14" rx="4" fill="#B8860B" transform="rotate(-5, 0, -11)"/>
+    <!-- Metal bands -->
+    <rect x="-22" y="6" width="44" height="3" fill="#DAA520" opacity="0.7"/>
+    <rect x="-24" y="-12" width="48" height="2.5" fill="#DAA520" opacity="0.7" transform="rotate(-5, 0, -11)"/>
+    <!-- Lock -->
+    <circle cx="0" cy="8" r="4" fill="#DAA520"/>
+    <rect x="-2" y="6" width="4" height="5" rx="1" fill="#B8860B"/>
+    <!-- Gold glow from opening -->
+    <ellipse cx="0" cy="-10" rx="16" ry="4" fill="#ffd700" opacity="0.35"/>
+    <!-- Sparkles -->
+    <polygon points="0,0 1.5,4.5 6,5 3,8 4,13 0,10.5 -4,13 -3,8 -6,5 -1.5,4.5" transform="translate(-30, -25) scale(0.4)" fill="#ffd700" opacity="0.7"/>
+    <polygon points="0,0 1.5,4.5 6,5 3,8 4,13 0,10.5 -4,13 -3,8 -6,5 -1.5,4.5" transform="translate(30, -28) scale(0.35)" fill="#ffd700" opacity="0.6"/>
+    <polygon points="0,0 1.5,4.5 6,5 3,8 4,13 0,10.5 -4,13 -3,8 -6,5 -1.5,4.5" transform="translate(5, -32) scale(0.3)" fill="#ffd700" opacity="0.8"/>
+  </g>
+
+  <!-- ===== LEVEL NODES ===== -->
+
+  <!-- LEVEL 1 - Completed (bottom-right, spiral start) -->
+  <g transform="translate(1750, 975)" filter="url(#nodeShadow)">
+    <circle cx="0" cy="0" r="28" fill="url(#stoneCompleted)" stroke="#888" stroke-width="2.5"/>
+    <circle cx="0" cy="0" r="22" fill="none" stroke="#aaa" stroke-width="1" opacity="0.4"/>
+    <text x="0" y="6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#fff" style="text-shadow: 0 1px 2px rgba(0,0,0,0.4)">1</text>
+    <polygon points="0,0 2,6 8,7 3,11 5,17 0,14 -5,17 -3,11 -8,7 -2,6" transform="translate(-18, 28) scale(0.55)" fill="#ffd700"/>
+    <polygon points="0,0 2,6 8,7 3,11 5,17 0,14 -5,17 -3,11 -8,7 -2,6" transform="translate(0, 28) scale(0.55)" fill="#ffd700"/>
+    <polygon points="0,0 2,6 8,7 3,11 5,17 0,14 -5,17 -3,11 -8,7 -2,6" transform="translate(18, 28) scale(0.55)" fill="#ffd700"/>
+  </g>
+
+  <!-- LEVEL 2 - Completed (bottom, moving left) -->
+  <g transform="translate(1200, 975)" filter="url(#nodeShadow)">
+    <circle cx="0" cy="0" r="28" fill="url(#stoneCompleted)" stroke="#888" stroke-width="2.5"/>
+    <circle cx="0" cy="0" r="22" fill="none" stroke="#aaa" stroke-width="1" opacity="0.4"/>
+    <text x="0" y="6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#fff" style="text-shadow: 0 1px 2px rgba(0,0,0,0.4)">2</text>
+    <polygon points="0,0 2,6 8,7 3,11 5,17 0,14 -5,17 -3,11 -8,7 -2,6" transform="translate(-18, 28) scale(0.55)" fill="#ffd700"/>
+    <polygon points="0,0 2,6 8,7 3,11 5,17 0,14 -5,17 -3,11 -8,7 -2,6" transform="translate(0, 28) scale(0.55)" fill="#ffd700"/>
+    <polygon points="0,0 2,6 8,7 3,11 5,17 0,14 -5,17 -3,11 -8,7 -2,6" transform="translate(18, 28) scale(0.55)" fill="#ffd700"/>
+  </g>
+
+  <!-- LEVEL 3 - Completed (bottom-left) -->
+  <g transform="translate(500, 975)" filter="url(#nodeShadow)">
+    <circle cx="0" cy="0" r="28" fill="url(#stoneCompleted)" stroke="#888" stroke-width="2.5"/>
+    <circle cx="0" cy="0" r="22" fill="none" stroke="#aaa" stroke-width="1" opacity="0.4"/>
+    <text x="0" y="6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#fff" style="text-shadow: 0 1px 2px rgba(0,0,0,0.4)">3</text>
+    <polygon points="0,0 2,6 8,7 3,11 5,17 0,14 -5,17 -3,11 -8,7 -2,6" transform="translate(-18, 28) scale(0.55)" fill="#ffd700"/>
+    <polygon points="0,0 2,6 8,7 3,11 5,17 0,14 -5,17 -3,11 -8,7 -2,6" transform="translate(0, 28) scale(0.55)" fill="#ffd700"/>
+    <polygon points="0,0 2,6 8,7 3,11 5,17 0,14 -5,17 -3,11 -8,7 -2,6" transform="translate(18, 28) scale(0.55)" fill="#ffd700"/>
+  </g>
+
+  <!-- LEVEL 4 - Current (golden glow, left side going up) -->
+  <g transform="translate(195, 800)" filter="url(#goldGlow)">
+    <circle cx="0" cy="0" r="32" fill="url(#stoneCurrent)" stroke="#daa520" stroke-width="3"/>
+    <circle cx="0" cy="0" r="25" fill="none" stroke="#fff" stroke-width="1.5" opacity="0.35"/>
+    <text x="0" y="7" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="bold" fill="#fff" style="text-shadow: 0 1px 3px rgba(0,0,0,0.5)">4</text>
+  </g>
+
+  <!-- LEVEL 5 - Locked (top-left corner of spiral) -->
+  <g transform="translate(230, 620)" filter="url(#nodeShadow)">
+    <circle cx="0" cy="0" r="28" fill="url(#stoneLocked)" stroke="#555" stroke-width="2.5" opacity="0.75"/>
+    <circle cx="0" cy="0" r="22" fill="none" stroke="#666" stroke-width="1" opacity="0.3"/>
+    <text x="0" y="6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#999" opacity="0.7">5</text>
+  </g>
+
+  <!-- LEVEL 6 - Locked (top, moving right) -->
+  <g transform="translate(700, 622)" filter="url(#nodeShadow)">
+    <circle cx="0" cy="0" r="28" fill="url(#stoneLocked)" stroke="#555" stroke-width="2.5" opacity="0.75"/>
+    <circle cx="0" cy="0" r="22" fill="none" stroke="#666" stroke-width="1" opacity="0.3"/>
+    <text x="0" y="6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#999" opacity="0.7">6</text>
+  </g>
+
+  <!-- LEVEL 7 - Locked (top-right of inner spiral) -->
+  <g transform="translate(1400, 622)" filter="url(#nodeShadow)">
+    <circle cx="0" cy="0" r="28" fill="url(#stoneLocked)" stroke="#555" stroke-width="2.5" opacity="0.75"/>
+    <circle cx="0" cy="0" r="22" fill="none" stroke="#666" stroke-width="1" opacity="0.3"/>
+    <text x="0" y="6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#999" opacity="0.7">7</text>
+  </g>
+
+  <!-- LEVEL 8 - Locked (right side, going down toward center) -->
+  <g transform="translate(1550, 800)" filter="url(#nodeShadow)">
+    <circle cx="0" cy="0" r="28" fill="url(#stoneLocked)" stroke="#555" stroke-width="2.5" opacity="0.75"/>
+    <circle cx="0" cy="0" r="22" fill="none" stroke="#666" stroke-width="1" opacity="0.3"/>
+    <text x="0" y="6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#999" opacity="0.7">8</text>
+  </g>
+
+  <!-- LEVEL 9 - Locked (moving left toward center) -->
+  <g transform="translate(1150, 800)" filter="url(#nodeShadow)">
+    <circle cx="0" cy="0" r="28" fill="url(#stoneLocked)" stroke="#555" stroke-width="2.5" opacity="0.75"/>
+    <circle cx="0" cy="0" r="22" fill="none" stroke="#666" stroke-width="1" opacity="0.3"/>
+    <text x="0" y="6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#999" opacity="0.7">9</text>
+  </g>
+
+  <!-- LEVEL 10 - Locked (center of spiral, near treasure) -->
+  <g transform="translate(960, 720)" filter="url(#nodeShadow)">
+    <circle cx="0" cy="0" r="28" fill="url(#stoneLocked)" stroke="#555" stroke-width="2.5" opacity="0.75"/>
+    <circle cx="0" cy="0" r="22" fill="none" stroke="#666" stroke-width="1" opacity="0.3"/>
+    <text x="0" y="6" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="bold" fill="#999" opacity="0.7">10</text>
+  </g>
+
+  <!-- ===== TINY DECORATIVE ELEMENTS ===== -->
+  <!-- Small grass tufts near path -->
+  <g opacity="0.6">
+    <path d="M 1500,960 Q 1505,940 1510,960" stroke="#4f7f45" stroke-width="2" fill="none"/>
+    <path d="M 1506,960 Q 1512,935 1518,960" stroke="#5a8a4a" stroke-width="2" fill="none"/>
+
+    <path d="M 800,960 Q 805,940 810,960" stroke="#4f7f45" stroke-width="2" fill="none"/>
+    <path d="M 806,960 Q 812,935 818,960" stroke="#5a8a4a" stroke-width="2" fill="none"/>
+
+    <path d="M 180,700 Q 185,680 190,700" stroke="#4f7f45" stroke-width="2" fill="none"/>
+    <path d="M 186,700 Q 192,675 198,700" stroke="#5a8a4a" stroke-width="2" fill="none"/>
+
+    <path d="M 450,610 Q 455,590 460,610" stroke="#4f7f45" stroke-width="2" fill="none"/>
+    <path d="M 1100,610 Q 1105,590 1110,610" stroke="#4f7f45" stroke-width="2" fill="none"/>
+
+    <path d="M 1300,790 Q 1305,770 1310,790" stroke="#4f7f45" stroke-width="2" fill="none"/>
+    <path d="M 1306,790 Q 1312,765 1318,790" stroke="#5a8a4a" stroke-width="2" fill="none"/>
+  </g>
+
+  <!-- Small pebbles near path -->
+  <g opacity="0.35">
+    <circle cx="1600" cy="968" r="3" fill="#8a7a60"/>
+    <circle cx="1610" cy="973" r="2" fill="#7a6a50"/>
+    <circle cx="900" cy="968" r="3" fill="#8a7a60"/>
+    <circle cx="910" cy="973" r="2" fill="#7a6a50"/>
+    <circle cx="300" cy="960" r="2.5" fill="#8a7a60"/>
+    <circle cx="210" cy="870" r="3" fill="#8a7a60"/>
+    <circle cx="500" cy="618" r="2.5" fill="#8a7a60"/>
+    <circle cx="1050" cy="618" r="3" fill="#8a7a60"/>
+    <circle cx="1550" cy="690" r="2.5" fill="#8a7a60"/>
+    <circle cx="1050" cy="792" r="3" fill="#8a7a60"/>
+  </g>
+
+  <!-- Tiny clouds -->
+  <g opacity="0.35">
+    <ellipse cx="400" cy="120" rx="80" ry="25" fill="#fff"/>
+    <ellipse cx="430" cy="110" rx="60" ry="22" fill="#fff"/>
+    <ellipse cx="370" cy="115" rx="50" ry="18" fill="#fff"/>
+
+    <ellipse cx="1100" cy="80" rx="90" ry="28" fill="#fff"/>
+    <ellipse cx="1135" cy="68" rx="65" ry="24" fill="#fff"/>
+    <ellipse cx="1070" cy="72" rx="55" ry="20" fill="#fff"/>
+
+    <ellipse cx="1600" cy="140" rx="70" ry="22" fill="#fff"/>
+    <ellipse cx="1625" cy="130" rx="55" ry="20" fill="#fff"/>
+
+    <ellipse cx="750" cy="160" rx="65" ry="20" fill="#fff"/>
+    <ellipse cx="775" cy="152" rx="50" ry="18" fill="#fff"/>
+
+    <ellipse cx="200" cy="200" rx="75" ry="23" fill="#fff"/>
+    <ellipse cx="230" cy="190" rx="58" ry="20" fill="#fff"/>
+  </g>
+
+</svg>
+</body>
+</html>

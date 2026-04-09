@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>Level Map - Variant 3</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { overflow: hidden; background: #000; }
+  svg { display: block; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <!-- Sky gradient -->
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8ecae6"/>
+      <stop offset="60%" stop-color="#a8d8cc"/>
+      <stop offset="100%" stop-color="#b5e3d8"/>
+    </linearGradient>
+
+    <!-- Grass gradient -->
+    <linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5a8f3c"/>
+      <stop offset="100%" stop-color="#4a7d2e"/>
+    </linearGradient>
+
+    <!-- Pond gradient -->
+    <radialGradient id="pond" cx="0.4" cy="0.35" r="0.6">
+      <stop offset="0%" stop-color="#7ec8d8"/>
+      <stop offset="60%" stop-color="#5ba8bc"/>
+      <stop offset="100%" stop-color="#4a96ab"/>
+    </radialGradient>
+
+    <!-- Path fill -->
+    <linearGradient id="pathFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c9a96e"/>
+      <stop offset="100%" stop-color="#b89458"/>
+    </linearGradient>
+
+    <!-- Stone platform gradients -->
+    <radialGradient id="stoneCompleted" cx="0.4" cy="0.3" r="0.7">
+      <stop offset="0%" stop-color="#d4cfc0"/>
+      <stop offset="100%" stop-color="#a8a090"/>
+    </radialGradient>
+    <radialGradient id="stoneCurrent" cx="0.4" cy="0.3" r="0.7">
+      <stop offset="0%" stop-color="#ffe066"/>
+      <stop offset="100%" stop-color="#d4a020"/>
+    </radialGradient>
+    <radialGradient id="stoneLocked" cx="0.4" cy="0.3" r="0.7">
+      <stop offset="0%" stop-color="#8a8578"/>
+      <stop offset="100%" stop-color="#5c584e"/>
+    </radialGradient>
+
+    <!-- Glow filter for current level -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Subtle shadow for platforms -->
+    <filter id="platformShadow" x="-20%" y="-10%" width="140%" height="150%">
+      <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#2a2a1a" flood-opacity="0.35"/>
+    </filter>
+
+    <!-- Bush shape -->
+    <radialGradient id="bushGrad" cx="0.4" cy="0.35" r="0.65">
+      <stop offset="0%" stop-color="#4a8035"/>
+      <stop offset="100%" stop-color="#3d6b2e"/>
+    </radialGradient>
+    <radialGradient id="bushGrad2" cx="0.45" cy="0.3" r="0.6">
+      <stop offset="0%" stop-color="#528c3a"/>
+      <stop offset="100%" stop-color="#3a6528"/>
+    </radialGradient>
+
+    <!-- Mountain gradient -->
+    <linearGradient id="mtnFar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7a7a6e"/>
+      <stop offset="100%" stop-color="#6b6b6b"/>
+    </linearGradient>
+    <linearGradient id="mtnMid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8a8a7a"/>
+      <stop offset="60%" stop-color="#6b6b5e"/>
+      <stop offset="100%" stop-color="#555"/>
+    </linearGradient>
+    <linearGradient id="mtnNear" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#757568"/>
+      <stop offset="100%" stop-color="#555"/>
+    </linearGradient>
+
+    <!-- Snow cap gradient -->
+    <linearGradient id="snow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#d8ddd6"/>
+    </linearGradient>
+
+    <!-- Tree gradient -->
+    <radialGradient id="treeGrad" cx="0.4" cy="0.3" r="0.65">
+      <stop offset="0%" stop-color="#4d8a35"/>
+      <stop offset="100%" stop-color="#3a6828"/>
+    </radialGradient>
+
+    <!-- Flag gradient -->
+    <linearGradient id="flagGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#e84040"/>
+      <stop offset="100%" stop-color="#cc2828"/>
+    </linearGradient>
+
+    <!-- Pond reflection -->
+    <linearGradient id="pondShine" x1="0.3" y1="0.2" x2="0.7" y2="0.8">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ==================== SKY ==================== -->
+  <rect x="0" y="0" width="1920" height="1080" fill="url(#sky)"/>
+
+  <!-- Soft clouds -->
+  <g opacity="0.3">
+    <ellipse cx="300" cy="120" rx="160" ry="45" fill="#fff"/>
+    <ellipse cx="360" cy="110" rx="120" ry="38" fill="#fff"/>
+    <ellipse cx="240" cy="115" rx="100" ry="32" fill="#fff"/>
+
+    <ellipse cx="900" cy="80" rx="140" ry="40" fill="#fff"/>
+    <ellipse cx="960" cy="72" rx="110" ry="35" fill="#fff"/>
+
+    <ellipse cx="1500" cy="140" rx="130" ry="38" fill="#fff"/>
+    <ellipse cx="1560" cy="132" rx="100" ry="30" fill="#fff"/>
+
+    <ellipse cx="650" cy="180" rx="90" ry="28" fill="#fff"/>
+    <ellipse cx="1200" cy="100" rx="100" ry="30" fill="#fff"/>
+  </g>
+
+  <!-- ==================== FAR MOUNTAINS ==================== -->
+  <!-- Smaller mountains on the left -->
+  <path d="M-50 480 L120 340 L200 380 L320 310 L440 370 L520 480Z" fill="url(#mtnFar)" opacity="0.5"/>
+  <path d="M320 310 L340 295 L360 310Z" fill="url(#snow)" opacity="0.4"/>
+
+  <path d="M400 480 L560 320 L650 360 L750 290 L850 350 L950 480Z" fill="url(#mtnFar)" opacity="0.55"/>
+  <path d="M750 290 L770 272 L790 290Z" fill="url(#snow)" opacity="0.4"/>
+
+  <!-- Taller mountains on the right -->
+  <path d="M850 480 L1050 260 L1150 320 L1280 220 L1400 300 L1500 480Z" fill="url(#mtnMid)" opacity="0.6"/>
+  <path d="M1280 220 L1300 195 L1320 220Z" fill="url(#snow)" opacity="0.5"/>
+  <path d="M1050 260 L1070 240 L1090 260Z" fill="url(#snow)" opacity="0.45"/>
+
+  <path d="M1350 480 L1520 200 L1650 280 L1780 160 L1920 260 L1970 480Z" fill="url(#mtnNear)" opacity="0.65"/>
+  <path d="M1780 160 L1805 130 L1830 160Z" fill="url(#snow)" opacity="0.6"/>
+  <path d="M1520 200 L1545 178 L1565 200Z" fill="url(#snow)" opacity="0.5"/>
+
+  <!-- ==================== GRASS HILLS (rolling terrain) ==================== -->
+  <!-- Far grass hills -->
+  <path d="M-20 520 Q200 440 500 490 Q700 520 960 460 Q1200 410 1440 470 Q1680 520 1940 450 L1940 1100 L-20 1100Z" fill="#5a8f3c"/>
+
+  <!-- Mid grass hills -->
+  <path d="M-20 580 Q180 530 400 560 Q650 600 900 540 Q1100 500 1350 550 Q1600 590 1940 530 L1940 1100 L-20 1100Z" fill="#528638"/>
+
+  <!-- Near grass layer -->
+  <path d="M-20 650 Q250 610 550 640 Q800 670 1050 620 Q1300 590 1550 630 Q1750 660 1940 620 L1940 1100 L-20 1100Z" fill="#4a7d2e"/>
+
+  <!-- Foreground grass -->
+  <path d="M-20 780 Q200 750 500 770 Q750 790 1000 760 Q1250 740 1500 770 Q1750 790 1940 760 L1940 1100 L-20 1100Z" fill="#437428"/>
+
+  <!-- Bottom grass -->
+  <path d="M-20 900 Q300 880 700 895 Q1100 910 1500 890 Q1750 880 1940 895 L1940 1100 L-20 1100Z" fill="#3d6b24"/>
+
+  <!-- ==================== POND (lower-left) ==================== -->
+  <g>
+    <!-- Pond bank (darker grass ring) -->
+    <ellipse cx="280" cy="820" rx="175" ry="90" fill="#3a6520"/>
+    <!-- Water surface -->
+    <ellipse cx="280" cy="815" rx="155" ry="75" fill="url(#pond)"/>
+    <!-- Highlight reflection -->
+    <ellipse cx="255" cy="800" rx="80" ry="35" fill="url(#pondShine)"/>
+    <!-- Small lily pad cluster -->
+    <ellipse cx="230" cy="830" rx="14" ry="8" fill="#4a8a3a" opacity="0.7"/>
+    <ellipse cx="250" cy="840" rx="11" ry="6" fill="#508e3e" opacity="0.6"/>
+    <ellipse cx="320" cy="810" rx="12" ry="7" fill="#4a8a3a" opacity="0.6"/>
+  </g>
+
+  <!-- ==================== BUSHES AROUND POND ==================== -->
+  <g>
+    <!-- Pond-area bushes (clustered) -->
+    <circle cx="130" cy="790" r="28" fill="url(#bushGrad)"/>
+    <circle cx="155" cy="780" r="22" fill="url(#bushGrad2)"/>
+    <circle cx="108" cy="800" r="20" fill="url(#bushGrad)"/>
+
+    <circle cx="140" cy="860" r="25" fill="url(#bushGrad2)"/>
+    <circle cx="165" cy="850" r="18" fill="url(#bushGrad)"/>
+
+    <circle cx="380" cy="870" r="24" fill="url(#bushGrad)"/>
+    <circle cx="405" cy="860" r="20" fill="url(#bushGrad2)"/>
+    <circle cx="415" cy="878" r="16" fill="url(#bushGrad)"/>
+
+    <circle cx="350" cy="750" r="22" fill="url(#bushGrad2)"/>
+    <circle cx="375" cy="742" r="18" fill="url(#bushGrad)"/>
+
+    <circle cx="200" cy="745" r="20" fill="url(#bushGrad)"/>
+    <circle cx="220" cy="738" r="16" fill="url(#bushGrad2)"/>
+  </g>
+
+  <!-- ==================== SCATTERED BUSHES/TREES ==================== -->
+  <!-- Trees (trunk + round canopy) -->
+  <g>
+    <!-- Tree near bottom-right -->
+    <rect x="1720" y="830" width="14" height="40" rx="4" fill="#6b5030"/>
+    <circle cx="1727" cy="818" r="32" fill="url(#treeGrad)"/>
+    <circle cx="1712" cy="825" r="24" fill="url(#bushGrad2)"/>
+    <circle cx="1742" cy="822" r="26" fill="url(#bushGrad)"/>
+
+    <!-- Tree mid-right -->
+    <rect x="1580" y="680" width="12" height="35" rx="4" fill="#6b5030"/>
+    <circle cx="1586" cy="668" r="28" fill="url(#treeGrad)"/>
+    <circle cx="1572" cy="674" r="22" fill="url(#bushGrad2)"/>
+    <circle cx="1600" cy="672" r="24" fill="url(#bushGrad)"/>
+
+    <!-- Tree upper-mid -->
+    <rect x="1100" y="560" width="12" height="32" rx="4" fill="#6b5030"/>
+    <circle cx="1106" cy="548" r="26" fill="url(#treeGrad)"/>
+    <circle cx="1092" cy="554" r="20" fill="url(#bushGrad2)"/>
+    <circle cx="1120" cy="552" r="22" fill="url(#bushGrad)"/>
+
+    <!-- Tree left-mid -->
+    <rect x="680" y="640" width="12" height="30" rx="4" fill="#6b5030"/>
+    <circle cx="686" cy="628" r="24" fill="url(#treeGrad)"/>
+    <circle cx="672" cy="634" r="18" fill="url(#bushGrad2)"/>
+    <circle cx="700" cy="632" r="20" fill="url(#bushGrad)"/>
+
+    <!-- Tree upper-left -->
+    <rect x="180" y="560" width="11" height="28" rx="4" fill="#6b5030"/>
+    <circle cx="185" cy="548" r="22" fill="url(#treeGrad)"/>
+    <circle cx="173" cy="553" r="17" fill="url(#bushGrad2)"/>
+    <circle cx="198" cy="551" r="19" fill="url(#bushGrad)"/>
+  </g>
+
+  <!-- Scattered standalone bushes -->
+  <g>
+    <circle cx="60" cy="680" r="20" fill="url(#bushGrad)"/>
+    <circle cx="80" cy="672" r="16" fill="url(#bushGrad2)"/>
+
+    <circle cx="530" cy="720" r="18" fill="url(#bushGrad)"/>
+    <circle cx="548" cy="714" r="14" fill="url(#bushGrad2)"/>
+
+    <circle cx="850" cy="580" r="16" fill="url(#bushGrad2)"/>
+    <circle cx="866" cy="574" r="13" fill="url(#bushGrad)"/>
+
+    <circle cx="1350" cy="620" r="18" fill="url(#bushGrad)"/>
+    <circle cx="1368" cy="614" r="14" fill="url(#bushGrad2)"/>
+
+    <circle cx="1820" cy="720" r="22" fill="url(#bushGrad)"/>
+    <circle cx="1842" cy="712" r="17" fill="url(#bushGrad2)"/>
+
+    <circle cx="480" cy="560" r="15" fill="url(#bushGrad)"/>
+    <circle cx="495" cy="554" r="12" fill="url(#bushGrad2)"/>
+
+    <circle cx="750" cy="500" r="14" fill="url(#bushGrad2)"/>
+    <circle cx="765" cy="494" r="11" fill="url(#bushGrad)"/>
+  </g>
+
+  <!-- ==================== WINDING DIRT PATH ==================== -->
+  <!-- Path starts bottom-RIGHT, winds LEFT and upward in spiral-like pattern -->
+  <!-- Dark path edge (wider, underneath) -->
+  <path d="
+    M1820 1000
+    Q1750 950 1680 920
+    Q1550 870 1450 850
+    Q1300 830 1200 870
+    Q1080 920 950 920
+    Q800 920 700 870
+    Q600 820 550 780
+    Q490 730 500 680
+    Q510 630 580 600
+    Q680 560 800 570
+    Q950 580 1080 540
+    Q1200 500 1280 470
+    Q1380 430 1380 380
+    Q1380 330 1300 300
+    Q1200 270 1080 280
+    Q950 290 830 270
+    Q700 250 580 230
+    Q450 210 350 250
+    Q250 290 200 350
+    Q150 420 160 460
+  " fill="none" stroke="#967840" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Main path surface -->
+  <path d="
+    M1820 1000
+    Q1750 950 1680 920
+    Q1550 870 1450 850
+    Q1300 830 1200 870
+    Q1080 920 950 920
+    Q800 920 700 870
+    Q600 820 550 780
+    Q490 730 500 680
+    Q510 630 580 600
+    Q680 560 800 570
+    Q950 580 1080 540
+    Q1200 500 1280 470
+    Q1380 430 1380 380
+    Q1380 330 1300 300
+    Q1200 270 1080 280
+    Q950 290 830 270
+    Q700 250 580 230
+    Q450 210 350 250
+    Q250 290 200 350
+    Q150 420 160 460
+  " fill="none" stroke="url(#pathFill)" stroke-width="42" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Path texture dots (subtle) -->
+  <g fill="#a08050" opacity="0.25">
+    <circle cx="1780" cy="980" r="3"/>
+    <circle cx="1650" cy="910" r="2.5"/>
+    <circle cx="1500" cy="860" r="3"/>
+    <circle cx="1300" cy="845" r="2.5"/>
+    <circle cx="1140" cy="880" r="3"/>
+    <circle cx="1000" cy="920" r="2.5"/>
+    <circle cx="830" cy="900" r="3"/>
+    <circle cx="660" cy="850" r="2.5"/>
+    <circle cx="560" cy="770" r="3"/>
+    <circle cx="510" cy="700" r="2.5"/>
+    <circle cx="530" cy="640" r="3"/>
+    <circle cx="620" cy="590" r="2.5"/>
+    <circle cx="740" cy="572" r="3"/>
+    <circle cx="900" cy="575" r="2.5"/>
+    <circle cx="1040" cy="555" r="3"/>
+    <circle cx="1180" cy="510" r="2.5"/>
+    <circle cx="1310" cy="460" r="3"/>
+    <circle cx="1375" cy="400" r="2.5"/>
+    <circle cx="1350" cy="330" r="3"/>
+    <circle cx="1250" cy="285" r="2.5"/>
+    <circle cx="1100" cy="282" r="3"/>
+    <circle cx="950" cy="280" r="2.5"/>
+    <circle cx="780" cy="262" r="3"/>
+    <circle cx="630" cy="238" r="2.5"/>
+    <circle cx="480" cy="220" r="3"/>
+    <circle cx="380" cy="240" r="2.5"/>
+    <circle cx="280" cy="290" r="3"/>
+    <circle cx="210" cy="360" r="2.5"/>
+    <circle cx="165" cy="440" r="3"/>
+  </g>
+
+  <!-- ==================== LEVEL NODES ==================== -->
+  <!--
+    Level positions along the path:
+    1: (1760, 970) bottom-right start
+    2: (1500, 855)
+    3: (1200, 870)
+    4: (920, 915) CURRENT
+    5: (680, 850)
+    6: (520, 710)
+    7: (660, 580)
+    8: (1100, 545)
+    9: (1370, 380)
+    10: (200, 400) top-left with flag
+  -->
+
+  <!-- === LEVEL 1 (Completed) === -->
+  <g filter="url(#platformShadow)">
+    <circle cx="1760" cy="970" r="30" fill="url(#stoneCompleted)" stroke="#8a8278" stroke-width="3"/>
+    <circle cx="1760" cy="970" r="26" fill="none" stroke="#c8c0b0" stroke-width="1.5" opacity="0.5"/>
+    <text x="1760" y="978" text-anchor="middle" font-family="'Trebuchet MS', Arial, sans-serif" font-size="24" font-weight="bold" fill="#5a5548">1</text>
+  </g>
+  <!-- Stars for level 1 -->
+  <g transform="translate(1760, 1010)">
+    <polygon points="-18,0 -16,-5 -13,-6 -16,-8 -15,-13 -18,-10 -21,-13 -20,-8 -23,-6 -20,-5" fill="#f0c840" stroke="#d4a820" stroke-width="0.5"/>
+    <polygon points="0,0 2,-5 5,-6 2,-8 3,-13 0,-10 -3,-13 -2,-8 -5,-6 -2,-5" fill="#f0c840" stroke="#d4a820" stroke-width="0.5"/>
+    <polygon points="18,0 16,-5 13,-6 16,-8 15,-13 18,-10 21,-13 20,-8 23,-6 20,-5" fill="#f0c840" stroke="#d4a820" stroke-width="0.5"/>
+  </g>
+
+  <!-- === LEVEL 2 (Completed) === -->
+  <g filter="url(#platformShadow)">
+    <circle cx="1500" cy="855" r="30" fill="url(#stoneCompleted)" stroke="#8a8278" stroke-width="3"/>
+    <circle cx="1500" cy="855" r="26" fill="none" stroke="#c8c0b0" stroke-width="1.5" opacity="0.5"/>
+    <text x="1500" y="863" text-anchor="middle" font-family="'Trebuchet MS', Arial, sans-serif" font-size="24" font-weight="bold" fill="#5a5548">2</text>
+  </g>
+  <!-- Stars for level 2 -->
+  <g transform="translate(1500, 895)">
+    <polygon points="-18,0 -16,-5 -13,-6 -16,-8 -15,-13 -18,-10 -21,-13 -20,-8 -23,-6 -20,-5" fill="#f0c840" stroke="#d4a820" stroke-width="0.5"/>
+    <polygon points="0,0 2,-5 5,-6 2,-8 3,-13 0,-10 -3,-13 -2,-8 -5,-6 -2,-5" fill="#f0c840" stroke="#d4a820" stroke-width="0.5"/>
+    <polygon points="18,0 16,-5 13,-6 16,-8 15,-13 18,-10 21,-13 20,-8 23,-6 20,-5" fill="#f0c840" stroke="#d4a820" stroke-width="0.5"/>
+  </g>
+
+  <!-- === LEVEL 3 (Completed) === -->
+  <g filter="url(#platformShadow)">
+    <circle cx="1200" cy="870" r="30" fill="url(#stoneCompleted)" stroke="#8a8278" stroke-width="3"/>
+    <circle cx="1200" cy="870" r="26" fill="none" stroke="#c8c0b0" stroke-width="1.5" opacity="0.5"/>
+    <text x="1200" y="878" text-anchor="middle" font-family="'Trebuchet MS', Arial, sans-serif" font-size="24" font-weight="bold" fill="#5a5548">3</text>
+  </g>
+  <!-- Stars for level 3 -->
+  <g transform="translate(1200, 910)">
+    <polygon points="-18,0 -16,-5 -13,-6 -16,-8 -15,-13 -18,-10 -21,-13 -20,-8 -23,-6 -20,-5" fill="#f0c840" stroke="#d4a820" stroke-width="0.5"/>
+    <polygon points="0,0 2,-5 5,-6 2,-8 3,-13 0,-10 -3,-13 -2,-8 -5,-6 -2,-5" fill="#f0c840" stroke="#d4a820" stroke-width="0.5"/>
+    <polygon points="18,0 16,-5 13,-6 16,-8 15,-13 18,-10 21,-13 20,-8 23,-6 20,-5" fill="#f0c840" stroke="#d4a820" stroke-width="0.5"/>
+  </g>
+
+  <!-- === LEVEL 4 (Current - glowing) === -->
+  <g filter="url(#glow)">
+    <circle cx="920" cy="915" r="35" fill="url(#stoneCurrent)" stroke="#e8b820" stroke-width="3.5"/>
+    <circle cx="920" cy="915" r="30" fill="none" stroke="#fff8d0" stroke-width="1.5" opacity="0.6"/>
+    <text x="920" y="924" text-anchor="middle" font-family="'Trebuchet MS', Arial, sans-serif" font-size="28" font-weight="bold" fill="#6b4800">4</text>
+  </g>
+  <!-- Animated pulse ring -->
+  <circle cx="920" cy="915" r="38" fill="none" stroke="#ffe066" stroke-width="2" opacity="0.6">
+    <animate attributeName="r" values="38;50;38" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- === LEVEL 5 (Locked) === -->
+  <g filter="url(#platformShadow)" opacity="0.65">
+    <circle cx="680" cy="850" r="30" fill="url(#stoneLocked)" stroke="#4a4840" stroke-width="3"/>
+    <circle cx="680" cy="850" r="26" fill="none" stroke="#6a6660" stroke-width="1" opacity="0.3"/>
+    <text x="680" y="858" text-anchor="middle" font-family="'Trebuchet MS', Arial, sans-serif" font-size="24" font-weight="bold" fill="#3a3830">5</text>
+    <!-- Lock icon -->
+    <g transform="translate(680, 832)">
+      <rect x="-7" y="-2" width="14" height="11" rx="2" fill="#4a4438"/>
+      <path d="M-4,-2 L-4,-6 Q-4,-10 0,-10 Q4,-10 4,-6 L4,-2" fill="none" stroke="#4a4438" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- === LEVEL 6 (Locked) === -->
+  <g filter="url(#platformShadow)" opacity="0.65">
+    <circle cx="520" cy="710" r="30" fill="url(#stoneLocked)" stroke="#4a4840" stroke-width="3"/>
+    <circle cx="520" cy="710" r="26" fill="none" stroke="#6a6660" stroke-width="1" opacity="0.3"/>
+    <text x="520" y="718" text-anchor="middle" font-family="'Trebuchet MS', Arial, sans-serif" font-size="24" font-weight="bold" fill="#3a3830">6</text>
+    <g transform="translate(520, 692)">
+      <rect x="-7" y="-2" width="14" height="11" rx="2" fill="#4a4438"/>
+      <path d="M-4,-2 L-4,-6 Q-4,-10 0,-10 Q4,-10 4,-6 L4,-2" fill="none" stroke="#4a4438" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- === LEVEL 7 (Locked) === -->
+  <g filter="url(#platformShadow)" opacity="0.65">
+    <circle cx="660" cy="580" r="30" fill="url(#stoneLocked)" stroke="#4a4840" stroke-width="3"/>
+    <circle cx="660" cy="580" r="26" fill="none" stroke="#6a6660" stroke-width="1" opacity="0.3"/>
+    <text x="660" y="588" text-anchor="middle" font-family="'Trebuchet MS', Arial, sans-serif" font-size="24" font-weight="bold" fill="#3a3830">7</text>
+    <g transform="translate(660, 562)">
+      <rect x="-7" y="-2" width="14" height="11" rx="2" fill="#4a4438"/>
+      <path d="M-4,-2 L-4,-6 Q-4,-10 0,-10 Q4,-10 4,-6 L4,-2" fill="none" stroke="#4a4438" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- === LEVEL 8 (Locked) === -->
+  <g filter="url(#platformShadow)" opacity="0.65">
+    <circle cx="1100" cy="545" r="30" fill="url(#stoneLocked)" stroke="#4a4840" stroke-width="3"/>
+    <circle cx="1100" cy="545" r="26" fill="none" stroke="#6a6660" stroke-width="1" opacity="0.3"/>
+    <text x="1100" y="553" text-anchor="middle" font-family="'Trebuchet MS', Arial, sans-serif" font-size="24" font-weight="bold" fill="#3a3830">8</text>
+    <g transform="translate(1100, 527)">
+      <rect x="-7" y="-2" width="14" height="11" rx="2" fill="#4a4438"/>
+      <path d="M-4,-2 L-4,-6 Q-4,-10 0,-10 Q4,-10 4,-6 L4,-2" fill="none" stroke="#4a4438" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- === LEVEL 9 (Locked) === -->
+  <g filter="url(#platformShadow)" opacity="0.65">
+    <circle cx="1370" cy="380" r="30" fill="url(#stoneLocked)" stroke="#4a4840" stroke-width="3"/>
+    <circle cx="1370" cy="380" r="26" fill="none" stroke="#6a6660" stroke-width="1" opacity="0.3"/>
+    <text x="1370" y="388" text-anchor="middle" font-family="'Trebuchet MS', Arial, sans-serif" font-size="24" font-weight="bold" fill="#3a3830">9</text>
+    <g transform="translate(1370, 362)">
+      <rect x="-7" y="-2" width="14" height="11" rx="2" fill="#4a4438"/>
+      <path d="M-4,-2 L-4,-6 Q-4,-10 0,-10 Q4,-10 4,-6 L4,-2" fill="none" stroke="#4a4438" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- === LEVEL 10 (Locked, with flag) === -->
+  <!-- Extra path segment to level 10 -->
+  <path d="
+    M350 250
+    Q250 290 200 350
+    Q150 420 160 460
+  " fill="none" stroke="#967840" stroke-width="52" stroke-linecap="round" stroke-linejoin="round" opacity="0"/>
+
+  <g filter="url(#platformShadow)" opacity="0.65">
+    <circle cx="170" cy="440" r="30" fill="url(#stoneLocked)" stroke="#4a4840" stroke-width="3"/>
+    <circle cx="170" cy="440" r="26" fill="none" stroke="#6a6660" stroke-width="1" opacity="0.3"/>
+    <text x="170" y="449" text-anchor="middle" font-family="'Trebuchet MS', Arial, sans-serif" font-size="22" font-weight="bold" fill="#3a3830">10</text>
+    <g transform="translate(170, 422)">
+      <rect x="-7" y="-2" width="14" height="11" rx="2" fill="#4a4438"/>
+      <path d="M-4,-2 L-4,-6 Q-4,-10 0,-10 Q4,-10 4,-6 L4,-2" fill="none" stroke="#4a4438" stroke-width="2.5" stroke-linecap="round"/>
+    </g>
+  </g>
+
+  <!-- Flag/Banner at Level 10 -->
+  <g transform="translate(195, 395)">
+    <!-- Flag pole -->
+    <rect x="0" y="-50" width="4" height="70" rx="2" fill="#6b5030"/>
+    <circle cx="2" cy="-52" r="4" fill="#d4a820"/>
+    <!-- Flag -->
+    <path d="M4,-48 L50,-38 L50,-18 L4,-28Z" fill="url(#flagGrad)" stroke="#b02020" stroke-width="1"/>
+    <!-- Star on flag -->
+    <polygon points="27,-35 29,-29 35,-29 30,-25 32,-19 27,-23 22,-19 24,-25 19,-29 25,-29" fill="#f0d040" opacity="0.9"/>
+    <!-- Flag wave effect -->
+    <path d="M4,-48 Q25,-52 50,-38" fill="none" stroke="#f05050" stroke-width="0.5" opacity="0.3"/>
+  </g>
+
+  <!-- ==================== FOREGROUND GRASS DETAIL ==================== -->
+  <!-- Small grass tufts in foreground -->
+  <g fill="#3d6b24" opacity="0.6">
+    <path d="M50,1060 Q55,1040 52,1060 Q58,1035 56,1060"/>
+    <path d="M200,1070 Q205,1050 202,1070 Q208,1045 206,1070"/>
+    <path d="M450,1055 Q455,1035 452,1055 Q458,1030 456,1055"/>
+    <path d="M700,1065 Q705,1045 702,1065 Q708,1040 706,1065"/>
+    <path d="M1000,1060 Q1005,1040 1002,1060 Q1008,1035 1006,1060"/>
+    <path d="M1300,1070 Q1305,1050 1302,1070 Q1308,1045 1306,1070"/>
+    <path d="M1600,1058 Q1605,1038 1602,1058 Q1608,1033 1606,1058"/>
+    <path d="M1850,1065 Q1855,1045 1852,1065 Q1858,1040 1856,1065"/>
+  </g>
+
+  <!-- ==================== SMALL DECORATIVE ROCKS ==================== -->
+  <g fill="#8a8578" opacity="0.5">
+    <ellipse cx="600" cy="940" rx="10" ry="6" fill="#7a7568"/>
+    <ellipse cx="610" cy="942" rx="7" ry="4" fill="#8a8578"/>
+    <ellipse cx="1100" cy="980" rx="8" ry="5" fill="#7a7568"/>
+    <ellipse cx="1400" cy="750" rx="9" ry="5" fill="#8a8578"/>
+    <ellipse cx="800" cy="650" rx="7" ry="4" fill="#7a7568"/>
+    <ellipse cx="1250" cy="600" rx="8" ry="5" fill="#8a8578"/>
+  </g>
+
+  <!-- ==================== SMALL FLOWERS ==================== -->
+  <g>
+    <g transform="translate(470, 920)">
+      <circle cx="0" cy="0" r="4" fill="#e8d040"/>
+      <circle cx="5" cy="-3" r="3" fill="#f0e868"/>
+      <circle cx="-4" cy="-4" r="3" fill="#f0e868"/>
+    </g>
+    <g transform="translate(1050, 760)">
+      <circle cx="0" cy="0" r="3.5" fill="#d848a0"/>
+      <circle cx="4" cy="-2" r="2.5" fill="#e868b8"/>
+      <circle cx="-3" cy="-3" r="2.5" fill="#e868b8"/>
+    </g>
+    <g transform="translate(780, 700)">
+      <circle cx="0" cy="0" r="3" fill="#e8d040"/>
+      <circle cx="4" cy="-2" r="2.5" fill="#f0e868"/>
+    </g>
+    <g transform="translate(300, 680)">
+      <circle cx="0" cy="0" r="3.5" fill="#d848a0"/>
+      <circle cx="4" cy="-3" r="2.5" fill="#e868b8"/>
+      <circle cx="-3" cy="-3" r="2.5" fill="#e868b8"/>
+    </g>
+    <g transform="translate(1650, 760)">
+      <circle cx="0" cy="0" r="3" fill="#e8d040"/>
+      <circle cx="4" cy="-2" r="2.5" fill="#f0e868"/>
+    </g>
+  </g>
+
+</svg>
+</body>
+</html>

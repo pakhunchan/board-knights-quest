@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300">
+  <!-- Robot 2: Bubblegum Pink Compact/Squat — big round head, stubby limbs, toy-like -->
+
+  <!-- Antenna stem -->
+  <rect x="95" y="18" width="10" height="20" rx="5" ry="5" fill="#D63084"/>
+  <!-- Antenna ball -->
+  <circle cx="100" cy="12" r="10" fill="#FF78BC" stroke="#D63084" stroke-width="2"/>
+  <circle cx="103" cy="9" r="3" fill="#FFB8DC" opacity="0.7"/>
+
+  <!-- Head: big and round -->
+  <rect x="30" y="38" width="140" height="100" rx="42" ry="42" fill="#F050A0"/>
+  <!-- Head highlight -->
+  <rect x="38" y="44" width="124" height="50" rx="34" ry="28" fill="#FF78BC" opacity="0.3"/>
+
+  <!-- Left eye socket -->
+  <ellipse cx="70" cy="82" rx="20" ry="19" fill="#D63084"/>
+  <!-- Left eye white -->
+  <ellipse cx="70" cy="82" rx="16" ry="15" fill="#FFFFFF"/>
+  <!-- Left pupil -->
+  <ellipse cx="74" cy="84" rx="8" ry="8.5" fill="#D63084"/>
+  <!-- Left eye shine -->
+  <circle cx="78" cy="79" r="4" fill="#FFFFFF"/>
+
+  <!-- Right eye socket -->
+  <ellipse cx="130" cy="82" rx="20" ry="19" fill="#D63084"/>
+  <!-- Right eye white -->
+  <ellipse cx="130" cy="82" rx="16" ry="15" fill="#FFFFFF"/>
+  <!-- Right pupil -->
+  <ellipse cx="134" cy="84" rx="8" ry="8.5" fill="#D63084"/>
+  <!-- Right eye shine -->
+  <circle cx="138" cy="79" r="4" fill="#FFFFFF"/>
+
+  <!-- Mouth: wide happy grin -->
+  <path d="M72,112 Q82,122 100,124 Q118,122 128,112" fill="none" stroke="#D63084" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Tongue peek -->
+  <ellipse cx="100" cy="120" rx="8" ry="5" fill="#FFB8DC" opacity="0.6"/>
+
+  <!-- Cheek blush -->
+  <ellipse cx="44" cy="102" rx="10" ry="6" fill="#FFB8DC" opacity="0.55"/>
+  <ellipse cx="156" cy="102" rx="10" ry="6" fill="#FFB8DC" opacity="0.55"/>
+
+  <!-- Neck / collar: short and wide -->
+  <rect x="78" y="138" width="44" height="10" rx="5" ry="5" fill="#D63084"/>
+  <rect x="72" y="144" width="56" height="8" rx="4" ry="4" fill="#F050A0"/>
+
+  <!-- Body: short and wide (squat) -->
+  <rect x="38" y="150" width="124" height="78" rx="24" ry="24" fill="#F050A0"/>
+  <!-- Body highlight -->
+  <rect x="46" y="156" width="108" height="32" rx="18" ry="14" fill="#FF78BC" opacity="0.3"/>
+
+  <!-- Chest panel: simplified, wide -->
+  <rect x="58" y="168" width="84" height="42" rx="14" ry="14" fill="#D63084"/>
+  <rect x="63" y="172" width="74" height="34" rx="11" ry="11" fill="#FFB8DC" opacity="0.35"/>
+
+  <!-- Simple chest details: 3 horizontal bars -->
+  <rect x="74" y="178" width="52" height="6" rx="3" ry="3" fill="#FF78BC" opacity="0.7"/>
+  <rect x="80" y="188" width="40" height="6" rx="3" ry="3" fill="#FF78BC" opacity="0.5"/>
+  <rect x="86" y="198" width="28" height="6" rx="3" ry="3" fill="#FF78BC" opacity="0.35"/>
+
+  <!-- Left arm: stubby -->
+  <rect x="14" y="158" width="24" height="40" rx="12" ry="12" fill="#F050A0"/>
+  <rect x="16" y="160" width="20" height="16" rx="10" ry="10" fill="#FF78BC" opacity="0.3"/>
+  <!-- Left hand: big and round -->
+  <circle cx="26" cy="204" r="16" fill="#FF78BC" stroke="#D63084" stroke-width="2"/>
+  <circle cx="26" cy="204" r="8" fill="#FFB8DC" opacity="0.45"/>
+
+  <!-- Right arm: stubby -->
+  <rect x="162" y="158" width="24" height="40" rx="12" ry="12" fill="#F050A0"/>
+  <rect x="164" y="160" width="20" height="16" rx="10" ry="10" fill="#FF78BC" opacity="0.3"/>
+  <!-- Right hand: big and round -->
+  <circle cx="174" cy="204" r="16" fill="#FF78BC" stroke="#D63084" stroke-width="2"/>
+  <circle cx="174" cy="204" r="8" fill="#FFB8DC" opacity="0.45"/>
+
+  <!-- Left leg: short and stubby -->
+  <rect x="56" y="226" width="30" height="30" rx="15" ry="15" fill="#F050A0"/>
+  <!-- Left foot: wide and rounded -->
+  <ellipse cx="66" cy="264" rx="24" ry="14" fill="#D63084"/>
+  <ellipse cx="63" cy="262" rx="16" ry="9" fill="#FF78BC" opacity="0.3"/>
+
+  <!-- Right leg: short and stubby -->
+  <rect x="114" y="226" width="30" height="30" rx="15" ry="15" fill="#F050A0"/>
+  <!-- Right foot: wide and rounded -->
+  <ellipse cx="134" cy="264" rx="24" ry="14" fill="#D63084"/>
+  <ellipse cx="131" cy="262" rx="16" ry="9" fill="#FF78BC" opacity="0.3"/>
+
+  <!-- Body bolt accents -->
+  <circle cx="46" cy="190" r="4" fill="#D63084"/>
+  <circle cx="154" cy="190" r="4" fill="#D63084"/>
+</svg>

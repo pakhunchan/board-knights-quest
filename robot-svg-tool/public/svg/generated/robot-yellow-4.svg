@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300">
+  <!-- ROBOT 4: Lemon Yellow — Springy variant -->
+  <!-- Long spring neck, bouncy antenna, thin waist, flared lower body, playful -->
+
+  <!-- Antenna stem (bouncy, wavy spring) -->
+  <path d="M100,8 Q108,14 100,20 Q92,26 100,32" stroke="#C8B020" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <!-- Antenna ball (larger, bouncy) -->
+  <circle cx="100" cy="5" r="9" fill="#F8E858"/>
+  <circle cx="97" cy="3" r="3" fill="#FFF8A0" opacity="0.6"/>
+
+  <!-- Head (medium, friendly) -->
+  <rect x="62" y="32" width="76" height="54" rx="16" ry="16" fill="#E8D030"/>
+  <!-- Head highlight -->
+  <rect x="68" y="36" width="64" height="24" rx="12" ry="12" fill="#F8E858" opacity="0.35"/>
+
+  <!-- Left eye socket -->
+  <circle cx="84" cy="56" r="14" fill="#C8B020"/>
+  <!-- Left eye white -->
+  <circle cx="84" cy="56" r="10.5" fill="#EEEEFF"/>
+  <!-- Left pupil -->
+  <circle cx="87" cy="55" r="5.5" fill="#2A1A08"/>
+  <!-- Left eye shine -->
+  <circle cx="89" cy="53" r="2.2" fill="#FFFFFF"/>
+
+  <!-- Right eye socket -->
+  <circle cx="116" cy="56" r="14" fill="#C8B020"/>
+  <!-- Right eye white -->
+  <circle cx="116" cy="56" r="10.5" fill="#EEEEFF"/>
+  <!-- Right pupil -->
+  <circle cx="119" cy="55" r="5.5" fill="#2A1A08"/>
+  <!-- Right eye shine -->
+  <circle cx="121" cy="53" r="2.2" fill="#FFFFFF"/>
+
+  <!-- Mouth (big happy open smile) -->
+  <ellipse cx="100" cy="76" rx="14" ry="7" fill="#C8B020"/>
+  <ellipse cx="100" cy="74" rx="10" ry="4" fill="#2A1A08" opacity="0.6"/>
+
+  <!-- Neck — long spring coil -->
+  <path d="M92,86 Q110,90 92,96 Q74,102 92,108 Q110,114 92,120" stroke="#C8B020" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <path d="M108,86 Q126,90 108,96 Q90,102 108,108 Q126,114 108,120" stroke="#C8B020" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.3"/>
+
+  <!-- Thin waist connector -->
+  <rect x="88" y="118" width="24" height="10" rx="5" ry="5" fill="#C8B020"/>
+
+  <!-- Body (flared lower, wider at bottom) -->
+  <path d="M60,128 Q56,128 52,160 Q48,192 56,200 L144,200 Q152,192 148,160 Q144,128 140,128 Z" rx="20" fill="#E8D030"/>
+  <!-- Body highlight -->
+  <rect x="64" y="132" width="72" height="30" rx="14" ry="14" fill="#F8E858" opacity="0.25"/>
+
+  <!-- Chest panel -->
+  <rect x="72" y="145" width="56" height="40" rx="10" ry="10" fill="#C8B020"/>
+  <!-- Chest detail: zigzag lightning bolt -->
+  <path d="M92,152 L98,160 L92,160 L100,172 L96,164 L102,164 L94,152" fill="#F8E858"/>
+  <!-- Chest button left -->
+  <circle cx="82" cy="178" r="5" fill="#F8E858"/>
+  <circle cx="82" cy="178" r="2.5" fill="#FFF8A0"/>
+  <!-- Chest button right -->
+  <circle cx="118" cy="178" r="5" fill="#F8E858"/>
+  <circle cx="118" cy="178" r="2.5" fill="#FFF8A0"/>
+
+  <!-- Left arm (thin, springy) -->
+  <rect x="32" y="130" width="22" height="52" rx="11" ry="11" fill="#E8D030"/>
+  <rect x="34" y="132" width="18" height="22" rx="9" ry="9" fill="#F8E858" opacity="0.25"/>
+  <!-- Left hand -->
+  <circle cx="43" cy="184" r="11" fill="#C8B020"/>
+  <circle cx="41" cy="181" r="3" fill="#F8E858" opacity="0.3"/>
+
+  <!-- Right arm (thin, springy, angled out playfully) -->
+  <rect x="146" y="126" width="22" height="52" rx="11" ry="11" fill="#E8D030" transform="rotate(8, 157, 152)"/>
+  <rect x="148" y="128" width="18" height="22" rx="9" ry="9" fill="#F8E858" opacity="0.25" transform="rotate(8, 157, 139)"/>
+  <!-- Right hand -->
+  <circle cx="163" cy="180" r="11" fill="#C8B020"/>
+  <circle cx="161" cy="177" r="3" fill="#F8E858" opacity="0.3"/>
+
+  <!-- Left leg (thin upper, flared foot) -->
+  <rect x="66" y="198" width="26" height="42" rx="12" ry="12" fill="#C8B020"/>
+  <rect x="68" y="200" width="22" height="18" rx="10" ry="10" fill="#F8E858" opacity="0.2"/>
+  <!-- Left foot -->
+  <rect x="56" y="234" width="44" height="20" rx="10" ry="10" fill="#E8D030"/>
+  <rect x="58" y="236" width="40" height="9" rx="7" ry="7" fill="#F8E858" opacity="0.25"/>
+
+  <!-- Right leg (thin upper, flared foot) -->
+  <rect x="108" y="198" width="26" height="42" rx="12" ry="12" fill="#C8B020"/>
+  <rect x="110" y="200" width="22" height="18" rx="10" ry="10" fill="#F8E858" opacity="0.2"/>
+  <!-- Right foot -->
+  <rect x="100" y="234" width="44" height="20" rx="10" ry="10" fill="#E8D030"/>
+  <rect x="102" y="236" width="40" height="9" rx="7" ry="7" fill="#F8E858" opacity="0.25"/>
+</svg>

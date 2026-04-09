@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 300" fill="none">
+  <!-- Antenna stem -->
+  <rect x="96" y="18" width="8" height="20" rx="3" fill="#D4A810"/>
+  <!-- Antenna ball -->
+  <circle cx="100" cy="14" r="10" fill="#F5C518"/>
+  <circle cx="96" cy="11" r="3" fill="#FFD84D" opacity="0.7"/>
+
+  <!-- Head -->
+  <rect x="60" y="38" width="80" height="65" rx="18" fill="#F5C518"/>
+  <!-- Head highlight -->
+  <rect x="68" y="44" width="40" height="12" rx="6" fill="#FFD84D" opacity="0.5"/>
+  <!-- Left eye socket -->
+  <circle cx="82" cy="68" r="14" fill="#FFFFFF"/>
+  <circle cx="82" cy="68" r="9" fill="#333333"/>
+  <circle cx="78" cy="65" r="3" fill="#FFFFFF"/>
+  <!-- Right eye socket -->
+  <circle cx="118" cy="68" r="14" fill="#FFFFFF"/>
+  <circle cx="118" cy="68" r="9" fill="#333333"/>
+  <circle cx="114" cy="65" r="3" fill="#FFFFFF"/>
+  <!-- Mouth -->
+  <rect x="82" y="88" width="36" height="6" rx="3" fill="#D4A810"/>
+
+  <!-- Neck / collar band -->
+  <rect x="55" y="103" width="90" height="14" rx="5" fill="#D4A810"/>
+  <rect x="60" y="106" width="80" height="8" rx="4" fill="#B8920E"/>
+  <!-- Collar rivets -->
+  <circle cx="72" cy="110" r="3" fill="#FFD84D"/>
+  <circle cx="100" cy="110" r="3" fill="#FFD84D"/>
+  <circle cx="128" cy="110" r="3" fill="#FFD84D"/>
+
+  <!-- Body -->
+  <path d="M52 130 Q48 130 46 145 L42 200 Q40 218 60 222 L140 222 Q160 218 158 200 L154 145 Q152 130 148 130 Z" fill="#F5C518"/>
+  <!-- Body chest highlight -->
+  <path d="M60 135 Q58 135 56 148 L55 170 Q70 175 100 175 Q130 175 145 170 L144 148 Q142 135 140 135 Z" fill="#FFD84D" opacity="0.4"/>
+  <!-- Chest panel -->
+  <rect x="74" y="145" width="52" height="40" rx="8" fill="#D4A810"/>
+  <!-- Chest panel inner -->
+  <rect x="80" y="151" width="40" height="28" rx="5" fill="#B8920E" opacity="0.5"/>
+  <!-- Chest buttons -->
+  <circle cx="92" cy="162" r="5" fill="#FF6B6B"/>
+  <circle cx="108" cy="162" r="5" fill="#5BBA6F"/>
+  <!-- Chest meter -->
+  <rect x="86" y="172" width="28" height="4" rx="2" fill="#FFD84D"/>
+
+  <!-- Left arm -->
+  <rect x="30" y="135" width="18" height="50" rx="9" fill="#F5C518"/>
+  <rect x="32" y="138" width="8" height="14" rx="4" fill="#FFD84D" opacity="0.5"/>
+  <!-- Left hand -->
+  <circle cx="39" cy="190" r="11" fill="#D4A810"/>
+
+  <!-- Right arm -->
+  <rect x="152" y="135" width="18" height="50" rx="9" fill="#F5C518"/>
+  <rect x="160" y="138" width="8" height="14" rx="4" fill="#FFD84D" opacity="0.5"/>
+  <!-- Right hand -->
+  <circle cx="161" cy="190" r="11" fill="#D4A810"/>
+
+  <!-- Left leg -->
+  <rect x="65" y="222" width="26" height="40" rx="10" fill="#F5C518"/>
+  <!-- Left foot -->
+  <rect x="58" y="252" width="38" height="20" rx="10" fill="#D4A810"/>
+  <rect x="60" y="255" width="14" height="8" rx="4" fill="#FFD84D" opacity="0.4"/>
+
+  <!-- Right leg -->
+  <rect x="109" y="222" width="26" height="40" rx="10" fill="#F5C518"/>
+  <!-- Right foot -->
+  <rect x="104" y="252" width="38" height="20" rx="10" fill="#D4A810"/>
+  <rect x="126" y="255" width="14" height="8" rx="4" fill="#FFD84D" opacity="0.4"/>
+</svg>

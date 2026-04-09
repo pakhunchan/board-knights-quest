@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 300">
+
+  <!-- ANTENNA -->
+  <!-- Antenna ball -->
+  <circle cx="60" cy="12" r="8" fill="#FFF080"/>
+  <!-- Antenna stem -->
+  <rect x="57" y="20" width="6" height="28" rx="3" ry="3" fill="#F0D850"/>
+  <!-- Stem rings (3 rings for variant 5) -->
+  <rect x="53" y="24" width="14" height="3" rx="1.5" ry="1.5" fill="#C8B030"/>
+  <rect x="53" y="31" width="14" height="3" rx="1.5" ry="1.5" fill="#C8B030"/>
+  <rect x="53" y="38" width="14" height="3" rx="1.5" ry="1.5" fill="#C8B030"/>
+
+  <!-- HEAD -->
+  <rect x="20" y="50" width="80" height="55" rx="10" ry="10" fill="#F0D850"/>
+  <!-- Eye sockets (darker recessed area) -->
+  <rect x="27" y="56" width="66" height="38" rx="8" ry="8" fill="#C8B030"/>
+  <!-- Left eye white -->
+  <circle cx="44" cy="75" r="16" fill="#FFFFFF"/>
+  <!-- Left pupil -->
+  <circle cx="44" cy="73" r="9" fill="#484000"/>
+  <!-- Left eye shine -->
+  <circle cx="48" cy="69" r="3.5" fill="#FFFFFF"/>
+  <!-- Right eye white -->
+  <circle cx="76" cy="75" r="16" fill="#FFFFFF"/>
+  <!-- Right pupil -->
+  <circle cx="76" cy="73" r="9" fill="#484000"/>
+  <!-- Right eye shine -->
+  <circle cx="80" cy="69" r="3.5" fill="#FFFFFF"/>
+
+  <!-- Mouth: W-shaped zigzag -->
+  <polyline points="44,97 50,102 56,95 64,102 70,95 76,102" stroke="#C8B030" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- NECK -->
+  <rect x="42" y="105" width="36" height="8" rx="4" ry="4" fill="#C8B030"/>
+
+  <!-- BODY -->
+  <rect x="20" y="113" width="80" height="80" rx="10" ry="10" fill="#F0D850"/>
+  <!-- Belly panel (lighter accent) -->
+  <rect x="32" y="126" width="56" height="52" rx="8" ry="8" fill="#FFF080"/>
+
+  <!-- 5-pointed star emblem on belly -->
+  <polygon points="60,137 62.4,144.4 70,144.4 64,149 66,156.4 60,152 54,156.4 56,149 50,144.4 57.6,144.4" fill="#C8B030"/>
+  <!-- Inner star highlight -->
+  <polygon points="60,140 61.4,144.8 66,144.8 62.4,147.6 63.6,152.4 60,149.8 56.4,152.4 57.6,147.6 54,144.8 58.6,144.8" fill="#F0D850"/>
+
+  <!-- Small decorative dots on body sides -->
+  <circle cx="30" cy="140" r="2.5" fill="#C8B030"/>
+  <circle cx="90" cy="140" r="2.5" fill="#C8B030"/>
+
+  <!-- LEGS -->
+  <!-- Left leg -->
+  <rect x="24" y="200" width="28" height="60" rx="14" ry="14" fill="#F0D850"/>
+  <!-- Left leg highlight -->
+  <rect x="30" y="210" width="16" height="24" rx="8" ry="8" fill="#FFF080" opacity="0.35"/>
+  <!-- Right leg -->
+  <rect x="68" y="200" width="28" height="60" rx="14" ry="14" fill="#F0D850"/>
+  <!-- Right leg highlight -->
+  <rect x="74" y="210" width="16" height="24" rx="8" ry="8" fill="#FFF080" opacity="0.35"/>
+  <!-- Arch shadow between legs -->
+  <ellipse cx="60" cy="204" rx="12" ry="6" fill="#C8B030"/>
+  <!-- Body bottom overlap to clean up leg join -->
+  <rect x="20" y="187" width="80" height="16" rx="0" ry="0" fill="#F0D850"/>
+
+</svg>
