@@ -85,7 +85,7 @@ namespace BoardOfEducation.Navigation
             var circlesCardGo = CreateGameCard(canvasGo.transform, "CirclesCard",
                 "CIRCLES", "Combine to zero!",
                 HexColor("#e74c3c"), // red theme
-                new Vector2(0.02f, 0.1f), new Vector2(0.24f, 0.68f));
+                new Vector2(0.02f, 0.1f), new Vector2(0.19f, 0.68f));
 
             // ══════════════════════════════════════════════════
             // FRACTIONS CARD
@@ -93,7 +93,7 @@ namespace BoardOfEducation.Navigation
             var fractionsCardGo = CreateGameCard(canvasGo.transform, "FractionsCard",
                 "FRACTIONS", "Visual equivalence",
                 HexColor("#3498db"), // blue theme
-                new Vector2(0.26f, 0.1f), new Vector2(0.48f, 0.68f));
+                new Vector2(0.21f, 0.1f), new Vector2(0.38f, 0.68f));
 
             // ══════════════════════════════════════════════════
             // INTERACTIVE FRACTIONS CARD
@@ -101,7 +101,15 @@ namespace BoardOfEducation.Navigation
             var fractions3CardGo = CreateGameCard(canvasGo.transform, "Fractions3Card",
                 "INTERACTIVE", "Answer with pieces",
                 HexColor("#9b59b6"), // purple theme
-                new Vector2(0.50f, 0.1f), new Vector2(0.72f, 0.68f));
+                new Vector2(0.40f, 0.1f), new Vector2(0.57f, 0.68f));
+
+            // ══════════════════════════════════════════════════
+            // FRACTIONS 4 CARD
+            // ══════════════════════════════════════════════════
+            var fractions4CardGo = CreateGameCard(canvasGo.transform, "Fractions4Card",
+                "FRACTIONS 4", "3/5 = ?/20",
+                HexColor("#e67e22"), // orange theme
+                new Vector2(0.59f, 0.1f), new Vector2(0.76f, 0.68f));
 
             // ══════════════════════════════════════════════════
             // PLAYGROUND CARD
@@ -109,7 +117,7 @@ namespace BoardOfEducation.Navigation
             var playgroundCardGo = CreateGameCard(canvasGo.transform, "PlaygroundCard",
                 "PAK'S\nPLAYGROUND", "Explore & experiment",
                 HexColor("#2ecc71"), // green theme
-                new Vector2(0.74f, 0.1f), new Vector2(0.96f, 0.68f));
+                new Vector2(0.78f, 0.1f), new Vector2(0.96f, 0.68f));
 
             // ══════════════════════════════════════════════════
             // WIRE UP SERIALIZED REFERENCES
@@ -120,10 +128,12 @@ namespace BoardOfEducation.Navigation
             SetRef(managerSO, "fractionsCard", fractionsCardGo.GetComponent<RectTransform>());
             SetRef(managerSO, "playgroundCard", playgroundCardGo.GetComponent<RectTransform>());
             SetRef(managerSO, "fractions3Card", fractions3CardGo.GetComponent<RectTransform>());
+            SetRef(managerSO, "fractions4Card", fractions4CardGo.GetComponent<RectTransform>());
             SetRef(managerSO, "circlesButton", circlesCardGo.GetComponent<Button>());
             SetRef(managerSO, "fractionsButton", fractionsCardGo.GetComponent<Button>());
             SetRef(managerSO, "playgroundButton", playgroundCardGo.GetComponent<Button>());
             SetRef(managerSO, "fractions3Button", fractions3CardGo.GetComponent<Button>());
+            SetRef(managerSO, "fractions4Button", fractions4CardGo.GetComponent<Button>());
             SetRef(managerSO, "subtitleText", subtitleGo.GetComponent<TextMeshProUGUI>());
             managerSO.ApplyModifiedPropertiesWithoutUndo();
 
@@ -146,9 +156,10 @@ namespace BoardOfEducation.Navigation
                 new EditorBuildSettingsScene("Assets/Scenes/Playground.unity", true),
                 new EditorBuildSettingsScene("Assets/Scenes/TotalFractionsDemo.unity", true),
                 new EditorBuildSettingsScene("Assets/Scenes/FractionsDemo3.unity", true),
+                new EditorBuildSettingsScene("Assets/Scenes/FractionsDemo4.unity", true),
             };
             EditorBuildSettings.scenes = scenes;
-            Debug.Log("[LandingSceneBuilder] Build settings configured: LandingPage(0), Circles(1), Playground(2), TotalFractionsDemo(3), FractionsDemo3(4)");
+            Debug.Log("[LandingSceneBuilder] Build settings configured: LandingPage(0), Circles(1), Playground(2), TotalFractionsDemo(3), FractionsDemo3(4), FractionsDemo4(5)");
         }
 
         // ── Game Card Helper ─────────────────────────────────
