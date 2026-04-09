@@ -29,6 +29,8 @@ namespace BoardOfEducation.Game
             StartCoroutine(PlayGentleFade());
         }
 
+        public event System.Action OnFadeComplete;
+
         private IEnumerator PlayGentleFade()
         {
             // Small initial delay so the background is visible first
@@ -40,6 +42,8 @@ namespace BoardOfEducation.Game
                 yield return StartCoroutine(FadeIn(img, fadeDuration));
                 yield return new WaitForSeconds(delayBetween);
             }
+
+            OnFadeComplete?.Invoke();
         }
 
         private IEnumerator FadeIn(Image img, float duration)
