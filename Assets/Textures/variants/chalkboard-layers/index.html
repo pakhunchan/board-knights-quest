@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chalkboard Build Animation Demo</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #111; color: #eee; font-family: system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; padding: 20px; }
+  h1 { font-size: 1.3rem; margin-bottom: 6px; }
+  .subtitle { color: #888; font-size: 0.85rem; margin-bottom: 16px; }
+
+  .stage {
+    position: relative;
+    width: 960px;
+    height: 540px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+  }
+  .stage img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    will-change: transform, opacity, clip-path;
+  }
+  #layer-0 { opacity: 1; }
+
+  .controls {
+    display: flex; gap: 12px; margin-top: 20px; align-items: center; flex-wrap: wrap; justify-content: center;
+  }
+  button {
+    background: #2a6; color: #fff; border: none; padding: 10px 24px;
+    border-radius: 6px; font-size: 0.95rem; cursor: pointer; font-weight: 600;
+  }
+  button:hover { background: #3b7; }
+  button:disabled { background: #444; color: #888; cursor: default; }
+  button.reset { background: #555; }
+  button.reset:hover { background: #666; }
+
+  .preset-bar {
+    display: flex; gap: 6px; margin-top: 16px; flex-wrap: wrap; justify-content: center;
+  }
+  .preset-btn {
+    padding: 8px 16px; border-radius: 20px; border: 2px solid #333;
+    background: #1a1a2e; color: #aaa; cursor: pointer; font-size: 0.82rem;
+    transition: all 0.2s;
+  }
+  .preset-btn:hover { border-color: #555; color: #eee; }
+  .preset-btn.active { border-color: #2a6; color: #fff; background: #1a3a2e; }
+  .preset-desc { color: #666; font-size: 0.78rem; margin-top: 8px; text-align: center; max-width: 700px; }
+
+  .timeline {
+    margin-top: 16px; display: flex; gap: 0; align-items: center;
+  }
+  .step {
+    display: flex; flex-direction: column; align-items: center; width: 140px;
+  }
+  .step .dot {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: #333; border: 2px solid #555; transition: all 0.3s;
+  }
+  .step .dot.active { background: #2a6; border-color: #4c8; box-shadow: 0 0 8px #2a6; }
+  .step .line { width: 80px; height: 2px; background: #333; margin: 0 -20px; }
+  .step .line.active { background: #2a6; }
+  .step-label { font-size: 0.7rem; color: #777; margin-top: 6px; text-align: center; }
+  .step-label.active { color: #aee; }
+
+  .speed-controls { display: flex; gap: 6px; align-items: center; font-size: 0.8rem; color: #888; }
+  .speed-controls label { cursor: pointer; padding: 4px 10px; border-radius: 4px; background: #222; }
+  .speed-controls input:checked + label { background: #2a6; color: #fff; }
+  .speed-controls input { display: none; }
+
+  .layer-list {
+    margin-top: 20px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 960px;
+  }
+  .layer-thumb {
+    background: #1a1a2e; border-radius: 6px; overflow: hidden; text-align: center;
+  }
+  .layer-thumb img { width: 100%; display: block; background: repeating-conic-gradient(#222 0% 25%, #2a2a2a 0% 50%) 50%/16px 16px; }
+  .layer-thumb .lbl { padding: 4px; font-size: 0.7rem; color: #999; }
+
+  .unity-note {
+    margin-top: 20px; padding: 12px 20px; background: #1a1a2e; border-radius: 8px;
+    border-left: 3px solid #2a6; font-size: 0.8rem; color: #999; max-width: 700px;
+  }
+  .unity-note strong { color: #aee; }
+</style>
+</head>
+<body>
+
+<h1>Chalkboard Build Animation</h1>
+<p class="subtitle">6 animation presets — pick a style, then hit Play to preview</p>
+
+<div class="stage">
+  <img id="layer-0" src="layer-0-background.png" alt="Background">
+  <img id="layer-1" src="layer-1-frame.png" alt="Frame">
+  <img id="layer-2" src="layer-2-board.png" alt="Board">
+  <img id="layer-3" src="layer-3-tray.png" alt="Tray">
+  <img id="layer-4" src="layer-4-border.png" alt="Border">
+</div>
+
+<div class="preset-bar" id="presetBar"></div>
+<div class="preset-desc" id="presetDesc"></div>
+
+<div class="timeline" id="timeline">
+  <div class="step"><div class="dot active" id="dot-0"></div><div class="step-label active">Background</div></div>
+  <div class="step"><div class="line" id="line-1"></div></div>
+  <div class="step"><div class="dot" id="dot-1"></div><div class="step-label">Frame</div></div>
+  <div class="step"><div class="line" id="line-2"></div></div>
+  <div class="step"><div class="dot" id="dot-2"></div><div class="step-label">Board</div></div>
+  <div class="step"><div class="line" id="line-3"></div></div>
+  <div class="step"><div class="dot" id="dot-3"></div><div class="step-label">Tray</div></div>
+  <div class="step"><div class="line" id="line-4"></div></div>
+  <div class="step"><div class="dot" id="dot-4"></div><div class="step-label">Border</div></div>
+</div>
+
+<div class="controls">
+  <button id="playBtn" onclick="play()">Play Animation</button>
+  <button id="stepBtn" onclick="stepNext()">Step Forward</button>
+  <button class="reset" onclick="reset()">Reset</button>
+  <div class="speed-controls">
+    Speed:
+    <input type="radio" name="speed" id="s-slow" value="1200"><label for="s-slow">Slow</label>
+    <input type="radio" name="speed" id="s-normal" value="700" checked><label for="s-normal">Normal</label>
+    <input type="radio" name="speed" id="s-fast" value="350"><label for="s-fast">Fast</label>
+  </div>
+</div>
+
+<div class="layer-list">
+  <div class="layer-thumb"><img src="layer-0-background.png"><div class="lbl">0 — Background</div></div>
+  <div class="layer-thumb"><img src="layer-1-frame.png"><div class="lbl">1 — Wooden Frame</div></div>
+  <div class="layer-thumb"><img src="layer-2-board.png"><div class="lbl">2 — Board Surface</div></div>
+  <div class="layer-thumb"><img src="layer-3-tray.png"><div class="lbl">3 — Chalk Tray</div></div>
+  <div class="layer-thumb"><img src="layer-4-border.png"><div class="lbl">4 — Chalk Border</div></div>
+</div>
+
+<div class="unity-note">
+  <strong>Unity equivalents:</strong> scale = Transform.localScale, slide = Transform.position,
+  fade = CanvasGroup.alpha or SpriteRenderer.color.a, clip/reveal = shader mask,
+  bounce easing = DOTween Ease.OutBack, elastic = Ease.OutElastic
+</div>
+
+<script>
+// ── Preset definitions ──
+// Each preset defines per-layer: initial CSS state, animation keyframes, duration, easing
+const PRESETS = {
+  bounce_build: {
+    name: "Bounce Build",
+    desc: "Frame bounces in from small, board fades, tray slides up, border reveals from center. (Unity: Ease.OutBack)",
+    init: [
+      { opacity: '0', transform: 'scale(0.7)' },
+      { opacity: '0', transform: 'scale(0.95)' },
+      { opacity: '0', transform: 'translateY(40px)' },
+      { opacity: '0', clipPath: 'inset(50% 50% 50% 50%)' },
+    ],
+    anim: [
+      { keyframes: [{ opacity: 0, transform: 'scale(0.7)' }, { opacity: 1, transform: 'scale(1.05)', offset: 0.7 }, { opacity: 1, transform: 'scale(1)' }], duration: 600, easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)' },
+      { keyframes: [{ opacity: 0, transform: 'scale(0.95)' }, { opacity: 1, transform: 'scale(1)' }], duration: 500, easing: 'ease-out' },
+      { keyframes: [{ opacity: 0, transform: 'translateY(40px)' }, { opacity: 1, transform: 'translateY(-5px)', offset: 0.75 }, { opacity: 1, transform: 'translateY(0)' }], duration: 450, easing: 'cubic-bezier(0.34, 1.4, 0.64, 1)' },
+      { keyframes: [{ opacity: 0, clipPath: 'inset(50% 50% 50% 50%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)' }], duration: 700, easing: 'ease-out' },
+    ]
+  },
+  drop_in: {
+    name: "Drop In",
+    desc: "Each layer drops from above with a squash-settle at the bottom. (Unity: Ease.OutBounce or custom curve)",
+    init: [
+      { opacity: '0', transform: 'translateY(-120px)' },
+      { opacity: '0', transform: 'translateY(-100px)' },
+      { opacity: '0', transform: 'translateY(-80px)' },
+      { opacity: '0', transform: 'translateY(-60px)' },
+    ],
+    anim: [
+      { keyframes: [{ opacity: 0, transform: 'translateY(-120px)' }, { opacity: 1, transform: 'translateY(8px)', offset: 0.6 }, { opacity: 1, transform: 'translateY(-3px)', offset: 0.8 }, { opacity: 1, transform: 'translateY(0)' }], duration: 650, easing: 'ease-out' },
+      { keyframes: [{ opacity: 0, transform: 'translateY(-100px)' }, { opacity: 1, transform: 'translateY(6px)', offset: 0.6 }, { opacity: 1, transform: 'translateY(-2px)', offset: 0.8 }, { opacity: 1, transform: 'translateY(0)' }], duration: 550, easing: 'ease-out' },
+      { keyframes: [{ opacity: 0, transform: 'translateY(-80px)' }, { opacity: 1, transform: 'translateY(5px)', offset: 0.65 }, { opacity: 1, transform: 'translateY(0)' }], duration: 450, easing: 'ease-out' },
+      { keyframes: [{ opacity: 0, transform: 'translateY(-60px)' }, { opacity: 1, transform: 'translateY(3px)', offset: 0.65 }, { opacity: 1, transform: 'translateY(0)' }], duration: 400, easing: 'ease-out' },
+    ]
+  },
+  slide_right: {
+    name: "Slide From Right",
+    desc: "All layers slide in from the right side with staggered delays. (Unity: Ease.OutQuart + DOTween Sequence)",
+    init: [
+      { opacity: '0', transform: 'translateX(200px)' },
+      { opacity: '0', transform: 'translateX(160px)' },
+      { opacity: '0', transform: 'translateX(120px)' },
+      { opacity: '0', transform: 'translateX(80px)' },
+    ],
+    anim: [
+      { keyframes: [{ opacity: 0, transform: 'translateX(200px)' }, { opacity: 1, transform: 'translateX(0)' }], duration: 600, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' },
+      { keyframes: [{ opacity: 0, transform: 'translateX(160px)' }, { opacity: 1, transform: 'translateX(0)' }], duration: 550, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' },
+      { keyframes: [{ opacity: 0, transform: 'translateX(120px)' }, { opacity: 1, transform: 'translateX(0)' }], duration: 500, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' },
+      { keyframes: [{ opacity: 0, transform: 'translateX(80px)' }, { opacity: 1, transform: 'translateX(0)' }], duration: 450, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' },
+    ]
+  },
+  pop_elastic: {
+    name: "Pop Elastic",
+    desc: "Each layer pops from tiny with an elastic wobble overshoot. (Unity: Ease.OutElastic)",
+    init: [
+      { opacity: '0', transform: 'scale(0.3)' },
+      { opacity: '0', transform: 'scale(0.3)' },
+      { opacity: '0', transform: 'scale(0.3)' },
+      { opacity: '0', transform: 'scale(0.3)' },
+    ],
+    anim: [
+      { keyframes: [{ opacity: 0, transform: 'scale(0.3)' }, { opacity: 1, transform: 'scale(1.12)', offset: 0.4 }, { opacity: 1, transform: 'scale(0.95)', offset: 0.65 }, { opacity: 1, transform: 'scale(1.03)', offset: 0.82 }, { opacity: 1, transform: 'scale(1)' }], duration: 800, easing: 'ease-out' },
+      { keyframes: [{ opacity: 0, transform: 'scale(0.3)' }, { opacity: 1, transform: 'scale(1.1)', offset: 0.4 }, { opacity: 1, transform: 'scale(0.96)', offset: 0.65 }, { opacity: 1, transform: 'scale(1.02)', offset: 0.82 }, { opacity: 1, transform: 'scale(1)' }], duration: 750, easing: 'ease-out' },
+      { keyframes: [{ opacity: 0, transform: 'scale(0.3)' }, { opacity: 1, transform: 'scale(1.08)', offset: 0.45 }, { opacity: 1, transform: 'scale(0.97)', offset: 0.7 }, { opacity: 1, transform: 'scale(1)' }], duration: 650, easing: 'ease-out' },
+      { keyframes: [{ opacity: 0, transform: 'scale(0.3)' }, { opacity: 1, transform: 'scale(1.06)', offset: 0.45 }, { opacity: 1, transform: 'scale(0.98)', offset: 0.7 }, { opacity: 1, transform: 'scale(1)' }], duration: 600, easing: 'ease-out' },
+    ]
+  },
+  unfold: {
+    name: "Unfold",
+    desc: "Layers unfold from the center outward like opening a book. (Unity: clip-rect shader or RectMask2D animation)",
+    init: [
+      { opacity: '0', clipPath: 'inset(0% 50% 0% 50%)' },
+      { opacity: '0', clipPath: 'inset(50% 0% 50% 0%)' },
+      { opacity: '0', clipPath: 'inset(100% 0% 0% 0%)' },
+      { opacity: '0', clipPath: 'inset(50% 50% 50% 50%)' },
+    ],
+    anim: [
+      { keyframes: [{ opacity: 1, clipPath: 'inset(0% 50% 0% 50%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)' }], duration: 600, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' },
+      { keyframes: [{ opacity: 1, clipPath: 'inset(50% 0% 50% 0%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)' }], duration: 550, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' },
+      { keyframes: [{ opacity: 1, clipPath: 'inset(100% 0% 0% 0%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)' }], duration: 450, easing: 'ease-out' },
+      { keyframes: [{ opacity: 1, clipPath: 'inset(50% 50% 50% 50%)' }, { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)' }], duration: 600, easing: 'ease-out' },
+    ]
+  },
+  gentle_fade: {
+    name: "Gentle Fade",
+    desc: "Simple sequential fade-in with no motion — clean and understated. (Unity: CanvasGroup.alpha tween only)",
+    init: [
+      { opacity: '0' },
+      { opacity: '0' },
+      { opacity: '0' },
+      { opacity: '0' },
+    ],
+    anim: [
+      { keyframes: [{ opacity: 0 }, { opacity: 1 }], duration: 800, easing: 'ease-in-out' },
+      { keyframes: [{ opacity: 0 }, { opacity: 1 }], duration: 700, easing: 'ease-in-out' },
+      { keyframes: [{ opacity: 0 }, { opacity: 1 }], duration: 600, easing: 'ease-in-out' },
+      { keyframes: [{ opacity: 0 }, { opacity: 1 }], duration: 500, easing: 'ease-in-out' },
+    ]
+  },
+};
+
+// ── State ──
+const layers = [1,2,3,4].map(i => document.getElementById(`layer-${i}`));
+let currentStep = 0;
+let playing = false;
+let activePreset = 'bounce_build';
+let activeAnimations = [];
+
+// ── Preset bar ──
+const presetBar = document.getElementById('presetBar');
+const presetDesc = document.getElementById('presetDesc');
+Object.entries(PRESETS).forEach(([key, p]) => {
+  const btn = document.createElement('div');
+  btn.className = 'preset-btn' + (key === activePreset ? ' active' : '');
+  btn.textContent = p.name;
+  btn.dataset.key = key;
+  btn.onclick = () => selectPreset(key);
+  presetBar.appendChild(btn);
+});
+presetDesc.textContent = PRESETS[activePreset].desc;
+
+function selectPreset(key) {
+  activePreset = key;
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('active', b.dataset.key === key));
+  presetDesc.textContent = PRESETS[key].desc;
+  reset();
+}
+
+// ── Animation engine ──
+function getSpeed() {
+  return parseInt(document.querySelector('input[name="speed"]:checked')?.value || 700);
+}
+
+function applyInit() {
+  const preset = PRESETS[activePreset];
+  layers.forEach((l, i) => {
+    Object.assign(l.style, preset.init[i]);
+  });
+}
+
+function activateStep(step) {
+  const preset = PRESETS[activePreset];
+  const layer = layers[step - 1];
+  const a = preset.anim[step - 1];
+
+  // Cancel any existing animation on this layer
+  const animation = layer.animate(a.keyframes, {
+    duration: a.duration,
+    easing: a.easing,
+    fill: 'forwards',
+  });
+  activeAnimations.push(animation);
+
+  // Timeline dots
+  const dot = document.getElementById(`dot-${step}`);
+  const line = document.getElementById(`line-${step}`);
+  if (dot) dot.classList.add('active');
+  if (line) line.classList.add('active');
+  dot?.closest('.step')?.querySelector('.step-label')?.classList.add('active');
+}
+
+function stepNext() {
+  if (currentStep >= 4) return;
+  currentStep++;
+  activateStep(currentStep);
+  updateButtons();
+}
+
+function updateButtons() {
+  document.getElementById('stepBtn').disabled = currentStep >= 4;
+  document.getElementById('playBtn').disabled = playing || currentStep >= 4;
+}
+
+function play() {
+  if (playing || currentStep >= 4) return;
+  playing = true;
+  updateButtons();
+  const speed = getSpeed();
+
+  function next() {
+    if (currentStep >= 4) { playing = false; updateButtons(); return; }
+    currentStep++;
+    activateStep(currentStep);
+    updateButtons();
+    if (currentStep < 4) setTimeout(next, speed);
+    else { playing = false; updateButtons(); }
+  }
+  next();
+}
+
+function reset() {
+  playing = false;
+  currentStep = 0;
+  // Cancel all Web Animations
+  activeAnimations.forEach(a => a.cancel());
+  activeAnimations = [];
+  // Reset layers
+  layers.forEach(l => { l.removeAttribute('style'); });
+  // Apply preset initial state
+  applyInit();
+  // Reset timeline
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById(`dot-${i}`)?.classList.remove('active');
+    document.getElementById(`line-${i}`)?.classList.remove('active');
+    document.getElementById(`dot-${i}`)?.closest('.step')?.querySelector('.step-label')?.classList.remove('active');
+  }
+  updateButtons();
+}
+
+// Initialize
+applyInit();
+updateButtons();
+</script>
+</body>
+</html>

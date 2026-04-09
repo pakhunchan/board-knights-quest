@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Background Panel Variants</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1a1a2e; color: #eee; font-family: system-ui, sans-serif; padding: 24px; }
+  h1 { text-align: center; margin-bottom: 8px; font-size: 1.6rem; }
+  .subtitle { text-align: center; color: #999; margin-bottom: 24px; font-size: 0.9rem; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 1600px; margin: 0 auto; }
+  .card { background: #16213e; border-radius: 12px; overflow: hidden; transition: transform 0.15s; cursor: pointer; }
+  .card:hover { transform: scale(1.02); }
+  .card img { width: 100%; display: block; }
+  .label { padding: 10px 14px; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; }
+  .label .num { color: #666; font-size: 0.8rem; }
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 10; align-items: center; justify-content: center; flex-direction: column; cursor: pointer; }
+  .overlay.active { display: flex; }
+  .overlay img { max-width: 95vw; max-height: 85vh; border-radius: 8px; }
+  .overlay .caption { color: #ccc; margin-top: 12px; font-size: 1.1rem; }
+  .overlay .hint { color: #666; margin-top: 6px; font-size: 0.8rem; }
+</style>
+</head>
+<body>
+<h1>Panel Variant Comparison</h1>
+<p class="subtitle">Click any variant to view full size. Click again to close.</p>
+<div class="grid" id="grid"></div>
+<div class="overlay" id="overlay" onclick="this.classList.remove('active')">
+  <img id="overlay-img" src="">
+  <div class="caption" id="overlay-caption"></div>
+  <div class="hint">Click anywhere to close</div>
+</div>
+<script>
+const variants = [
+  { file: "variant-1.png", label: "Parchment Scroll" },
+  { file: "variant-2.png", label: "Cloud Panel" },
+  { file: "variant-3.png", label: "Wooden Signboard" },
+  { file: "variant-4.png", label: "Stone Tablet" },
+  { file: "variant-5.png", label: "Magical Glow" },
+  { file: "variant-6.png", label: "Castle Window" },
+  { file: "variant-7.png", label: "Banner / Shield" },
+  { file: "variant-8.png", label: "Storybook Card" },
+  { file: "variant-9.png", label: "Grassy Nature" },
+  { file: "variant-10.png", label: "Chalkboard" },
+];
+const grid = document.getElementById("grid");
+const overlay = document.getElementById("overlay");
+const overlayImg = document.getElementById("overlay-img");
+const overlayCaption = document.getElementById("overlay-caption");
+variants.forEach((v, i) => {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `<img src="${v.file}" alt="${v.label}"><div class="label"><span>${v.label}</span><span class="num">#${i+1}</span></div>`;
+  card.onclick = () => { overlayImg.src = v.file; overlayCaption.textContent = `#${i+1} — ${v.label}`; overlay.classList.add("active"); };
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>
