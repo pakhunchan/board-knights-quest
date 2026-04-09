@@ -17,11 +17,15 @@ namespace BoardOfEducation.Navigation
         [SerializeField] private RectTransform playgroundCard;
         [SerializeField] private RectTransform fractions3Card;
         [SerializeField] private RectTransform fractions4Card;
+        [SerializeField] private RectTransform fractions5Card;
+        [SerializeField] private RectTransform totalFractions2Card;
         [SerializeField] private Button circlesButton;
         [SerializeField] private Button fractionsButton;
         [SerializeField] private Button playgroundButton;
         [SerializeField] private Button fractions3Button;
         [SerializeField] private Button fractions4Button;
+        [SerializeField] private Button fractions5Button;
+        [SerializeField] private Button totalFractions2Button;
         [SerializeField] private TextMeshProUGUI subtitleText;
 
         // Piece dwell tracking
@@ -30,6 +34,8 @@ namespace BoardOfEducation.Navigation
         private float dwellOnPlayground = -1f;
         private float dwellOnFractions3 = -1f;
         private float dwellOnFractions4 = -1f;
+        private float dwellOnFractions5 = -1f;
+        private float dwellOnTotalFractions2 = -1f;
         private const float DWELL_TIME = 1.0f;
 
         // Visual feedback
@@ -38,11 +44,15 @@ namespace BoardOfEducation.Navigation
         private Image playgroundCardImage;
         private Image fractions3CardImage;
         private Image fractions4CardImage;
+        private Image fractions5CardImage;
+        private Image totalFractions2CardImage;
         private Color circlesBaseColor;
         private Color fractionsBaseColor;
         private Color playgroundBaseColor;
         private Color fractions3BaseColor;
         private Color fractions4BaseColor;
+        private Color fractions5BaseColor;
+        private Color totalFractions2BaseColor;
 
         private void Start()
         {
@@ -56,6 +66,10 @@ namespace BoardOfEducation.Navigation
                 fractions3Button.onClick.AddListener(OnFractions3Clicked);
             if (fractions4Button != null)
                 fractions4Button.onClick.AddListener(OnFractions4Clicked);
+            if (fractions5Button != null)
+                fractions5Button.onClick.AddListener(OnFractions5Clicked);
+            if (totalFractions2Button != null)
+                totalFractions2Button.onClick.AddListener(OnTotalFractions2Clicked);
 
             if (circlesCard != null)
                 circlesCardImage = circlesCard.GetComponent<Image>();
@@ -67,6 +81,10 @@ namespace BoardOfEducation.Navigation
                 fractions3CardImage = fractions3Card.GetComponent<Image>();
             if (fractions4Card != null)
                 fractions4CardImage = fractions4Card.GetComponent<Image>();
+            if (fractions5Card != null)
+                fractions5CardImage = fractions5Card.GetComponent<Image>();
+            if (totalFractions2Card != null)
+                totalFractions2CardImage = totalFractions2Card.GetComponent<Image>();
 
             if (circlesCardImage != null)
                 circlesBaseColor = circlesCardImage.color;
@@ -78,6 +96,10 @@ namespace BoardOfEducation.Navigation
                 fractions3BaseColor = fractions3CardImage.color;
             if (fractions4CardImage != null)
                 fractions4BaseColor = fractions4CardImage.color;
+            if (fractions5CardImage != null)
+                fractions5BaseColor = fractions5CardImage.color;
+            if (totalFractions2CardImage != null)
+                totalFractions2BaseColor = totalFractions2CardImage.color;
         }
 
         private void Update()
@@ -107,6 +129,8 @@ namespace BoardOfEducation.Navigation
                 dwellOnPlayground = -1f;
                 dwellOnFractions3 = -1f;
                 dwellOnFractions4 = -1f;
+                dwellOnFractions5 = -1f;
+                dwellOnTotalFractions2 = -1f;
                 if (dwellOnCircles < 0f) dwellOnCircles = 0f;
                 dwellOnCircles += Time.deltaTime;
 
@@ -129,6 +153,8 @@ namespace BoardOfEducation.Navigation
                 dwellOnPlayground = -1f;
                 dwellOnFractions3 = -1f;
                 dwellOnFractions4 = -1f;
+                dwellOnFractions5 = -1f;
+                dwellOnTotalFractions2 = -1f;
                 if (dwellOnFractions < 0f) dwellOnFractions = 0f;
                 dwellOnFractions += Time.deltaTime;
 
@@ -151,6 +177,8 @@ namespace BoardOfEducation.Navigation
                 dwellOnFractions = -1f;
                 dwellOnFractions3 = -1f;
                 dwellOnFractions4 = -1f;
+                dwellOnFractions5 = -1f;
+                dwellOnTotalFractions2 = -1f;
                 if (dwellOnPlayground < 0f) dwellOnPlayground = 0f;
                 dwellOnPlayground += Time.deltaTime;
 
@@ -173,6 +201,8 @@ namespace BoardOfEducation.Navigation
                 dwellOnFractions = -1f;
                 dwellOnPlayground = -1f;
                 dwellOnFractions4 = -1f;
+                dwellOnFractions5 = -1f;
+                dwellOnTotalFractions2 = -1f;
                 if (dwellOnFractions3 < 0f) dwellOnFractions3 = 0f;
                 dwellOnFractions3 += Time.deltaTime;
 
@@ -195,6 +225,8 @@ namespace BoardOfEducation.Navigation
                 dwellOnFractions = -1f;
                 dwellOnPlayground = -1f;
                 dwellOnFractions3 = -1f;
+                dwellOnFractions5 = -1f;
+                dwellOnTotalFractions2 = -1f;
                 if (dwellOnFractions4 < 0f) dwellOnFractions4 = 0f;
                 dwellOnFractions4 += Time.deltaTime;
 
@@ -210,6 +242,54 @@ namespace BoardOfEducation.Navigation
                     OnFractions4Clicked();
                 }
             }
+            // Check Practice card
+            else if (fractions5Card != null && NavigationHelper.IsOverRect(fractions5Card, screenPos, 30f))
+            {
+                dwellOnCircles = -1f;
+                dwellOnFractions = -1f;
+                dwellOnPlayground = -1f;
+                dwellOnFractions3 = -1f;
+                dwellOnFractions4 = -1f;
+                dwellOnTotalFractions2 = -1f;
+                if (dwellOnFractions5 < 0f) dwellOnFractions5 = 0f;
+                dwellOnFractions5 += Time.deltaTime;
+
+                if (fractions5CardImage != null)
+                    fractions5CardImage.color = Color.Lerp(fractions5CardImage.color, Color.white, Time.deltaTime * 3f);
+
+                if (subtitleText != null)
+                    subtitleText.text = $"Hold to select Practice... ({Mathf.CeilToInt(DWELL_TIME - dwellOnFractions5)}s)";
+
+                if (dwellOnFractions5 >= DWELL_TIME)
+                {
+                    dwellOnFractions5 = -1f;
+                    OnFractions5Clicked();
+                }
+            }
+            // Check Total Fractions 2 card
+            else if (totalFractions2Card != null && NavigationHelper.IsOverRect(totalFractions2Card, screenPos, 30f))
+            {
+                dwellOnCircles = -1f;
+                dwellOnFractions = -1f;
+                dwellOnPlayground = -1f;
+                dwellOnFractions3 = -1f;
+                dwellOnFractions4 = -1f;
+                dwellOnFractions5 = -1f;
+                if (dwellOnTotalFractions2 < 0f) dwellOnTotalFractions2 = 0f;
+                dwellOnTotalFractions2 += Time.deltaTime;
+
+                if (totalFractions2CardImage != null)
+                    totalFractions2CardImage.color = Color.Lerp(totalFractions2CardImage.color, Color.white, Time.deltaTime * 3f);
+
+                if (subtitleText != null)
+                    subtitleText.text = $"Hold to select Full Lesson... ({Mathf.CeilToInt(DWELL_TIME - dwellOnTotalFractions2)}s)";
+
+                if (dwellOnTotalFractions2 >= DWELL_TIME)
+                {
+                    dwellOnTotalFractions2 = -1f;
+                    OnTotalFractions2Clicked();
+                }
+            }
             else
             {
                 ResetDwells();
@@ -223,6 +303,8 @@ namespace BoardOfEducation.Navigation
             dwellOnPlayground = -1f;
             dwellOnFractions3 = -1f;
             dwellOnFractions4 = -1f;
+            dwellOnFractions5 = -1f;
+            dwellOnTotalFractions2 = -1f;
 
             if (circlesCardImage != null)
                 circlesCardImage.color = Color.Lerp(circlesCardImage.color, circlesBaseColor, Time.deltaTime * 5f);
@@ -234,6 +316,10 @@ namespace BoardOfEducation.Navigation
                 fractions3CardImage.color = Color.Lerp(fractions3CardImage.color, fractions3BaseColor, Time.deltaTime * 5f);
             if (fractions4CardImage != null)
                 fractions4CardImage.color = Color.Lerp(fractions4CardImage.color, fractions4BaseColor, Time.deltaTime * 5f);
+            if (fractions5CardImage != null)
+                fractions5CardImage.color = Color.Lerp(fractions5CardImage.color, fractions5BaseColor, Time.deltaTime * 5f);
+            if (totalFractions2CardImage != null)
+                totalFractions2CardImage.color = Color.Lerp(totalFractions2CardImage.color, totalFractions2BaseColor, Time.deltaTime * 5f);
 
             if (subtitleText != null)
                 subtitleText.text = "Place a piece or tap to choose";
@@ -262,6 +348,16 @@ namespace BoardOfEducation.Navigation
         private void OnFractions4Clicked()
         {
             NavigationHelper.LoadScene("FractionsDemo4");
+        }
+
+        private void OnFractions5Clicked()
+        {
+            NavigationHelper.LoadScene("FractionsDemo5");
+        }
+
+        private void OnTotalFractions2Clicked()
+        {
+            NavigationHelper.LoadScene("TotalFractions2");
         }
     }
 }

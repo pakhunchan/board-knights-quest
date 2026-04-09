@@ -85,7 +85,7 @@ namespace BoardOfEducation.Navigation
             var circlesCardGo = CreateGameCard(canvasGo.transform, "CirclesCard",
                 "CIRCLES", "Combine to zero!",
                 HexColor("#e74c3c"), // red theme
-                new Vector2(0.02f, 0.1f), new Vector2(0.19f, 0.68f));
+                new Vector2(0.02f, 0.1f), new Vector2(0.145f, 0.68f));
 
             // ══════════════════════════════════════════════════
             // FRACTIONS CARD
@@ -93,7 +93,7 @@ namespace BoardOfEducation.Navigation
             var fractionsCardGo = CreateGameCard(canvasGo.transform, "FractionsCard",
                 "FRACTIONS", "Visual equivalence",
                 HexColor("#3498db"), // blue theme
-                new Vector2(0.21f, 0.1f), new Vector2(0.38f, 0.68f));
+                new Vector2(0.155f, 0.1f), new Vector2(0.27f, 0.68f));
 
             // ══════════════════════════════════════════════════
             // INTERACTIVE FRACTIONS CARD
@@ -101,7 +101,7 @@ namespace BoardOfEducation.Navigation
             var fractions3CardGo = CreateGameCard(canvasGo.transform, "Fractions3Card",
                 "INTERACTIVE", "Answer with pieces",
                 HexColor("#9b59b6"), // purple theme
-                new Vector2(0.40f, 0.1f), new Vector2(0.57f, 0.68f));
+                new Vector2(0.28f, 0.1f), new Vector2(0.395f, 0.68f));
 
             // ══════════════════════════════════════════════════
             // FRACTIONS 4 CARD
@@ -109,7 +109,23 @@ namespace BoardOfEducation.Navigation
             var fractions4CardGo = CreateGameCard(canvasGo.transform, "Fractions4Card",
                 "FRACTIONS 4", "3/5 = ?/20",
                 HexColor("#e67e22"), // orange theme
-                new Vector2(0.59f, 0.1f), new Vector2(0.76f, 0.68f));
+                new Vector2(0.405f, 0.1f), new Vector2(0.52f, 0.68f));
+
+            // ══════════════════════════════════════════════════
+            // PRACTICE CARD
+            // ══════════════════════════════════════════════════
+            var fractions5CardGo = CreateGameCard(canvasGo.transform, "Fractions5Card",
+                "PRACTICE", "10 problems",
+                HexColor("#1abc9c"), // teal theme
+                new Vector2(0.53f, 0.1f), new Vector2(0.645f, 0.68f));
+
+            // ══════════════════════════════════════════════════
+            // FULL LESSON CARD
+            // ══════════════════════════════════════════════════
+            var totalFractions2CardGo = CreateGameCard(canvasGo.transform, "TotalFractions2Card",
+                "FULL LESSON", "Complete lesson",
+                HexColor("#f39c12"), // gold/amber theme
+                new Vector2(0.655f, 0.1f), new Vector2(0.77f, 0.68f));
 
             // ══════════════════════════════════════════════════
             // PLAYGROUND CARD
@@ -129,11 +145,15 @@ namespace BoardOfEducation.Navigation
             SetRef(managerSO, "playgroundCard", playgroundCardGo.GetComponent<RectTransform>());
             SetRef(managerSO, "fractions3Card", fractions3CardGo.GetComponent<RectTransform>());
             SetRef(managerSO, "fractions4Card", fractions4CardGo.GetComponent<RectTransform>());
+            SetRef(managerSO, "fractions5Card", fractions5CardGo.GetComponent<RectTransform>());
+            SetRef(managerSO, "totalFractions2Card", totalFractions2CardGo.GetComponent<RectTransform>());
             SetRef(managerSO, "circlesButton", circlesCardGo.GetComponent<Button>());
             SetRef(managerSO, "fractionsButton", fractionsCardGo.GetComponent<Button>());
             SetRef(managerSO, "playgroundButton", playgroundCardGo.GetComponent<Button>());
             SetRef(managerSO, "fractions3Button", fractions3CardGo.GetComponent<Button>());
             SetRef(managerSO, "fractions4Button", fractions4CardGo.GetComponent<Button>());
+            SetRef(managerSO, "fractions5Button", fractions5CardGo.GetComponent<Button>());
+            SetRef(managerSO, "totalFractions2Button", totalFractions2CardGo.GetComponent<Button>());
             SetRef(managerSO, "subtitleText", subtitleGo.GetComponent<TextMeshProUGUI>());
             managerSO.ApplyModifiedPropertiesWithoutUndo();
 
@@ -157,9 +177,11 @@ namespace BoardOfEducation.Navigation
                 new EditorBuildSettingsScene("Assets/Scenes/TotalFractionsDemo.unity", true),
                 new EditorBuildSettingsScene("Assets/Scenes/FractionsDemo3.unity", true),
                 new EditorBuildSettingsScene("Assets/Scenes/FractionsDemo4.unity", true),
+                new EditorBuildSettingsScene("Assets/Scenes/FractionsDemo5.unity", true),
+                new EditorBuildSettingsScene("Assets/Scenes/TotalFractions2.unity", true),
             };
             EditorBuildSettings.scenes = scenes;
-            Debug.Log("[LandingSceneBuilder] Build settings configured: LandingPage(0), Circles(1), Playground(2), TotalFractionsDemo(3), FractionsDemo3(4), FractionsDemo4(5)");
+            Debug.Log("[LandingSceneBuilder] Build settings configured: LandingPage(0), Circles(1), Playground(2), TotalFractionsDemo(3), FractionsDemo3(4), FractionsDemo4(5), FractionsDemo5(6), TotalFractions2(7)");
         }
 
         // ── Game Card Helper ─────────────────────────────────
