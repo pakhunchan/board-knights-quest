@@ -22,6 +22,7 @@ namespace BoardOfEducation.Game
         [SerializeField] private Button playButton;
         [SerializeField] private GameObject playButtonGo;
         [SerializeField] private LessonSequencer sequencer;
+        [SerializeField] private bool autoPlay;
 
         // ── Equation elements — set by BuildEquation() ──
         private RectTransform equationRow;
@@ -42,6 +43,7 @@ namespace BoardOfEducation.Game
         private Image[] scorePills;
         private int currentQuestionIndex;
         private bool currentQuestionHadWrong;
+        private bool triggerExplanation;
 
         // ── Question Data ────────────────────────────────────────
 
@@ -108,7 +110,7 @@ namespace BoardOfEducation.Game
         private const float CircleY = -240f;
         private const float DWELL_TIME = 1.0f;
 
-        private static readonly Color HandwriteColor = new Color(0.18f, 0.8f, 0.44f);
+        private static readonly Color HandwriteColor = new Color(1f, 0.75f, 0.3f);
         private static readonly Color CircleDefaultColor = new Color(0.85f, 0.85f, 0.85f, 1f);
         private static readonly Color CircleCorrectColor = new Color(0.18f, 0.8f, 0.44f, 1f);
         private static readonly Color CircleWrongColor = new Color(0.9f, 0.2f, 0.2f, 1f);
@@ -133,6 +135,9 @@ namespace BoardOfEducation.Game
             playButtonImage = playButtonGo.GetComponent<Image>();
             if (playButtonImage != null)
                 playButtonBaseColor = playButtonImage.color;
+
+            if (autoPlay)
+                OnPlayPressed();
         }
 
         private void Update()
@@ -333,6 +338,23 @@ namespace BoardOfEducation.Game
 
                 // Wait for correct answer
                 yield return CoWaitForAnswer(q.correctIndex);
+
+                // If first wrong answer triggered an explanation, run it and skip to next question
+                if (triggerExplanation)
+                {
+                    triggerExplanation = false;
+                    UpdateScorePill(i, false);
+                    DestroyAnswerCircles();
+                    yield return CoAnimateFadeOutEquation();
+                    ClearContentArea();
+                    yield return new WaitForSeconds(0.3f);
+
+                    var helper = new GuidedExplanationHelper(this, contentArea, sequencer);
+                    yield return helper.CoRunExplanation(q);
+
+                    yield return new WaitForSeconds(0.3f);
+                    continue;
+                }
 
                 // Update score pill (red if any wrong attempt, green if first-try correct)
                 UpdateScorePill(i, !currentQuestionHadWrong);
@@ -674,11 +696,22 @@ namespace BoardOfEducation.Game
                     }
                     else
                     {
-                        // Wrong: red flash, reset dwell
-                        currentQuestionHadWrong = true;
-                        yield return CoFlashCircle(hoveredIndex, CircleWrongColor, 0.5f);
-                        answerDwellTimes[hoveredIndex] = -1f;
-                        ResetCircleColor(hoveredIndex);
+                        // Wrong answer
+                        if (!currentQuestionHadWrong)
+                        {
+                            // First wrong → trigger guided explanation
+                            currentQuestionHadWrong = true;
+                            triggerExplanation = true;
+                            yield return CoFlashCircle(hoveredIndex, CircleWrongColor, 0.5f);
+                            answered = true; // break out of loop
+                        }
+                        else
+                        {
+                            // Subsequent wrong answers (safety)
+                            yield return CoFlashCircle(hoveredIndex, CircleWrongColor, 0.5f);
+                            answerDwellTimes[hoveredIndex] = -1f;
+                            ResetCircleColor(hoveredIndex);
+                        }
                     }
                 }
 
