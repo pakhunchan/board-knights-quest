@@ -36,6 +36,10 @@ namespace BoardOfEducation.Lessons
         private RectTransform[] answerCircleRects;
         private float[] answerDwellTimes;
 
+        // ── Lift-piece overlay ──
+        private GameObject liftOverlay;
+        private CanvasGroup liftOverlayGroup;
+
         // ── Layout constants (matching Demo3) ──
         private const float FractionWidth = 180f;
         private const float OperatorWidth = 90f;
@@ -56,6 +60,12 @@ namespace BoardOfEducation.Lessons
         private static readonly Color CircleDefaultColor = new Color(0.85f, 0.85f, 0.85f, 1f);
         private static readonly Color CircleCorrectColor = new Color(0.18f, 0.8f, 0.44f, 1f);
         private static readonly Color CircleWrongColor = new Color(0.9f, 0.2f, 0.2f, 1f);
+
+        private static readonly string[] EncouragementPhrases = new[] {
+            "Not quite, but good try.",
+            "Not quite, but nice effort.",
+            "Close, but not quite."
+        };
 
         public GuidedExplanationHelper(MonoBehaviour host, RectTransform contentArea, LessonSequencer sequencer)
         {
@@ -141,6 +151,11 @@ namespace BoardOfEducation.Lessons
             // Fade out and clean up
             yield return CoAnimateFadeOutEquation();
             ClearCreatedChildren();
+            if (liftOverlay != null)
+            {
+                UnityEngine.Object.Destroy(liftOverlay);
+                liftOverlay = null;
+            }
         }
 
         // ── Interactive Sections ────────────────────────────────────
@@ -176,6 +191,7 @@ namespace BoardOfEducation.Lessons
 
             // Wait for correct answer
             yield return CoWaitForAnswer(correctIdx);
+            yield return CoWaitForPieceRemoval();
 
             // Handwrite answer
             DestroyAnswerCircles();
@@ -207,6 +223,7 @@ namespace BoardOfEducation.Lessons
             yield return new WaitUntil(() => subDone);
 
             yield return CoWaitForAnswer(correctIdx);
+            yield return CoWaitForPieceRemoval();
 
             DestroyAnswerCircles();
             bool writeDone = false;
@@ -254,6 +271,7 @@ namespace BoardOfEducation.Lessons
             yield return new WaitUntil(() => subDone);
 
             yield return CoWaitForAnswer(correctIdx);
+            yield return CoWaitForPieceRemoval();
 
             DestroyAnswerCircles();
             bool writeDone = false;
@@ -268,24 +286,16 @@ namespace BoardOfEducation.Lessons
 
         private string[] GenerateChoices(int correctValue)
         {
-            string[] choices = new string[3];
-            int idx = UnityEngine.Random.Range(0, 3);
-            choices[idx] = correctValue.ToString();
-
             // Distractors at ±1, ensuring > 0
             int d1 = correctValue - 1;
             int d2 = correctValue + 1;
             if (d1 < 1) { d1 = correctValue + 2; }
 
-            int filled = 0;
-            for (int i = 0; i < 3; i++)
-            {
-                if (i == idx) continue;
-                choices[i] = (filled == 0 ? d1 : d2).ToString();
-                filled++;
-            }
+            // Sort values in increasing order
+            int[] vals = new int[] { correctValue, d1, d2 };
+            System.Array.Sort(vals);
 
-            return choices;
+            return new string[] { vals[0].ToString(), vals[1].ToString(), vals[2].ToString() };
         }
 
         private int FindCorrectIndex(string[] choices, int correctValue)
@@ -294,6 +304,82 @@ namespace BoardOfEducation.Lessons
             for (int i = 0; i < choices.Length; i++)
                 if (choices[i] == val) return i;
             return 0;
+        }
+
+        // ── Lift-Piece Overlay ───────────────────────────────────────
+
+        private void CreateLiftOverlay()
+        {
+            var canvas = contentArea.GetComponentInParent<Canvas>();
+            var parent = canvas != null ? canvas.transform : contentArea;
+
+            liftOverlay = new GameObject("LiftOverlay");
+            liftOverlay.transform.SetParent(parent, false);
+            var rect = liftOverlay.AddComponent<RectTransform>();
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+
+            var bg = liftOverlay.AddComponent<Image>();
+            bg.color = new Color(0, 0, 0, 0.85f);
+            bg.raycastTarget = false;
+
+            liftOverlayGroup = liftOverlay.AddComponent<CanvasGroup>();
+            liftOverlayGroup.alpha = 0f;
+            liftOverlayGroup.blocksRaycasts = false;
+
+            var textGo = new GameObject("LiftText");
+            textGo.transform.SetParent(liftOverlay.transform, false);
+            var textRect = textGo.AddComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = Vector2.zero;
+            textRect.offsetMax = Vector2.zero;
+            var tmp = textGo.AddComponent<TextMeshProUGUI>();
+            tmp.text = "Remove your piece to continue";
+            tmp.fontSize = 52;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.color = Color.white;
+            tmp.raycastTarget = false;
+
+            liftOverlay.SetActive(false);
+        }
+
+        private IEnumerator CoWaitForPieceRemoval()
+        {
+            if (PieceManager.Instance == null || PieceManager.Instance.ActivePieces.Count == 0)
+                yield break;
+
+            if (liftOverlay == null)
+                CreateLiftOverlay();
+
+            liftOverlay.SetActive(true);
+            liftOverlay.transform.SetAsLastSibling();
+
+            float elapsed = 0f;
+            const float fadeDuration = 0.2f;
+            while (elapsed < fadeDuration)
+            {
+                elapsed += Time.deltaTime;
+                liftOverlayGroup.alpha = Mathf.Lerp(0f, 1f, Mathf.Clamp01(elapsed / fadeDuration));
+                yield return null;
+            }
+            liftOverlayGroup.alpha = 1f;
+
+            yield return new WaitUntil(() =>
+                PieceManager.Instance == null || PieceManager.Instance.ActivePieces.Count == 0);
+
+            elapsed = 0f;
+            float startAlpha = liftOverlayGroup.alpha;
+            while (elapsed < fadeDuration)
+            {
+                elapsed += Time.deltaTime;
+                liftOverlayGroup.alpha = Mathf.Lerp(startAlpha, 0f, Mathf.Clamp01(elapsed / fadeDuration));
+                yield return null;
+            }
+            liftOverlayGroup.alpha = 0f;
+            liftOverlay.SetActive(false);
         }
 
         // ── Grammar Fix ─────────────────────────────────────────────
@@ -560,6 +646,7 @@ namespace BoardOfEducation.Lessons
                     else
                     {
                         yield return CoFlashCircle(hoveredIndex, CircleWrongColor, 0.5f);
+                        yield return CoShowEncouragement();
                         answerDwellTimes[hoveredIndex] = -1f;
                         ResetCircleColor(hoveredIndex);
                     }
@@ -575,6 +662,15 @@ namespace BoardOfEducation.Lessons
             var img = answerCircles[index]?.GetComponent<Image>();
             if (img != null)
                 img.color = Color.Lerp(img.color, CircleDefaultColor, Time.deltaTime * 5f);
+        }
+
+        private IEnumerator CoShowEncouragement()
+        {
+            string phrase = EncouragementPhrases[UnityEngine.Random.Range(0, EncouragementPhrases.Length)];
+            bool subDone = false;
+            host.StartCoroutine(sequencer.CoShowSubtitle(phrase,
+                new LessonStep(phrase).EstimatedDuration, () => subDone = true));
+            yield return new WaitUntil(() => subDone);
         }
 
         private IEnumerator CoFlashCircle(int index, Color flashColor, float duration)
