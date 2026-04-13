@@ -101,7 +101,7 @@ namespace BoardOfEducation.Game
         private const float CircleY = -240f;
         private const float DWELL_TIME = 1.0f;
 
-        private static readonly Color HandwriteColor = new Color(0.18f, 0.8f, 0.44f);
+        private static readonly Color HandwriteColor = new Color(1f, 0.75f, 0.3f);
         private static readonly Color CircleDefaultColor = new Color(0.85f, 0.85f, 0.85f, 1f);
         private static readonly Color CircleCorrectColor = new Color(0.18f, 0.8f, 0.44f, 1f);
         private static readonly Color CircleWrongColor = new Color(0.9f, 0.2f, 0.2f, 1f);

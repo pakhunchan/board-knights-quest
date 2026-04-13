@@ -99,7 +99,7 @@ namespace BoardOfEducation.Game
         private const float ZoomDuration = 0.8f;
 
         // Handwritten digit color — matches the green highlight used in CoSwapText
-        private static readonly Color HandwriteColor = new Color(0.18f, 0.8f, 0.44f);
+        private static readonly Color HandwriteColor = new Color(1f, 0.75f, 0.3f);
 
         // Piece/finger dwell tracking for Play button
         private float dwellOnPlay = -1f;
@@ -643,7 +643,7 @@ namespace BoardOfEducation.Game
 
             // Swap text and color
             tmp.text = newValue;
-            tmp.color = new Color(0.18f, 0.8f, 0.44f); // green highlight
+            tmp.color = HandwriteColor;
 
             // Scale up with EaseOutBack
             elapsed = 0f;

@@ -24,6 +24,7 @@ namespace BoardOfEducation.Game
         [SerializeField] private Button playButton;
         [SerializeField] private GameObject playButtonGo;
         [SerializeField] private LessonSequencer sequencer;
+        [SerializeField] private bool autoPlay;
 
         // ── Phase 1 (circles) — set by BuildCircleVisuals(), nulled after transition ──
         private FractionCircle leftCircle, rightCircle;
@@ -41,12 +42,18 @@ namespace BoardOfEducation.Game
         private Vector3 savedEquationScale;
         private float savedEquationY, savedOpEqualsY, savedOpMultiplyY;
 
+        // ── Rules helper (Phase 4) ──
+        private RectTransform rulesContainer;
+        private CanvasGroup rulesGroup;
+        private TextMeshProUGUI rulesTitle;
+        private TextMeshProUGUI[] ruleLines = new TextMeshProUGUI[3];
+
         // ── Answer circle tracking ──
         private GameObject[] answerCircles;
         private RectTransform[] answerCircleRects;
         private float[] answerDwellTimes;
 
-        // ── Step Definitions (42 steps) ──────────────────────────────────
+        // ── Step Definitions (43 steps) ──────────────────────────────────
 
         private readonly LessonStep[] steps = new LessonStep[]
         {
@@ -99,10 +106,10 @@ namespace BoardOfEducation.Game
             // Transition 3→4 (step 36)
             new LessonStep(" ",                                                     "transition3to4"),     // 36
 
-            // Phase 4: Equation 3/5 = ?/20 (steps 37–41)
+            // Phase 4: Equation 3/5 = ?/20 (steps 37–42)
             new LessonStep("You're doing great, so let's try another example",      "p4_showEquation"),    // 37
             new LessonStep("Three fifths is equal to how many twentieths?"),                                                                // 38
-            new LessonStep("First, look at the bottom numbers, the denominators."),                                                          // 39
+            new LessonStep("First, look at the bottom numbers, the denominators.", "p4_showRules"),                                            // 39
             new LessonStep("Second, find the times number. Five times what number equals twenty?"),                                         // 40
             new LessonStep("Third, multiple the top by that times number to get the answer"),                                               // 41
             new LessonStep("How many twentieths is three fifths?"),                                                                         // 42
@@ -154,6 +161,7 @@ namespace BoardOfEducation.Game
             animationRegistry = new Dictionary<string, Func<Action, IEnumerator>>
             {
                 ["p4_showEquation"] = CoAnimateShowEquation,
+                ["p4_showRules"] = CoRevealRulesTitle,
             };
         }
 
@@ -184,7 +192,7 @@ namespace BoardOfEducation.Game
         private const float ZoomScale = 1.5f;
         private const float ZoomDuration = 0.8f;
 
-        private static readonly Color HandwriteColor = new Color(0.18f, 0.8f, 0.44f);
+        private static readonly Color HandwriteColor = new Color(1f, 0.75f, 0.3f);
 
         // ── Answer Circle Constants ────────────────────────────────
         private const float AnswerCircleSize = 156f;
@@ -207,6 +215,9 @@ namespace BoardOfEducation.Game
             playButtonImage = playButtonGo.GetComponent<Image>();
             if (playButtonImage != null)
                 playButtonBaseColor = playButtonImage.color;
+
+            if (autoPlay)
+                OnPlayPressed();
         }
 
         private void Update()
@@ -459,6 +470,99 @@ namespace BoardOfEducation.Game
             fracRight.anchoredPosition = new Vector2(startX + FractionWidth + ElementGap + OperatorWidth + ElementGap + FractionWidth / 2f, 0);
         }
 
+        // ── Rules Helper (Phase 4) ────────────────────────────────
+
+        private static readonly Color RulesYellow = new Color(1f, 0.95f, 0.4f);
+
+        private static readonly string[] RuleTexts = new string[]
+        {
+            "1. Look at the bottom",
+            "2. Find the times number",
+            "3. Multiply the top by\n   the times number",
+        };
+
+        private void BuildRulesHelper()
+        {
+            var containerGo = new GameObject("RulesContainer");
+            containerGo.transform.SetParent(contentArea, false);
+            rulesContainer = containerGo.AddComponent<RectTransform>();
+            rulesContainer.anchorMin = new Vector2(0.22f, 0.55f);
+            rulesContainer.anchorMax = new Vector2(0.52f, 0.84f);
+            rulesContainer.offsetMin = new Vector2(-89f, -18f);
+            rulesContainer.offsetMax = new Vector2(-89f, -18f);
+
+            rulesGroup = containerGo.AddComponent<CanvasGroup>();
+            rulesGroup.alpha = 0f;
+
+            // Title: "Rules:"
+            var titleGo = new GameObject("RulesTitle");
+            titleGo.transform.SetParent(containerGo.transform, false);
+            var titleRect = titleGo.AddComponent<RectTransform>();
+            titleRect.anchorMin = new Vector2(0f, 0.85f);
+            titleRect.anchorMax = Vector2.one;
+            titleRect.offsetMin = new Vector2(10f, -10f);
+            titleRect.offsetMax = new Vector2(0f, -10f);
+            rulesTitle = titleGo.AddComponent<TextMeshProUGUI>();
+            rulesTitle.text = "Rules:";
+            rulesTitle.fontSize = 29f;
+            rulesTitle.color = RulesYellow;
+            rulesTitle.alignment = TextAlignmentOptions.TopLeft;
+
+            // Rule lines — packed tight below title
+            float lineHeight = 0.18f;
+            for (int i = 0; i < 3; i++)
+            {
+                var lineGo = new GameObject("RuleLine" + i);
+                lineGo.transform.SetParent(containerGo.transform, false);
+                var lineRect = lineGo.AddComponent<RectTransform>();
+                float top = 0.82f - i * lineHeight;
+                lineRect.anchorMin = new Vector2(0f, top - lineHeight);
+                lineRect.anchorMax = new Vector2(1f, top);
+                lineRect.offsetMin = new Vector2(10f, 0f);
+                lineRect.offsetMax = Vector2.zero;
+
+                ruleLines[i] = lineGo.AddComponent<TextMeshProUGUI>();
+                ruleLines[i].text = RuleTexts[i];
+                ruleLines[i].fontSize = 24f;
+                ruleLines[i].color = RulesYellow;
+                ruleLines[i].alignment = TextAlignmentOptions.TopLeft;
+
+                // Each line starts hidden via its own CanvasGroup
+                var lineCg = lineGo.AddComponent<CanvasGroup>();
+                lineCg.alpha = 0f;
+            }
+        }
+
+        private IEnumerator CoRevealRulesTitle(Action onComplete)
+        {
+            float duration = 0.3f;
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                rulesGroup.alpha = Mathf.Clamp01(elapsed / duration);
+                yield return null;
+            }
+            rulesGroup.alpha = 1f;
+            onComplete?.Invoke();
+        }
+
+        private IEnumerator CoRevealRuleLine(int index, float duration = 0.3f)
+        {
+            if (index < 0 || index >= ruleLines.Length) yield break;
+            var cg = ruleLines[index].GetComponent<CanvasGroup>();
+            if (cg == null) yield break;
+
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                cg.alpha = Mathf.Clamp01(elapsed / duration);
+                yield return null;
+            }
+            cg.alpha = 1f;
+        }
+
         // ── Shared Equation Helpers ─────────────────────────────────
 
         private RectTransform CreateFraction(RectTransform parent, string num, string den,
@@ -593,11 +697,24 @@ namespace BoardOfEducation.Game
             yield return new WaitForSeconds(1f);
             yield return sequencer.RunStep(steps[38], null);
             yield return new WaitForSeconds(1f);
-            yield return sequencer.RunStep(steps[39], null);
+
+            // Step 39: "First, look at the bottom..." — animation writes "Rules:" title
+            yield return sequencer.RunStep(steps[39], ResolveAnimation(steps[39].animationKey));
+            yield return CoRevealRuleLine(0);  // "1. Look at the bottom"
             yield return new WaitForSeconds(1f);
+
+            // Step 40: "Second, find the times number..."
             yield return sequencer.RunStep(steps[40], null);
+            yield return CoRevealRuleLine(1);  // "2. Find the times number"
             yield return new WaitForSeconds(0.5f);
-            yield return RunP4AnswerInteraction();  // step 41
+
+            // Step 41: "Third, multiply the top..."
+            yield return sequencer.RunStep(steps[41], null);
+            yield return CoRevealRuleLine(2);  // "3. Multiply the top by the times number"
+            yield return new WaitForSeconds(0.5f);
+
+            // Step 42: interactive answer
+            yield return RunP4AnswerInteraction();
 
             sequencer.End();
             playButtonGo.SetActive(true);
@@ -714,8 +831,9 @@ namespace BoardOfEducation.Game
             // 3. Brief pause
             yield return new WaitForSeconds(0.3f);
 
-            // 4. Build Phase 4 equation (starts invisible — p4_showEquation fades in)
+            // 4. Build Phase 4 equation + rules helper (starts invisible — p4_showEquation fades in)
             BuildPhase4Equation();
+            BuildRulesHelper();
             BuildPhase4Registry();
 
             onComplete?.Invoke();
@@ -1144,9 +1262,9 @@ namespace BoardOfEducation.Game
             // Show answer circles (10, 12, 14)
             yield return CoShowAnswerCircles(new string[] { "10", "12", "14" });
 
-            // Step 41: "How many twentieths is three fifths?"
+            // Step 42: "How many twentieths is three fifths?"
             bool subDone = false;
-            StartCoroutine(sequencer.CoShowSubtitle(steps[41].subtitle, steps[41].EstimatedDuration, () => subDone = true));
+            StartCoroutine(sequencer.CoShowSubtitle(steps[42].subtitle, steps[42].EstimatedDuration, () => subDone = true));
             yield return new WaitUntil(() => subDone);
 
             // Wait for correct answer: circle index 1 ("12")
@@ -1547,7 +1665,7 @@ namespace BoardOfEducation.Game
             }
 
             tmp.text = newValue;
-            tmp.color = new Color(0.18f, 0.8f, 0.44f);
+            tmp.color = HandwriteColor;
 
             elapsed = 0f;
             while (elapsed < half)
