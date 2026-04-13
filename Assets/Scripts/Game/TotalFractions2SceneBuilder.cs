@@ -99,6 +99,7 @@ namespace BoardOfEducation.Game
             SetRef(managerSO, "playButton", playBtnGo.GetComponent<Button>());
             SetRef(managerSO, "playButtonGo", playBtnGo);
             SetRef(managerSO, "sequencer", sequencer);
+            managerSO.FindProperty("autoPlay").boolValue = true;
             managerSO.ApplyModifiedPropertiesWithoutUndo();
 
             // ── Save Scene ──

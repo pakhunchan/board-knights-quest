@@ -122,10 +122,11 @@ namespace BoardOfEducation.Game
                 36, TextAlignmentOptions.Center, new Color(1, 1, 1, 0.9f));
             SetAnchored(subtitleGo, new Vector2(0.1f, 0.03f), new Vector2(0.9f, 0.14f));
 
-            // ── PlayButton ──
+            // ── PlayButton (hidden at start; re-shown at end of lesson for replay) ──
             var playBtnGo = CreateButton(canvasGo.transform, "PlayButton",
                 "\u25b6 PLAY", HexColor("#2ecc71"), HexColor("#555555"));
             SetAnchored(playBtnGo, new Vector2(0.38f, 0.22f), new Vector2(0.62f, 0.33f));
+            playBtnGo.SetActive(false);
 
             // ══════════════════════════════════════════════════
             // GAMECORE — all components on one object
@@ -163,6 +164,7 @@ namespace BoardOfEducation.Game
             SetRef(managerSO, "playButton", playBtnGo.GetComponent<Button>());
             SetRef(managerSO, "playButtonGo", playBtnGo);
             SetRef(managerSO, "sequencer", sequencer);
+            managerSO.FindProperty("autoPlay").boolValue = true;
             managerSO.ApplyModifiedPropertiesWithoutUndo();
 
             // TotalFractions2DemoWithBGManager (orchestrator)
