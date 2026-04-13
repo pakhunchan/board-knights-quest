@@ -6,26 +6,41 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/TitleScreen.unity
-    guid: c3f8470740d704c4099906c14e3e5b5d
-  - enabled: 0
     path: Assets/Scenes/LandingPage.unity
     guid: c003d5569ecfe49d9b9fca3f5326feee
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Circles.unity
     guid: fb7f973b81db0431e9a17c4fa9529a6b
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/Playground.unity
     guid: 4a732e015f17e4deb8398d6836d22146
-  - enabled: 0
-    path: Assets/Scenes/FractionsDemo.unity
-    guid: 6476388c9fb8f4ae6b14dab98852d6d5
-  - enabled: 0
+  - enabled: 1
+    path: Assets/Scenes/TotalFractionsDemo.unity
+    guid: c67271a7d8600421eb92e0c26e6f9d3b
+  - enabled: 1
+    path: Assets/Scenes/FractionsDemo3.unity
+    guid: 53b8210d3d86649d2a183776a2c10f44
+  - enabled: 1
+    path: Assets/Scenes/FractionsDemo4.unity
+    guid: 2b961c78296eb4e919cd388aa762e9c9
+  - enabled: 1
     path: Assets/Scenes/FractionsDemo5.unity
     guid: 8b23ee301abda41d3a7896db16b76f0d
   - enabled: 1
     path: Assets/Scenes/TotalFractions2.unity
     guid: 051072d1d32874595bd512c876a3abd2
+  - enabled: 1
+    path: Assets/Scenes/MVP1.unity
+    guid: af62a7c147bc84830bdbda6077de222e
+  - enabled: 1
+    path: Assets/Scenes/Intro2.unity
+    guid: dcb4e2537b4fd479283d7a6f3a32d8f8
+  - enabled: 1
+    path: Assets/Scenes/Intro3.unity
+    guid: 6d6e7a453256141d0b10430bfbb3fcc0
+  - enabled: 1
+    path: Assets/Scenes/Outro1.unity
+    guid: ff99b5c22ea574f0695bfd303e585e16
   m_configObjects:
     fun.board.input.settings: {fileID: 11400000, guid: 038ef9367c3ca4cdba9b7d23125bff13, type: 2}
     fun.board.settings: {fileID: 11400000, guid: 9e4311430c6124a63a48bfab46d73a8d, type: 2}
