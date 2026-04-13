@@ -154,8 +154,9 @@ namespace BoardOfEducation.Game
             {
                 chalkboardManager.OnFadeComplete += OnChalkboardFadeComplete;
             }
-            else if (autoPlay)
+            else
             {
+                // No chalkboard assembly — start the practice session directly
                 OnPlayPressed();
             }
         }

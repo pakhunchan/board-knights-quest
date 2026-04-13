@@ -651,16 +651,76 @@ namespace BoardOfEducation.Game
             fracLeftTopGroup = null; fracMiddleTopGroup = null; fracRightTopGroup = null;
         }
 
+        // ── Intro Card ──────────────────────────────────────────
+
+        private GameObject introCardGo;
+
+        private IEnumerator CoFadeInIntroCard(string text)
+        {
+            introCardGo = new GameObject("IntroCard");
+            introCardGo.transform.SetParent(contentArea, false);
+            var rect = introCardGo.AddComponent<RectTransform>();
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+
+            var tmp = introCardGo.AddComponent<TextMeshProUGUI>();
+            tmp.text = text;
+            tmp.fontSize = 96;
+            tmp.fontStyle = FontStyles.Bold;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.color = new Color(1, 1, 1, 0);
+
+            float elapsed = 0f;
+            float fadeDuration = 0.4f;
+            while (elapsed < fadeDuration)
+            {
+                elapsed += Time.deltaTime;
+                tmp.color = new Color(1, 1, 1, Mathf.Clamp01(elapsed / fadeDuration));
+                yield return null;
+            }
+            tmp.color = Color.white;
+        }
+
+        private IEnumerator CoFadeOutIntroCard()
+        {
+            if (introCardGo == null) yield break;
+            var tmp = introCardGo.GetComponent<TextMeshProUGUI>();
+            float elapsed = 0f;
+            float fadeDuration = 0.4f;
+            while (elapsed < fadeDuration)
+            {
+                elapsed += Time.deltaTime;
+                tmp.color = new Color(1, 1, 1, 1f - Mathf.Clamp01(elapsed / fadeDuration));
+                yield return null;
+            }
+            Destroy(introCardGo);
+            introCardGo = null;
+        }
+
         // ══════════════════════════════════════════════════════════════
         //  MAIN SEQUENCE
         // ══════════════════════════════════════════════════════════════
 
         private IEnumerator CoPlaySequence()
         {
+            // ── Intro Card + Welcome subtitle ──
+            sequencer.Begin();
+            yield return CoFadeInIntroCard("Completing\nEquivalent Fractions");
+
+            bool welcomeDone = false;
+            StartCoroutine(sequencer.CoShowKaraokeSubtitle(
+                "Hello! Welcome to today's lesson on completing equivalent fractions. We'll jump right in.",
+                3f, null, () => welcomeDone = true));
+            yield return new WaitUntil(() => welcomeDone);
+            yield return new WaitForSeconds(1.2f);
+
+            yield return CoFadeOutIntroCard();
+
             // ── Phase 1: Circles ──
             BuildCircleVisuals();
             BuildPhase1Registry();
-            sequencer.Begin();
             yield return new WaitForSeconds(0.3f);
 
             for (int i = 0; i <= 11; i++)

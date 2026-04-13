@@ -81,9 +81,8 @@ namespace BoardOfEducation.Game
             bgImg.preserveAspect = false;
             bgImg.raycastTarget = false;
 
-            // ── Overlay layers 1-4 (start at alpha 0) ──
+            // ── Overlay layers 1-4 (fully visible from the start) ──
             string[] layerNames = { "Frame", "Board", "Tray", "Border" };
-            var overlayImages = new Image[4];
 
             for (int i = 0; i < 4; i++)
             {
@@ -93,12 +92,6 @@ namespace BoardOfEducation.Game
                 img.sprite = LoadSprite(LayerPaths[i + 1]);
                 img.preserveAspect = false;
                 img.raycastTarget = false;
-
-                var c = img.color;
-                c.a = 0f;
-                img.color = c;
-
-                overlayImages[i] = img;
             }
 
             // ══════════════════════════════════════════════════
@@ -107,12 +100,7 @@ namespace BoardOfEducation.Game
             var lessonUIGo = CreateUIElement("LessonUI", canvasGo.transform);
             StretchFill(lessonUIGo);
             var contentGroup = lessonUIGo.AddComponent<CanvasGroup>();
-            contentGroup.alpha = 0f;
-
-            // ── Title ──
-            var titleGo = CreateText(lessonUIGo.transform, "Title", "FRACTION PRACTICE",
-                48, TextAlignmentOptions.Center, Color.white);
-            SetAnchored(titleGo, new Vector2(0.1f, 0.85f), new Vector2(0.9f, 0.95f));
+            contentGroup.alpha = 1f;
 
             // ── ContentArea ──
             var contentAreaGo = CreateUIElement("ContentArea", lessonUIGo.transform);
@@ -148,21 +136,12 @@ namespace BoardOfEducation.Game
             gameCoreGo.AddComponent<Core.BoardStartup>();
             gameCoreGo.AddComponent<Input.PieceManager>();
 
-            var chalkboardManager = gameCoreGo.AddComponent<ChalkboardDemoManager>();
             var manager = gameCoreGo.AddComponent<FractionsDemo5Manager>();
             var sequencer = gameCoreGo.AddComponent<LessonSequencer>();
 
             // ══════════════════════════════════════════════════
             // WIRE UP SERIALIZED REFERENCES
             // ══════════════════════════════════════════════════
-
-            // ChalkboardDemoManager.layers
-            var chalkboardSO = new SerializedObject(chalkboardManager);
-            var layersProp = chalkboardSO.FindProperty("layers");
-            layersProp.arraySize = 4;
-            for (int i = 0; i < 4; i++)
-                layersProp.GetArrayElementAtIndex(i).objectReferenceValue = overlayImages[i];
-            chalkboardSO.ApplyModifiedPropertiesWithoutUndo();
 
             // LessonSequencer
             var sequencerSO = new SerializedObject(sequencer);
@@ -176,7 +155,6 @@ namespace BoardOfEducation.Game
             SetRef(managerSO, "playButton", playBtnGo.GetComponent<Button>());
             SetRef(managerSO, "playButtonGo", playBtnGo);
             SetRef(managerSO, "sequencer", sequencer);
-            SetRef(managerSO, "chalkboardManager", chalkboardManager);
             SetRef(managerSO, "contentGroup", contentGroup);
             managerSO.ApplyModifiedPropertiesWithoutUndo();
 
