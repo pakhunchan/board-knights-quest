@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knight Concept 02 - Jolly Adventurer</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    font-family: system-ui, sans-serif;
+  }
+  .preview {
+    background: #2a2a2a;
+    border-radius: 16px;
+    padding: 40px 60px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .preview h2 {
+    color: #888;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  /* Animations */
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  @keyframes breathe {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.02); }
+  }
+  @keyframes blink {
+    0%, 92%, 96%, 100% { transform: scaleY(1); }
+    94% { transform: scaleY(0.1); }
+  }
+  @keyframes beardSway {
+    0%, 100% { transform: rotate(0deg); }
+    33% { transform: rotate(0.8deg); }
+    66% { transform: rotate(-0.8deg); }
+  }
+
+  .knight-bob {
+    animation: bob 2.5s ease-in-out infinite;
+  }
+  .torso-breathe {
+    animation: breathe 3s ease-in-out infinite;
+    transform-origin: 150px 220px;
+  }
+  .eye-blink {
+    animation: blink 4s ease-in-out infinite;
+  }
+  .eye-blink-delay {
+    animation: blink 4s ease-in-out infinite;
+    animation-delay: 0.05s;
+  }
+  .beard-sway {
+    animation: beardSway 3.5s ease-in-out infinite;
+    transform-origin: 150px 115px;
+  }
+</style>
+</head>
+<body>
+<div class="preview">
+  <svg viewBox="0 0 300 400" width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+    <g class="knight-bob">
+
+      <!-- === CAPE (behind body) === -->
+      <polygon points="110,180 90,280 210,280 190,180" fill="#5A7A4A"/>
+      <!-- Cape flutter edge -->
+      <polygon points="90,280 80,285 100,275 120,282 140,273 160,283 180,274 200,282 210,280 205,270 95,270" fill="#4E6B40"/>
+
+      <!-- === BOOTS === -->
+      <!-- Left boot -->
+      <ellipse cx="118" cy="368" rx="22" ry="12" fill="#5A4A3A"/>
+      <rect x="104" y="340" width="28" height="30" rx="6" fill="#5A4A3A"/>
+      <!-- Right boot -->
+      <ellipse cx="182" cy="368" rx="22" ry="12" fill="#5A4A3A"/>
+      <rect x="168" y="340" width="28" height="30" rx="6" fill="#5A4A3A"/>
+
+      <!-- === LEGS === -->
+      <!-- Left leg -->
+      <rect x="108" y="300" width="24" height="45" rx="8" fill="#8B8178"/>
+      <!-- Right leg -->
+      <rect x="168" y="300" width="24" height="45" rx="8" fill="#8B8178"/>
+      <!-- Knee plates -->
+      <ellipse cx="120" cy="318" rx="14" ry="8" fill="#A09890"/>
+      <ellipse cx="180" cy="318" rx="14" ry="8" fill="#A09890"/>
+
+      <!-- === TORSO GROUP (breathe animation) === -->
+      <g class="torso-breathe">
+
+        <!-- Barrel body - plate armor -->
+        <ellipse cx="150" cy="240" rx="60" ry="70" fill="#A09890"/>
+
+        <!-- Green tunic visible at center -->
+        <ellipse cx="150" cy="245" rx="38" ry="50" fill="#7B9E6B"/>
+
+        <!-- Tunic detail - lighter stripe -->
+        <rect x="143" y="200" width="14" height="80" rx="4" fill="#8BAE7B"/>
+
+        <!-- Belt -->
+        <rect x="92" y="265" width="116" height="14" rx="4" fill="#8B6914"/>
+        <!-- Belt buckle -->
+        <rect x="140" y="263" width="20" height="18" rx="3" fill="#A07B1A"/>
+        <rect x="145" y="267" width="10" height="10" rx="2" fill="#8B6914"/>
+
+        <!-- Shoulder pauldrons -->
+        <ellipse cx="95" cy="195" rx="22" ry="16" fill="#8B8178"/>
+        <ellipse cx="205" cy="195" rx="22" ry="16" fill="#8B8178"/>
+
+        <!-- === ARMS (akimbo - hands on hips) === -->
+        <!-- Left arm upper -->
+        <rect x="68" y="195" width="22" height="45" rx="10" fill="#8B8178" transform="rotate(20, 79, 195)"/>
+        <!-- Left arm lower (angled to hip) -->
+        <rect x="72" y="230" width="20" height="40" rx="9" fill="#A09890" transform="rotate(-30, 82, 250)"/>
+        <!-- Left gauntlet/hand on hip -->
+        <ellipse cx="92" cy="270" rx="12" ry="10" fill="#6B5F56"/>
+
+        <!-- Right arm upper -->
+        <rect x="210" y="195" width="22" height="45" rx="10" fill="#8B8178" transform="rotate(-20, 221, 195)"/>
+        <!-- Right arm lower (angled to hip) -->
+        <rect x="208" y="230" width="20" height="40" rx="9" fill="#A09890" transform="rotate(30, 218, 250)"/>
+        <!-- Right gauntlet/hand on hip -->
+        <ellipse cx="208" cy="270" rx="12" ry="10" fill="#6B5F56"/>
+
+      </g>
+
+      <!-- === HEAD === -->
+      <!-- Neck -->
+      <rect x="138" y="155" width="24" height="25" rx="8" fill="#D4A574"/>
+
+      <!-- Bald head -->
+      <ellipse cx="150" cy="115" rx="45" ry="50" fill="#D4A574"/>
+
+      <!-- Slight head sheen (bald highlight) -->
+      <ellipse cx="140" cy="85" rx="22" ry="14" fill="#DEB580" opacity="0.5"/>
+
+      <!-- Ears -->
+      <ellipse cx="105" cy="118" rx="8" ry="12" fill="#C89660"/>
+      <ellipse cx="195" cy="118" rx="8" ry="12" fill="#C89660"/>
+
+      <!-- Rosy cheeks -->
+      <ellipse cx="120" cy="122" rx="12" ry="8" fill="#D4907A" opacity="0.5"/>
+      <ellipse cx="180" cy="122" rx="12" ry="8" fill="#D4907A" opacity="0.5"/>
+
+      <!-- Eyes -->
+      <g class="eye-blink" style="transform-origin: 134px 108px;">
+        <ellipse cx="134" cy="108" rx="5" ry="5.5" fill="#3A3028"/>
+        <!-- Eye highlight -->
+        <ellipse cx="136" cy="106" rx="1.8" ry="1.8" fill="#F0E8D8"/>
+      </g>
+      <g class="eye-blink-delay" style="transform-origin: 166px 108px;">
+        <ellipse cx="166" cy="108" rx="5" ry="5.5" fill="#3A3028"/>
+        <!-- Eye highlight -->
+        <ellipse cx="168" cy="106" rx="1.8" ry="1.8" fill="#F0E8D8"/>
+      </g>
+
+      <!-- Eyebrows (thick, friendly) -->
+      <ellipse cx="134" cy="97" rx="12" ry="3.5" fill="#6B4A14" transform="rotate(-5, 134, 97)"/>
+      <ellipse cx="166" cy="97" rx="12" ry="3.5" fill="#6B4A14" transform="rotate(5, 166, 97)"/>
+
+      <!-- Nose -->
+      <ellipse cx="150" cy="120" rx="7" ry="6" fill="#C89660"/>
+
+      <!-- === BEARD (animated sway) === -->
+      <g class="beard-sway">
+        <!-- Mustache -->
+        <ellipse cx="140" cy="130" rx="14" ry="6" fill="#8B6914"/>
+        <ellipse cx="160" cy="130" rx="14" ry="6" fill="#8B6914"/>
+
+        <!-- Main bushy beard -->
+        <ellipse cx="150" cy="148" rx="38" ry="28" fill="#8B6914"/>
+        <!-- Beard bottom roundness -->
+        <ellipse cx="150" cy="162" rx="30" ry="18" fill="#7A5C12"/>
+        <!-- Beard side tufts -->
+        <ellipse cx="118" cy="140" rx="12" ry="14" fill="#8B6914"/>
+        <ellipse cx="182" cy="140" rx="12" ry="14" fill="#8B6914"/>
+        <!-- Beard texture highlights -->
+        <ellipse cx="140" cy="145" rx="8" ry="12" fill="#9A7518" opacity="0.4"/>
+        <ellipse cx="160" cy="148" rx="7" ry="10" fill="#9A7518" opacity="0.3"/>
+      </g>
+
+      <!-- Mouth (hidden mostly by mustache, small smile peeking) -->
+      <path d="M142,136 Q150,141 158,136" fill="none" stroke="#7A5C12" stroke-width="1.5" stroke-linecap="round" opacity="0"/>
+
+      <!-- Cheerful smile crinkles near eyes -->
+      <path d="M121,114 Q118,118 121,122" fill="none" stroke="#C08A58" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+      <path d="M179,114 Q182,118 179,122" fill="none" stroke="#C08A58" stroke-width="1" stroke-linecap="round" opacity="0.4"/>
+
+    </g>
+  </svg>
+  <h2>Concept 02 - Jolly Adventurer</h2>
+</div>
+</body>
+</html>

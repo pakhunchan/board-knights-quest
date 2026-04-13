@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept 10 - Noble Paladin</title>
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    font-family: sans-serif;
+  }
+  .preview {
+    background: #2a2a2a;
+    border-radius: 16px;
+    padding: 40px 60px 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .preview h2 {
+    color: #888;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  /* Animations */
+  @keyframes breathe {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.015); }
+  }
+  @keyframes blink {
+    0%, 92%, 100% { transform: scaleY(1); }
+    96% { transform: scaleY(0.1); }
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-2px); }
+  }
+  @keyframes capeFlow {
+    0%, 100% { transform: skewX(0deg) scaleX(1); }
+    30% { transform: skewX(0.5deg) scaleX(1.01); }
+    70% { transform: skewX(-0.5deg) scaleX(0.99); }
+  }
+
+  .knight-bob {
+    animation: bob 3s ease-in-out infinite;
+  }
+  .torso-breathe {
+    animation: breathe 3.5s ease-in-out infinite;
+    transform-origin: 150px 250px;
+  }
+  .eye-blink {
+    animation: blink 4.5s ease-in-out infinite;
+  }
+  .eye-blink-delay {
+    animation: blink 4.5s ease-in-out infinite;
+    animation-delay: 0.05s;
+  }
+  .cape-flow {
+    animation: capeFlow 4s ease-in-out infinite;
+    transform-origin: 150px 170px;
+  }
+</style>
+</head>
+<body>
+<div class="preview">
+  <svg viewBox="0 0 300 400" width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+    <g class="knight-bob">
+
+      <!-- === CAPE (behind everything) === -->
+      <g class="cape-flow">
+        <!-- Main cape body -->
+        <path d="M100 175 Q90 180 80 220 Q70 280 75 350 Q80 370 105 375 L150 380 L195 375 Q220 370 225 350 Q230 280 220 220 Q210 180 200 175 Z" fill="#5A7A4A"/>
+        <!-- Cape inner shadow -->
+        <path d="M110 180 Q102 200 95 240 Q88 300 92 360 L150 370 L208 360 Q212 300 205 240 Q198 200 190 180 Z" fill="#4E6E3F"/>
+        <!-- Cape highlight fold left -->
+        <path d="M100 180 Q95 220 90 280 Q88 310 90 340 L100 345 Q102 310 105 280 Q108 230 110 190 Z" fill="#6B8E5B" opacity="0.5"/>
+        <!-- Cape highlight fold right -->
+        <path d="M200 180 Q205 220 210 280 Q212 310 210 340 L200 345 Q198 310 195 280 Q192 230 190 190 Z" fill="#6B8E5B" opacity="0.5"/>
+      </g>
+
+      <!-- === BOOTS === -->
+      <!-- Left boot -->
+      <rect x="108" y="362" width="34" height="28" rx="6" fill="#5A5A5A"/>
+      <ellipse cx="118" cy="388" rx="14" ry="5" fill="#4A4A4A"/>
+      <!-- Right boot -->
+      <rect x="162" y="362" width="34" height="28" rx="6" fill="#5A5A5A"/>
+      <ellipse cx="186" cy="388" rx="14" ry="5" fill="#4A4A4A"/>
+      <!-- Boot tops -->
+      <rect x="108" y="358" width="34" height="8" rx="3" fill="#4A4A4A"/>
+      <rect x="162" y="358" width="34" height="8" rx="3" fill="#4A4A4A"/>
+
+      <!-- === LEGS === -->
+      <!-- Left leg greave -->
+      <rect x="110" y="308" width="32" height="56" rx="8" fill="#8B8178"/>
+      <!-- Right leg greave -->
+      <rect x="162" y="308" width="32" height="56" rx="8" fill="#8B8178"/>
+      <!-- Knee guards -->
+      <ellipse cx="126" cy="322" rx="12" ry="9" fill="#7B7168"/>
+      <ellipse cx="178" cy="322" rx="12" ry="9" fill="#7B7168"/>
+      <!-- Knee guard rivets -->
+      <ellipse cx="126" cy="322" rx="4" ry="3" fill="#C4A44A"/>
+      <ellipse cx="178" cy="322" rx="4" ry="3" fill="#C4A44A"/>
+
+      <!-- === TORSO GROUP (breathe) === -->
+      <g class="torso-breathe">
+        <!-- Belt -->
+        <rect x="100" y="292" width="104" height="20" rx="4" fill="#6B5F56"/>
+        <!-- Belt buckle -->
+        <rect x="142" y="294" width="20" height="16" rx="3" fill="#C4A44A"/>
+        <!-- Belt buckle inner -->
+        <rect x="146" y="298" width="12" height="8" rx="2" fill="#B89430"/>
+
+        <!-- Green tabard base -->
+        <rect x="105" y="205" width="94" height="95" rx="10" fill="#7B9E6B"/>
+
+        <!-- Plate armor chest piece -->
+        <path d="M108 205 Q152 190 196 205 L192 275 Q152 285 112 275 Z" fill="#A09890"/>
+        <!-- Armor chest highlight -->
+        <path d="M120 210 Q152 200 184 210 L181 255 Q152 263 123 255 Z" fill="#B0A8A0"/>
+
+        <!-- Tabard visible below armor -->
+        <path d="M115 270 Q152 280 189 270 L186 295 Q152 300 118 295 Z" fill="#7B9E6B"/>
+
+        <!-- Gold emblem on chest -->
+        <polygon points="152,218 158,230 170,232 161,241 163,253 152,247 141,253 143,241 134,232 146,230" fill="#C4A44A"/>
+        <!-- Emblem inner -->
+        <polygon points="152,224 155,232 163,233 157,238 159,247 152,243 145,247 147,238 141,233 149,232" fill="#D4B45A"/>
+
+        <!-- Ceremonial sash -->
+        <path d="M130 210 Q125 250 128 290 L134 290 Q133 250 136 210 Z" fill="#C4A44A" opacity="0.6"/>
+
+        <!-- === ARMS (open wide, welcoming) === -->
+        <!-- Left arm -->
+        <path d="M105 210 Q90 220 72 240 Q58 258 50 270 L55 278 Q62 265 76 248 Q88 232 102 222 Z" fill="#8B8178"/>
+        <!-- Left forearm -->
+        <path d="M50 270 Q42 280 35 288 Q30 294 32 298 L40 302 Q42 296 48 290 Q54 282 55 278 Z" fill="#8B8178"/>
+        <!-- Left hand (palm up) -->
+        <ellipse cx="34" cy="300" rx="14" ry="8" fill="#D4A574" transform="rotate(-15, 34, 300)"/>
+        <!-- Left fingers -->
+        <ellipse cx="22" cy="296" rx="5" ry="4" fill="#D4A574"/>
+        <ellipse cx="24" cy="302" rx="4" ry="3.5" fill="#D4A574"/>
+        <!-- Left gauntlet cuff -->
+        <path d="M42 286 Q48 282 54 278 L56 283 Q50 287 44 291 Z" fill="#6B5F56"/>
+
+        <!-- Right arm -->
+        <path d="M199 210 Q214 220 232 240 Q246 258 254 270 L249 278 Q242 265 228 248 Q216 232 202 222 Z" fill="#8B8178"/>
+        <!-- Right forearm -->
+        <path d="M254 270 Q262 280 269 288 Q274 294 272 298 L264 302 Q262 296 256 290 Q250 282 249 278 Z" fill="#8B8178"/>
+        <!-- Right hand (palm up) -->
+        <ellipse cx="270" cy="300" rx="14" ry="8" fill="#D4A574" transform="rotate(15, 270, 300)"/>
+        <!-- Right fingers -->
+        <ellipse cx="282" cy="296" rx="5" ry="4" fill="#D4A574"/>
+        <ellipse cx="280" cy="302" rx="4" ry="3.5" fill="#D4A574"/>
+        <!-- Right gauntlet cuff -->
+        <path d="M262 286 Q256 282 250 278 L248 283 Q254 287 260 291 Z" fill="#6B5F56"/>
+
+        <!-- === SHOULDERS === -->
+        <!-- Left pauldron -->
+        <ellipse cx="100" cy="208" rx="22" ry="16" fill="#8B8178"/>
+        <ellipse cx="100" cy="206" rx="18" ry="12" fill="#A09890"/>
+        <!-- Pauldron gold trim -->
+        <path d="M82 210 Q100 220 118 210" fill="none" stroke="#C4A44A" stroke-width="0"/>
+        <ellipse cx="100" cy="214" rx="18" ry="3" fill="#C4A44A"/>
+        <!-- Pauldron rivet -->
+        <ellipse cx="100" cy="206" rx="4" ry="3" fill="#C4A44A"/>
+
+        <!-- Right pauldron -->
+        <ellipse cx="204" cy="208" rx="22" ry="16" fill="#8B8178"/>
+        <ellipse cx="204" cy="206" rx="18" ry="12" fill="#A09890"/>
+        <!-- Pauldron gold trim -->
+        <ellipse cx="204" cy="214" rx="18" ry="3" fill="#C4A44A"/>
+        <!-- Pauldron rivet -->
+        <ellipse cx="204" cy="206" rx="4" ry="3" fill="#C4A44A"/>
+
+        <!-- Gorget / collar -->
+        <ellipse cx="152" cy="195" rx="38" ry="14" fill="#8B8178"/>
+        <ellipse cx="152" cy="193" rx="32" ry="10" fill="#A09890"/>
+      </g>
+
+      <!-- === HEAD === -->
+      <!-- Neck -->
+      <rect x="140" y="165" width="24" height="30" rx="8" fill="#D4A574"/>
+
+      <!-- Hair behind head -->
+      <ellipse cx="152" cy="125" rx="40" ry="36" fill="#8B6B4A"/>
+
+      <!-- Head/face -->
+      <ellipse cx="152" cy="132" rx="36" ry="34" fill="#D4A574"/>
+
+      <!-- Hair on top (short, neat) -->
+      <path d="M116 120 Q120 100 152 95 Q184 100 188 120 Q180 108 152 105 Q124 108 116 120 Z" fill="#8B6B4A"/>
+      <!-- Hair sides -->
+      <path d="M116 120 Q114 130 116 140 L120 138 Q118 128 120 120 Z" fill="#8B6B4A"/>
+      <path d="M188 120 Q190 130 188 140 L184 138 Q186 128 184 120 Z" fill="#8B6B4A"/>
+
+      <!-- Ears -->
+      <ellipse cx="116" cy="135" rx="6" ry="10" fill="#C49564"/>
+      <ellipse cx="188" cy="135" rx="6" ry="10" fill="#C49564"/>
+
+      <!-- === CROWN / CORONET === -->
+      <!-- Crown band -->
+      <rect x="122" y="98" width="60" height="12" rx="3" fill="#C4A44A"/>
+      <!-- Crown points -->
+      <polygon points="126,98 130,85 134,98" fill="#C4A44A"/>
+      <polygon points="140,98 144,82 148,98" fill="#C4A44A"/>
+      <polygon points="154,98 158,82 162,98" fill="#C4A44A"/>
+      <polygon points="168,98 172,85 176,98" fill="#C4A44A"/>
+      <!-- Crown jewels -->
+      <ellipse cx="130" cy="88" rx="3" ry="3" fill="#D4B45A"/>
+      <ellipse cx="144" cy="86" rx="3" ry="3" fill="#D4B45A"/>
+      <ellipse cx="158" cy="86" rx="3" ry="3" fill="#D4B45A"/>
+      <ellipse cx="172" cy="88" rx="3" ry="3" fill="#D4B45A"/>
+      <!-- Crown band detail -->
+      <rect x="125" y="102" width="54" height="4" rx="2" fill="#D4B45A"/>
+
+      <!-- === FACE === -->
+      <!-- Eyebrows (strong but kind) -->
+      <path d="M132 120 Q138 116 146 119" fill="#7B5B3A"/>
+      <path d="M158 119 Q166 116 172 120" fill="#7B5B3A"/>
+
+      <!-- Eyes -->
+      <g class="eye-blink" style="transform-origin: 140px 130px;">
+        <ellipse cx="140" cy="130" rx="6" ry="6.5" fill="#fff"/>
+        <ellipse cx="141" cy="131" rx="4" ry="4.5" fill="#5A7A4A"/>
+        <ellipse cx="142" cy="129" rx="1.5" ry="1.5" fill="#fff" opacity="0.7"/>
+      </g>
+      <g class="eye-blink-delay" style="transform-origin: 164px 130px;">
+        <ellipse cx="164" cy="130" rx="6" ry="6.5" fill="#fff"/>
+        <ellipse cx="165" cy="131" rx="4" ry="4.5" fill="#5A7A4A"/>
+        <ellipse cx="166" cy="129" rx="1.5" ry="1.5" fill="#fff" opacity="0.7"/>
+      </g>
+
+      <!-- Warm eye lines (slight smile lines) -->
+      <path d="M133 134 Q136 136 140 136" fill="none" stroke="#C49564" stroke-width="1" opacity="0.4"/>
+      <path d="M164 136 Q168 136 171 134" fill="none" stroke="#C49564" stroke-width="1" opacity="0.4"/>
+
+      <!-- Nose -->
+      <ellipse cx="152" cy="140" rx="4.5" ry="3.5" fill="#C49564"/>
+      <!-- Nose bridge highlight -->
+      <ellipse cx="152" cy="136" rx="2" ry="4" fill="#DDBA84" opacity="0.3"/>
+
+      <!-- Gentle closed-mouth smile -->
+      <path d="M140 150 Q152 158 164 150" fill="#C49564"/>
+      <path d="M142 150 Q152 156 162 150" fill="#BA8A5A"/>
+
+      <!-- Defined jaw shadow -->
+      <path d="M120 155 Q152 170 184 155 Q186 158 184 160 Q152 174 120 160 Q118 158 120 155 Z" fill="#C49564" opacity="0.25"/>
+
+      <!-- Slight rosy cheeks -->
+      <ellipse cx="130" cy="144" rx="8" ry="5" fill="#D4857A" opacity="0.2"/>
+      <ellipse cx="174" cy="144" rx="8" ry="5" fill="#D4857A" opacity="0.2"/>
+
+    </g>
+  </svg>
+  <h2>Concept 10 &mdash; Noble Paladin</h2>
+</div>
+</body>
+</html>

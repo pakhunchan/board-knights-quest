@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knight Concept 01 - Classic Guardian</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    font-family: sans-serif;
+  }
+  .preview {
+    background: #2a2a2a;
+    border-radius: 16px;
+    padding: 40px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  .preview h2 {
+    color: #888;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  /* Animations */
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  @keyframes breathe {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.02); }
+  }
+  @keyframes blink {
+    0%, 90%, 95%, 100% { transform: scaleY(1); }
+    92.5% { transform: scaleY(0.1); }
+  }
+  @keyframes wave {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-12deg); }
+    50% { transform: rotate(8deg); }
+    75% { transform: rotate(-8deg); }
+  }
+
+  .knight-body { animation: bob 2.5s ease-in-out infinite; }
+  .torso-group { transform-origin: 150px 220px; animation: breathe 3s ease-in-out infinite; }
+  .eye { animation: blink 4s ease-in-out infinite; }
+  .right-arm-group { transform-origin: 195px 185px; animation: wave 1.8s ease-in-out infinite; }
+</style>
+</head>
+<body>
+<div class="preview">
+  <h2>Concept 01 &mdash; Classic Guardian</h2>
+  <svg class="knight-body" viewBox="0 0 300 400" width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <clipPath id="visor-clip">
+        <rect x="115" y="62" width="70" height="30" rx="8"/>
+      </clipPath>
+    </defs>
+
+    <!-- === BOOTS === -->
+    <rect x="105" y="355" width="38" height="22" rx="10" fill="#6B5F56"/>
+    <rect x="157" y="355" width="38" height="22" rx="10" fill="#6B5F56"/>
+
+    <!-- === LEGS / GREAVES === -->
+    <rect x="110" y="295" width="32" height="65" rx="8" fill="#8B8178"/>
+    <rect x="158" y="295" width="32" height="65" rx="8" fill="#8B8178"/>
+    <!-- Knee guards -->
+    <ellipse cx="126" cy="310" rx="14" ry="10" fill="#7A6F66"/>
+    <ellipse cx="174" cy="310" rx="14" ry="10" fill="#7A6F66"/>
+
+    <!-- === TORSO GROUP (breathe animation) === -->
+    <g class="torso-group">
+      <!-- Base plate armor -->
+      <rect x="100" y="175" width="100" height="125" rx="16" fill="#A09890"/>
+      <!-- Green tabard overlay -->
+      <rect x="118" y="185" width="64" height="100" rx="6" fill="#7B9E6B"/>
+      <!-- Tabard bottom point -->
+      <polygon points="130,285 170,285 150,300" fill="#7B9E6B"/>
+      <!-- Belt -->
+      <rect x="100" y="260" width="100" height="14" rx="4" fill="#8B6914"/>
+      <!-- Belt buckle -->
+      <rect x="140" y="258" width="20" height="18" rx="3" fill="#A07B1A"/>
+      <rect x="144" y="262" width="12" height="10" rx="2" fill="#8B6914"/>
+      <!-- Tabard detail - cross/emblem -->
+      <rect x="143" y="205" width="14" height="40" rx="3" fill="#5A7A4A"/>
+      <rect x="132" y="218" width="36" height="12" rx="3" fill="#5A7A4A"/>
+    </g>
+
+    <!-- === LEFT ARM (at side) === -->
+    <g>
+      <!-- Shoulder pauldron -->
+      <ellipse cx="95" cy="185" rx="20" ry="16" fill="#7A6F66"/>
+      <!-- Upper arm -->
+      <rect x="78" y="190" width="28" height="50" rx="10" fill="#8B8178"/>
+      <!-- Forearm -->
+      <rect x="78" y="235" width="26" height="45" rx="10" fill="#8B8178"/>
+      <!-- Gauntlet -->
+      <rect x="80" y="272" width="22" height="20" rx="8" fill="#7A6F66"/>
+    </g>
+
+    <!-- === RIGHT ARM (waving) === -->
+    <g class="right-arm-group">
+      <!-- Shoulder pauldron -->
+      <ellipse cx="205" cy="185" rx="20" ry="16" fill="#7A6F66"/>
+      <!-- Upper arm - angled up -->
+      <rect x="198" y="155" width="28" height="48" rx="10" fill="#8B8178" transform="rotate(30, 212, 179)"/>
+      <!-- Forearm - angled up more -->
+      <rect x="218" y="120" width="24" height="42" rx="10" fill="#8B8178" transform="rotate(15, 230, 141)"/>
+      <!-- Gauntlet / hand -->
+      <ellipse cx="235" cy="118" rx="12" ry="10" fill="#D4A574"/>
+      <!-- Fingers spread for wave -->
+      <ellipse cx="232" cy="106" rx="4" ry="7" fill="#D4A574"/>
+      <ellipse cx="239" cy="107" rx="3.5" ry="7" fill="#D4A574"/>
+      <ellipse cx="245" cy="110" rx="3.5" ry="6.5" fill="#D4A574"/>
+      <ellipse cx="249" cy="115" rx="3" ry="5.5" fill="#D4A574"/>
+    </g>
+
+    <!-- === HEAD === -->
+    <g>
+      <!-- Neck -->
+      <rect x="137" y="155" width="26" height="25" rx="6" fill="#D4A574"/>
+      <!-- Gorget (neck armor) -->
+      <rect x="125" y="165" width="50" height="18" rx="8" fill="#8B8178"/>
+
+      <!-- Face (round, friendly) -->
+      <ellipse cx="150" cy="100" rx="42" ry="48" fill="#D4A574"/>
+
+      <!-- Helmet -->
+      <!-- Helmet top dome -->
+      <ellipse cx="150" cy="65" rx="48" ry="35" fill="#8B8178"/>
+      <!-- Helmet sides -->
+      <rect x="102" y="55" width="96" height="35" rx="4" fill="#8B8178"/>
+      <!-- Helmet brow ridge -->
+      <rect x="108" y="58" width="84" height="10" rx="4" fill="#7A6F66"/>
+      <!-- Visor opening (shows face) -->
+      <rect x="115" y="68" width="70" height="50" rx="10" fill="#D4A574"/>
+
+      <!-- Helmet crest/ridge on top -->
+      <rect x="143" y="30" width="14" height="28" rx="7" fill="#7A6F66"/>
+
+      <!-- Cheek guards -->
+      <rect x="102" y="80" width="16" height="30" rx="6" fill="#8B8178"/>
+      <rect x="182" y="80" width="16" height="30" rx="6" fill="#8B8178"/>
+
+      <!-- === FACE DETAILS === -->
+      <!-- Eyes - kind dots -->
+      <g class="eye" style="transform-origin: 134px 88px;">
+        <ellipse cx="134" cy="88" rx="5" ry="5.5" fill="#4A3728"/>
+        <!-- Eye shine -->
+        <circle cx="136" cy="86" r="2" fill="#fff" opacity="0.6"/>
+      </g>
+      <g class="eye" style="transform-origin: 166px 88px;">
+        <ellipse cx="166" cy="88" rx="5" ry="5.5" fill="#4A3728"/>
+        <!-- Eye shine -->
+        <circle cx="168" cy="86" r="2" fill="#fff" opacity="0.6"/>
+      </g>
+
+      <!-- Eyebrows - friendly arched -->
+      <rect x="125" y="78" width="16" height="4" rx="2" fill="#6B4E2E" transform="rotate(-5, 133, 80)"/>
+      <rect x="159" y="78" width="16" height="4" rx="2" fill="#6B4E2E" transform="rotate(5, 167, 80)"/>
+
+      <!-- Nose - small rounded bump -->
+      <ellipse cx="150" cy="99" rx="5" ry="4" fill="#C49564"/>
+
+      <!-- Bushy mustache -->
+      <ellipse cx="150" cy="108" rx="20" ry="8" fill="#6B4E2E"/>
+      <ellipse cx="138" cy="107" rx="10" ry="6" fill="#6B4E2E"/>
+      <ellipse cx="162" cy="107" rx="10" ry="6" fill="#6B4E2E"/>
+      <!-- Mustache curls -->
+      <ellipse cx="128" cy="108" rx="6" ry="5" fill="#6B4E2E"/>
+      <ellipse cx="172" cy="108" rx="6" ry="5" fill="#6B4E2E"/>
+
+      <!-- Gentle smile (below mustache) -->
+      <path d="M140 114 Q150 122 160 114" fill="none" stroke="#B8836A" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- Rosy cheeks -->
+      <ellipse cx="124" cy="102" rx="8" ry="5" fill="#D4876A" opacity="0.3"/>
+      <ellipse cx="176" cy="102" rx="8" ry="5" fill="#D4876A" opacity="0.3"/>
+    </g>
+  </svg>
+</div>
+</body>
+</html>

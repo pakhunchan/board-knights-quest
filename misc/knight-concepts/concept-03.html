@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept 03 - Young Squire</title>
+<style>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    font-family: sans-serif;
+  }
+
+  .preview {
+    background: #2a2a2a;
+    padding: 60px 80px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .preview h2 {
+    color: #aaa;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .character {
+    animation: bobbing 2s ease-in-out infinite;
+  }
+
+  .torso-group {
+    transform-origin: 150px 240px;
+    animation: breathing 3s ease-in-out infinite;
+  }
+
+  .eye-left, .eye-right {
+    animation: blink 3.5s ease-in-out infinite;
+  }
+  .eye-left {
+    transform-origin: 138px 118px;
+  }
+  .eye-right {
+    transform-origin: 162px 118px;
+  }
+
+  .scroll-arm {
+    transform-origin: 110px 195px;
+    animation: scrollWiggle 2.5s ease-in-out infinite;
+  }
+
+  @keyframes bobbing {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+  }
+
+  @keyframes breathing {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.02); }
+  }
+
+  @keyframes blink {
+    0%, 42%, 48%, 100% { transform: scaleY(1); }
+    45% { transform: scaleY(0.08); }
+  }
+
+  @keyframes scrollWiggle {
+    0%, 100% { transform: rotate(0deg); }
+    30% { transform: rotate(-2.5deg); }
+    70% { transform: rotate(2.5deg); }
+  }
+</style>
+</head>
+<body>
+<div class="preview">
+  <h2>Concept 03 &mdash; Young Squire</h2>
+  <svg viewBox="0 0 300 400" width="300" height="400" xmlns="http://www.w3.org/2000/svg">
+    <g class="character">
+
+      <!-- ============ SHADOW ============ -->
+      <ellipse cx="150" cy="380" rx="45" ry="6" fill="#000" opacity="0.12"/>
+
+      <!-- ============ BOOTS ============ -->
+      <!-- Left boot -->
+      <rect x="120" y="355" width="26" height="16" rx="5" fill="#5A4A3A"/>
+      <rect x="115" y="363" width="34" height="12" rx="5" fill="#5A4A3A"/>
+      <!-- Left boot highlight -->
+      <rect x="122" y="357" width="12" height="4" rx="2" fill="#6B5B4B"/>
+      <!-- Right boot -->
+      <rect x="154" y="355" width="26" height="16" rx="5" fill="#5A4A3A"/>
+      <rect x="150" y="363" width="34" height="12" rx="5" fill="#5A4A3A"/>
+      <!-- Right boot highlight -->
+      <rect x="156" y="357" width="12" height="4" rx="2" fill="#6B5B4B"/>
+
+      <!-- ============ LEGS (chainmail leggings) ============ -->
+      <!-- Left leg -->
+      <rect x="124" y="305" width="22" height="52" rx="7" fill="#B0A89E"/>
+      <!-- Right leg -->
+      <rect x="154" y="305" width="22" height="52" rx="7" fill="#B0A89E"/>
+      <!-- Chainmail texture dots -->
+      <circle cx="132" cy="318" r="1.5" fill="#9E978E"/>
+      <circle cx="138" cy="330" r="1.5" fill="#9E978E"/>
+      <circle cx="132" cy="342" r="1.5" fill="#9E978E"/>
+      <circle cx="162" cy="318" r="1.5" fill="#9E978E"/>
+      <circle cx="168" cy="330" r="1.5" fill="#9E978E"/>
+      <circle cx="162" cy="342" r="1.5" fill="#9E978E"/>
+      <!-- Knee guards -->
+      <ellipse cx="135" cy="322" rx="8" ry="5" fill="#A09890" opacity="0.5"/>
+      <ellipse cx="165" cy="322" rx="8" ry="5" fill="#A09890" opacity="0.5"/>
+
+      <!-- ============ TORSO GROUP (breathing animation) ============ -->
+      <g class="torso-group">
+
+        <!-- Chainmail shirt base -->
+        <path d="M112 198 L188 198 L184 305 L116 305 Z" fill="#A09890"/>
+        <!-- Chainmail texture dots on shirt -->
+        <circle cx="118" cy="210" r="1.5" fill="#8B8178"/>
+        <circle cx="124" cy="225" r="1.5" fill="#8B8178"/>
+        <circle cx="118" cy="240" r="1.5" fill="#8B8178"/>
+        <circle cx="176" cy="210" r="1.5" fill="#8B8178"/>
+        <circle cx="182" cy="225" r="1.5" fill="#8B8178"/>
+        <circle cx="176" cy="240" r="1.5" fill="#8B8178"/>
+
+        <!-- Green tabard -->
+        <path d="M130 202 L170 202 L168 300 L132 300 Z" fill="#7B9E6B"/>
+        <!-- Tabard center seam -->
+        <rect x="147" y="202" width="6" height="98" fill="#5A7A4A" opacity="0.35"/>
+        <!-- Tabard darker panel left -->
+        <rect x="132" y="202" width="8" height="98" fill="#5A7A4A" opacity="0.15"/>
+
+        <!-- Tabard bottom trim -->
+        <rect x="130" y="294" width="40" height="6" rx="1" fill="#5A7A4A"/>
+
+        <!-- Belt -->
+        <rect x="114" y="260" width="72" height="10" rx="3" fill="#5A4A3A"/>
+        <!-- Belt buckle -->
+        <rect x="143" y="258" width="14" height="14" rx="2" fill="#C4A44A"/>
+        <rect x="146" y="261" width="8" height="8" rx="1" fill="#5A4A3A"/>
+        <!-- Belt buckle shine -->
+        <rect x="148" y="262" width="3" height="6" rx="1" fill="#D4B45A" opacity="0.4"/>
+
+        <!-- ============ RIGHT ARM (at side) ============ -->
+        <g>
+          <!-- Shoulder -->
+          <ellipse cx="190" cy="205" rx="12" ry="10" fill="#A09890"/>
+          <!-- Upper arm chainmail -->
+          <rect x="183" y="205" width="20" height="42" rx="8" fill="#A09890"/>
+          <!-- Tabard sleeve -->
+          <rect x="184" y="205" width="18" height="20" rx="4" fill="#7B9E6B"/>
+          <!-- Forearm -->
+          <rect x="185" y="242" width="16" height="32" rx="6" fill="#A09890"/>
+          <!-- Hand -->
+          <ellipse cx="193" cy="280" rx="8" ry="7" fill="#D4A574"/>
+          <!-- Fingers tucked -->
+          <ellipse cx="190" cy="284" rx="5" ry="4" fill="#C89A68"/>
+          <!-- Chainmail dots -->
+          <circle cx="190" cy="218" r="1.3" fill="#8B8178"/>
+          <circle cx="195" cy="232" r="1.3" fill="#8B8178"/>
+          <circle cx="190" cy="252" r="1.3" fill="#8B8178"/>
+        </g>
+
+        <!-- ============ LEFT ARM + SCROLL (wiggle animation) ============ -->
+        <g class="scroll-arm">
+          <!-- Shoulder -->
+          <ellipse cx="110" cy="205" rx="12" ry="10" fill="#A09890"/>
+          <!-- Upper arm chainmail -->
+          <rect x="97" y="205" width="20" height="42" rx="8" fill="#A09890"/>
+          <!-- Tabard sleeve -->
+          <rect x="98" y="205" width="18" height="20" rx="4" fill="#7B9E6B"/>
+          <!-- Forearm angled -->
+          <rect x="88" y="235" width="16" height="34" rx="6" fill="#A09890" transform="rotate(8, 96, 252)"/>
+          <!-- Hand gripping scroll -->
+          <ellipse cx="92" cy="270" rx="8" ry="7" fill="#D4A574"/>
+
+          <!-- ======== SCROLL ======== -->
+          <g transform="translate(68, 252) rotate(-10)">
+            <!-- Scroll parchment body -->
+            <rect x="2" y="6" width="38" height="46" rx="2" fill="#F0E6D0"/>
+            <!-- Top roll shadow -->
+            <ellipse cx="21" cy="6" rx="22" ry="5.5" fill="#E0D4BE"/>
+            <!-- Top roll -->
+            <ellipse cx="21" cy="6" rx="22" ry="4" fill="#F0E6D0"/>
+            <!-- Top roll highlight -->
+            <ellipse cx="21" cy="4" rx="18" ry="2" fill="#F5EDE0" opacity="0.6"/>
+            <!-- Bottom roll shadow -->
+            <ellipse cx="21" cy="52" rx="20" ry="5" fill="#E0D4BE"/>
+            <!-- Bottom roll -->
+            <ellipse cx="21" cy="52" rx="20" ry="3.5" fill="#F0E6D0"/>
+            <!-- Roll end caps -->
+            <circle cx="0" cy="6" r="3" fill="#C4A44A" opacity="0.5"/>
+            <circle cx="42" cy="6" r="3" fill="#C4A44A" opacity="0.5"/>
+            <circle cx="2" cy="52" r="2.5" fill="#C4A44A" opacity="0.5"/>
+            <circle cx="40" cy="52" r="2.5" fill="#C4A44A" opacity="0.5"/>
+            <!-- Math markings -->
+            <rect x="8" y="15" width="24" height="2" rx="1" fill="#8B6914" opacity="0.3"/>
+            <rect x="10" y="21" width="16" height="2" rx="1" fill="#8B6914" opacity="0.25"/>
+            <rect x="8" y="27" width="20" height="2" rx="1" fill="#8B6914" opacity="0.3"/>
+            <rect x="12" y="33" width="12" height="2" rx="1" fill="#8B6914" opacity="0.25"/>
+            <!-- Fraction on scroll -->
+            <rect x="14" y="39" width="12" height="1.5" rx="0.5" fill="#8B6914" opacity="0.35"/>
+            <circle cx="18" cy="37" r="1.2" fill="#8B6914" opacity="0.3"/>
+            <circle cx="22" cy="43" r="1.2" fill="#8B6914" opacity="0.3"/>
+          </g>
+
+          <!-- Chainmail dots on arm -->
+          <circle cx="103" cy="218" r="1.3" fill="#8B8178"/>
+          <circle cx="100" cy="232" r="1.3" fill="#8B8178"/>
+        </g>
+
+      </g><!-- end torso-group -->
+
+      <!-- ============ NECK ============ -->
+      <rect x="140" y="180" width="20" height="20" rx="5" fill="#D4A574"/>
+      <!-- Chainmail coif at neck -->
+      <rect x="135" y="185" width="30" height="15" rx="5" fill="#A09890"/>
+      <!-- Coif dots at neck -->
+      <circle cx="140" cy="192" r="1" fill="#8B8178"/>
+      <circle cx="150" cy="190" r="1" fill="#8B8178"/>
+      <circle cx="160" cy="192" r="1" fill="#8B8178"/>
+
+      <!-- ============ HEAD ============ -->
+
+      <!-- Chainmail coif (behind head) -->
+      <ellipse cx="150" cy="132" rx="42" ry="50" fill="#A09890"/>
+      <!-- Coif texture dots -->
+      <circle cx="114" cy="125" r="1.5" fill="#8B8178"/>
+      <circle cx="118" cy="112" r="1.5" fill="#8B8178"/>
+      <circle cx="112" cy="140" r="1.5" fill="#8B8178"/>
+      <circle cx="186" cy="125" r="1.5" fill="#8B8178"/>
+      <circle cx="182" cy="112" r="1.5" fill="#8B8178"/>
+      <circle cx="188" cy="140" r="1.5" fill="#8B8178"/>
+      <circle cx="116" cy="155" r="1.3" fill="#8B8178"/>
+      <circle cx="184" cy="155" r="1.3" fill="#8B8178"/>
+
+      <!-- Ears peeking from coif -->
+      <ellipse cx="116" cy="125" rx="5" ry="9" fill="#D4A574"/>
+      <ellipse cx="116" cy="125" rx="3" ry="5" fill="#C49A68" opacity="0.5"/>
+      <ellipse cx="184" cy="125" rx="5" ry="9" fill="#D4A574"/>
+      <ellipse cx="184" cy="125" rx="3" ry="5" fill="#C49A68" opacity="0.5"/>
+
+      <!-- Face (youthful, round) -->
+      <ellipse cx="150" cy="124" rx="30" ry="34" fill="#D4A574"/>
+
+      <!-- Messy brown hair peeking from coif -->
+      <ellipse cx="130" cy="90" rx="15" ry="9" fill="#8B6914" transform="rotate(-12, 130, 90)"/>
+      <ellipse cx="150" cy="86" rx="14" ry="8" fill="#8B6914"/>
+      <ellipse cx="168" cy="90" rx="12" ry="7" fill="#8B6914" transform="rotate(10, 168, 90)"/>
+      <!-- Hair highlight tufts -->
+      <ellipse cx="138" cy="85" rx="8" ry="5" fill="#9B7924" transform="rotate(-5, 138, 85)"/>
+      <ellipse cx="158" cy="87" rx="7" ry="4.5" fill="#9B7924" transform="rotate(8, 158, 87)"/>
+      <!-- Stray tuft sticking up -->
+      <ellipse cx="145" cy="80" rx="4" ry="8" fill="#8B6914" transform="rotate(-10, 145, 80)"/>
+      <ellipse cx="155" cy="82" rx="3.5" ry="6" fill="#9B7924" transform="rotate(5, 155, 82)"/>
+
+      <!-- Golden circlet -->
+      <path d="M118 98 Q150 82 182 98 L180 94 Q150 78 120 94 Z" fill="#C4A44A"/>
+      <!-- Circlet center gem -->
+      <circle cx="150" cy="88" r="4" fill="#C4A44A"/>
+      <circle cx="150" cy="88" r="2.5" fill="#D4B45A"/>
+      <!-- Circlet side gems -->
+      <circle cx="132" cy="92" r="2.2" fill="#D4B45A"/>
+      <circle cx="168" cy="92" r="2.2" fill="#D4B45A"/>
+      <!-- Circlet highlight -->
+      <path d="M124 96 Q150 83 176 96 L175 94 Q150 82 125 94 Z" fill="#D4B45A" opacity="0.4"/>
+
+      <!-- Eyebrows (raised, eager) -->
+      <ellipse cx="138" cy="105" rx="10" ry="2.8" fill="#7B5A14" transform="rotate(-6, 138, 105)"/>
+      <ellipse cx="162" cy="105" rx="10" ry="2.8" fill="#7B5A14" transform="rotate(6, 162, 105)"/>
+
+      <!-- Eye whites (bigger for youth) -->
+      <ellipse cx="138" cy="118" rx="10" ry="8" fill="#F5F0E8"/>
+      <ellipse cx="162" cy="118" rx="10" ry="8" fill="#F5F0E8"/>
+
+      <!-- Irises (animated blink) -->
+      <ellipse class="eye-left" cx="139" cy="119" rx="6" ry="6.5" fill="#5A7A4A"/>
+      <ellipse class="eye-right" cx="163" cy="119" rx="6" ry="6.5" fill="#5A7A4A"/>
+      <!-- Pupils -->
+      <ellipse class="eye-left" cx="140" cy="119" rx="3" ry="3.2" fill="#2A2A2A"/>
+      <ellipse class="eye-right" cx="164" cy="119" rx="3" ry="3.2" fill="#2A2A2A"/>
+      <!-- Eye highlights -->
+      <circle cx="142" cy="116" r="2" fill="#fff" opacity="0.85"/>
+      <circle cx="166" cy="116" r="2" fill="#fff" opacity="0.85"/>
+      <!-- Small secondary highlights -->
+      <circle cx="137" cy="122" r="1" fill="#fff" opacity="0.5"/>
+      <circle cx="161" cy="122" r="1" fill="#fff" opacity="0.5"/>
+
+      <!-- Freckles -->
+      <circle cx="128" cy="126" r="1.3" fill="#C49A68" opacity="0.5"/>
+      <circle cx="132" cy="130" r="1.1" fill="#C49A68" opacity="0.45"/>
+      <circle cx="126" cy="131" r="1.0" fill="#C49A68" opacity="0.5"/>
+      <circle cx="130" cy="134" r="1.2" fill="#C49A68" opacity="0.4"/>
+      <circle cx="168" cy="126" r="1.3" fill="#C49A68" opacity="0.5"/>
+      <circle cx="172" cy="130" r="1.1" fill="#C49A68" opacity="0.45"/>
+      <circle cx="174" cy="127" r="1.0" fill="#C49A68" opacity="0.5"/>
+      <circle cx="170" cy="134" r="1.2" fill="#C49A68" opacity="0.4"/>
+
+      <!-- Nose (small, youthful) -->
+      <ellipse cx="150" cy="130" rx="4" ry="3" fill="#C49A68"/>
+      <!-- Nose highlight -->
+      <ellipse cx="149" cy="129" rx="2" ry="1.5" fill="#D4A574" opacity="0.5"/>
+
+      <!-- Mouth (eager smile) -->
+      <path d="M141 141 Q150 149 159 141 Z" fill="#C4846A"/>
+      <!-- Teeth hint -->
+      <path d="M143 141 Q150 145 157 141 Z" fill="#F5F0E8" opacity="0.6"/>
+
+      <!-- Cheek blush -->
+      <ellipse cx="126" cy="132" rx="8" ry="4.5" fill="#D4907A" opacity="0.2"/>
+      <ellipse cx="174" cy="132" rx="8" ry="4.5" fill="#D4907A" opacity="0.2"/>
+
+    </g><!-- end character -->
+  </svg>
+</div>
+</body>
+</html>

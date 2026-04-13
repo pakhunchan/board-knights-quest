@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept 05 — Royal Captain (with BG)</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1a1a;
+    font-family: system-ui, sans-serif;
+  }
+  .preview {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    display: inline-block;
+  }
+  .preview .bg {
+    display: block;
+    max-width: 100vw;
+    max-height: 90vh;
+  }
+  .preview svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+  .label {
+    color: #888;
+    font-weight: 400;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 14px;
+    text-align: center;
+  }
+
+  /* --- Animations --- */
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  @keyframes breathe {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(1.02); }
+  }
+  @keyframes blink {
+    0%, 92%, 96%, 100% { transform: scaleY(1); }
+    94% { transform: scaleY(0.1); }
+  }
+  @keyframes plumeSway {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(3deg); }
+    75% { transform: rotate(-3deg); }
+  }
+
+  .knight-whole { animation: bob 2.5s ease-in-out infinite; }
+  .torso-group { animation: breathe 3s ease-in-out infinite; transform-origin: 150px 230px; }
+  .eye-group { animation: blink 4s ease-in-out infinite; transform-origin: center; }
+  .plume-group { animation: plumeSway 2.8s ease-in-out infinite; transform-origin: 150px 68px; }
+</style>
+</head>
+<body>
+<div>
+  <div class="preview">
+    <img class="bg" src="../../Assets/Textures/landscape_bg_soft.png" alt="background">
+    <svg viewBox="0 0 300 400" width="480" height="640" xmlns="http://www.w3.org/2000/svg">
+      <g class="knight-whole">
+
+        <!-- ==================== BOOTS ==================== -->
+        <rect x="108" y="360" width="32" height="18" rx="4" fill="#5A5A5A"/>
+        <rect x="104" y="370" width="38" height="12" rx="4" fill="#4A4A4A"/>
+        <rect x="160" y="360" width="32" height="18" rx="4" fill="#5A5A5A"/>
+        <rect x="158" y="370" width="38" height="12" rx="4" fill="#4A4A4A"/>
+        <rect x="110" y="356" width="28" height="8" rx="2" fill="#6B6B6B"/>
+        <rect x="162" y="356" width="28" height="8" rx="2" fill="#6B6B6B"/>
+
+        <!-- ==================== LEGS / GREAVES ==================== -->
+        <rect x="112" y="310" width="26" height="50" rx="5" fill="#8B8178"/>
+        <rect x="162" y="310" width="26" height="50" rx="5" fill="#8B8178"/>
+        <ellipse cx="125" cy="318" rx="16" ry="10" fill="#9B9188"/>
+        <ellipse cx="175" cy="318" rx="16" ry="10" fill="#9B9188"/>
+        <circle cx="125" cy="318" r="3" fill="#C4A44A"/>
+        <circle cx="175" cy="318" r="3" fill="#C4A44A"/>
+        <rect x="118" y="325" width="14" height="30" rx="3" fill="#7B7168"/>
+        <rect x="168" y="325" width="14" height="30" rx="3" fill="#7B7168"/>
+
+        <!-- ==================== TORSO GROUP ==================== -->
+        <g class="torso-group">
+          <polygon points="125,220 175,220 180,310 120,310" fill="#7B9E6B"/>
+          <polygon points="140,225 160,225 162,310 138,310" fill="#5A7A4A"/>
+          <polygon points="110,200 190,200 195,280 185,310 115,310 105,280" fill="#A09890"/>
+          <polygon points="125,210 175,210 178,260 122,260" fill="#B0A8A0"/>
+          <rect x="146" y="210" width="8" height="55" rx="3" fill="#9B9188"/>
+          <polygon points="150,225 158,240 150,235 142,240" fill="#C4A44A"/>
+          <circle cx="150" cy="232" r="4" fill="#D4B45A"/>
+          <rect x="112" y="275" width="76" height="10" rx="3" fill="#6B5F56"/>
+          <rect x="143" y="273" width="14" height="14" rx="2" fill="#C4A44A"/>
+          <rect x="112" y="200" width="76" height="3" rx="1" fill="#C4A44A"/>
+          <rect x="108" y="265" width="84" height="2" rx="1" fill="#C4A44A" opacity="0.6"/>
+
+          <!-- Left arm -->
+          <polygon points="105,208 90,210 82,260 100,258" fill="#A09890"/>
+          <polygon points="82,258 100,258 108,295 90,298" fill="#8B8178"/>
+          <ellipse cx="100" cy="296" rx="10" ry="8" fill="#D4A574"/>
+          <rect x="84" y="284" width="22" height="8" rx="3" fill="#6B5F56"/>
+
+          <!-- Right arm (pointing) -->
+          <polygon points="195,208 210,210 218,255 200,253" fill="#A09890"/>
+          <polygon points="218,253 200,253 228,230 242,238" fill="#8B8178"/>
+          <polygon points="228,230 242,238 260,215 250,208" fill="#8B8178"/>
+          <rect x="240" y="210" width="22" height="10" rx="3" fill="#6B5F56"/>
+          <ellipse cx="268" cy="213" rx="8" ry="6" fill="#D4A574"/>
+          <ellipse cx="278" cy="211" rx="7" ry="3.5" fill="#D4A574"/>
+
+          <!-- Pauldrons -->
+          <ellipse cx="100" cy="208" rx="20" ry="14" fill="#9B9188"/>
+          <ellipse cx="100" cy="205" rx="18" ry="10" fill="#A09890"/>
+          <rect x="90" y="200" width="20" height="3" rx="1" fill="#C4A44A"/>
+          <circle cx="100" cy="208" r="3" fill="#C4A44A"/>
+          <ellipse cx="200" cy="208" rx="20" ry="14" fill="#9B9188"/>
+          <ellipse cx="200" cy="205" rx="18" ry="10" fill="#A09890"/>
+          <rect x="190" y="200" width="20" height="3" rx="1" fill="#C4A44A"/>
+          <circle cx="200" cy="208" r="3" fill="#C4A44A"/>
+
+          <!-- Neck -->
+          <rect x="138" y="180" width="24" height="24" rx="4" fill="#D4A574"/>
+          <ellipse cx="150" cy="195" rx="22" ry="8" fill="#8B8178"/>
+          <rect x="132" y="193" width="36" height="3" rx="1" fill="#C4A44A"/>
+        </g>
+
+        <!-- ==================== HEAD ==================== -->
+        <ellipse cx="150" cy="155" rx="28" ry="32" fill="#D4A574"/>
+        <ellipse cx="150" cy="178" rx="14" ry="8" fill="#D4A574"/>
+        <ellipse cx="134" cy="160" rx="6" ry="4" fill="#DEB088" opacity="0.5"/>
+        <ellipse cx="166" cy="160" rx="6" ry="4" fill="#DEB088" opacity="0.5"/>
+
+        <!-- Eyes -->
+        <g class="eye-group">
+          <circle cx="139" cy="150" r="3.5" fill="#3D2B1F"/>
+          <circle cx="161" cy="150" r="3.5" fill="#3D2B1F"/>
+          <circle cx="140.5" cy="148.5" r="1" fill="#fff" opacity="0.7"/>
+          <circle cx="162.5" cy="148.5" r="1" fill="#fff" opacity="0.7"/>
+        </g>
+
+        <!-- Eyebrows -->
+        <rect x="132" y="142" width="14" height="3" rx="1.5" fill="#6B5040" transform="rotate(-5,139,143)"/>
+        <rect x="155" y="142" width="14" height="3" rx="1.5" fill="#6B5040" transform="rotate(5,162,143)"/>
+
+        <!-- Smile -->
+        <path d="M141,166 Q150,173 159,166" fill="#C4866A"/>
+        <path d="M143,166 Q150,171 157,166" fill="#B0756A"/>
+
+        <!-- ==================== HELMET ==================== -->
+        <ellipse cx="150" cy="140" rx="34" ry="30" fill="#8B8178"/>
+        <ellipse cx="150" cy="125" rx="30" ry="22" fill="#9B9188"/>
+        <rect x="116" y="137" width="68" height="6" rx="3" fill="#7B7168"/>
+        <path d="M122,140 L150,128 L178,140" fill="#A09890"/>
+        <rect x="120" y="138" width="60" height="3" rx="1.5" fill="#6B5F56"/>
+        <rect x="118" y="135" width="64" height="2.5" rx="1" fill="#C4A44A"/>
+        <rect x="147" y="108" width="6" height="30" rx="3" fill="#7B7168"/>
+        <rect x="148" y="110" width="4" height="28" rx="2" fill="#C4A44A"/>
+
+        <!-- Face opening -->
+        <ellipse cx="150" cy="155" rx="25" ry="22" fill="#D4A574"/>
+
+        <!-- Ear guards -->
+        <ellipse cx="120" cy="150" rx="8" ry="14" fill="#8B8178"/>
+        <ellipse cx="180" cy="150" rx="8" ry="14" fill="#8B8178"/>
+        <circle cx="120" cy="150" r="3" fill="#C4A44A"/>
+        <circle cx="180" cy="150" r="3" fill="#C4A44A"/>
+
+        <!-- ==================== PLUME ==================== -->
+        <g class="plume-group">
+          <ellipse cx="150" cy="108" rx="6" ry="4" fill="#6B5F56"/>
+          <ellipse cx="150" cy="75" rx="10" ry="35" fill="#7B9E6B"/>
+          <ellipse cx="148" cy="70" rx="7" ry="30" fill="#8BAE7B"/>
+          <ellipse cx="150" cy="45" rx="6" ry="12" fill="#5A7A4A"/>
+          <ellipse cx="153" cy="65" rx="3" ry="20" fill="#5A7A4A" opacity="0.4"/>
+          <ellipse cx="150" cy="100" rx="8" ry="6" fill="#B85450"/>
+          <ellipse cx="150" cy="97" rx="5" ry="4" fill="#C4A44A"/>
+        </g>
+
+      </g>
+    </svg>
+  </div>
+  <p class="label">Concept 05 — Royal Captain (with game background)</p>
+</div>
+</body>
+</html>
