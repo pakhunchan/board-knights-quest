@@ -13,11 +13,25 @@ namespace BoardOfEducation.Game
     /// </summary>
     public static class FractionsDemo5SceneBuilder
     {
+        private static readonly string[] LayerPaths = new[]
+        {
+            "Assets/Textures/variants/chalkboard-layers/layer-0-background.png",
+            "Assets/Textures/variants/chalkboard-layers/layer-1-frame.png",
+            "Assets/Textures/variants/chalkboard-layers/layer-2-board.png",
+            "Assets/Textures/variants/chalkboard-layers/layer-3-tray.png",
+            "Assets/Textures/variants/chalkboard-layers/layer-4-border.png",
+        };
+
         [MenuItem("Board of Education/Build Fractions Demo 5 Scene")]
         public static void BuildFractionsDemo5Scene()
         {
             if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
                 return;
+
+            // ── Pre-step: ensure all textures are imported as Sprite ──
+            foreach (var path in LayerPaths)
+                EnsureSpriteImport(path);
+            AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
 
             var scene = UnityEditor.SceneManagement.EditorSceneManager.NewScene(
                 UnityEditor.SceneManagement.NewSceneSetup.EmptyScene,
@@ -42,13 +56,6 @@ namespace BoardOfEducation.Game
             else
                 eventSystemGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
 
-            // ── GameCore ──
-            var gameCoreGo = new GameObject("GameCore");
-            gameCoreGo.AddComponent<Core.BoardStartup>();
-            gameCoreGo.AddComponent<Input.PieceManager>();
-            var manager = gameCoreGo.AddComponent<FractionsDemo5Manager>();
-            var sequencer = gameCoreGo.AddComponent<LessonSequencer>();
-
             // ── MainCanvas ──
             var canvasGo = new GameObject("MainCanvas");
             var canvas = canvasGo.AddComponent<Canvas>();
@@ -62,20 +69,53 @@ namespace BoardOfEducation.Game
 
             canvasGo.AddComponent<GraphicRaycaster>();
 
-            // ── Background ──
+            // ══════════════════════════════════════════════════
+            // CHALKBOARD LAYERS (bottom to top)
+            // ══════════════════════════════════════════════════
+
+            // ── Background (layer-0, always visible at full alpha) ──
             var bgGo = CreateUIElement("Background", canvasGo.transform);
             StretchFill(bgGo);
             var bgImg = bgGo.AddComponent<Image>();
-            bgImg.color = HexColor("#0f0e2a");
+            bgImg.sprite = LoadSprite(LayerPaths[0]);
+            bgImg.preserveAspect = false;
             bgImg.raycastTarget = false;
 
+            // ── Overlay layers 1-4 (start at alpha 0) ──
+            string[] layerNames = { "Frame", "Board", "Tray", "Border" };
+            var overlayImages = new Image[4];
+
+            for (int i = 0; i < 4; i++)
+            {
+                var go = CreateUIElement(layerNames[i], canvasGo.transform);
+                StretchFill(go);
+                var img = go.AddComponent<Image>();
+                img.sprite = LoadSprite(LayerPaths[i + 1]);
+                img.preserveAspect = false;
+                img.raycastTarget = false;
+
+                var c = img.color;
+                c.a = 0f;
+                img.color = c;
+
+                overlayImages[i] = img;
+            }
+
+            // ══════════════════════════════════════════════════
+            // LESSON UI WRAPPER (fades in after chalkboard)
+            // ══════════════════════════════════════════════════
+            var lessonUIGo = CreateUIElement("LessonUI", canvasGo.transform);
+            StretchFill(lessonUIGo);
+            var contentGroup = lessonUIGo.AddComponent<CanvasGroup>();
+            contentGroup.alpha = 0f;
+
             // ── Title ──
-            var titleGo = CreateText(canvasGo.transform, "Title", "FRACTION PRACTICE",
+            var titleGo = CreateText(lessonUIGo.transform, "Title", "FRACTION PRACTICE",
                 48, TextAlignmentOptions.Center, Color.white);
             SetAnchored(titleGo, new Vector2(0.1f, 0.85f), new Vector2(0.9f, 0.95f));
 
             // ── ContentArea ──
-            var contentAreaGo = CreateUIElement("ContentArea", canvasGo.transform);
+            var contentAreaGo = CreateUIElement("ContentArea", lessonUIGo.transform);
             var contentAreaRect = contentAreaGo.GetComponent<RectTransform>();
             contentAreaRect.anchorMin = new Vector2(0.05f, 0.18f);
             contentAreaRect.anchorMax = new Vector2(0.95f, 0.82f);
@@ -83,36 +123,61 @@ namespace BoardOfEducation.Game
             contentAreaRect.offsetMax = Vector2.zero;
 
             // ── SubtitleText ──
-            var subtitleGo = CreateText(canvasGo.transform, "SubtitleText", "",
+            var subtitleGo = CreateText(lessonUIGo.transform, "SubtitleText", "",
                 36, TextAlignmentOptions.Center, new Color(1, 1, 1, 0.9f));
             SetAnchored(subtitleGo, new Vector2(0.1f, 0.03f), new Vector2(0.9f, 0.14f));
 
-            // ── ScoreArea (bottom center, above subtitle) ──
-            var scoreAreaGo = CreateUIElement("ScoreArea", canvasGo.transform);
+            // ── ScoreArea (top center, above title) ──
+            var scoreAreaGo = CreateUIElement("ScoreArea", lessonUIGo.transform);
             var scoreAreaRect = scoreAreaGo.GetComponent<RectTransform>();
-            scoreAreaRect.anchorMin = new Vector2(0.25f, 0.14f);
-            scoreAreaRect.anchorMax = new Vector2(0.75f, 0.22f);
+            scoreAreaRect.anchorMin = new Vector2(0.25f, 0.92f);
+            scoreAreaRect.anchorMax = new Vector2(0.75f, 0.98f);
             scoreAreaRect.offsetMin = Vector2.zero;
             scoreAreaRect.offsetMax = Vector2.zero;
 
-            // ── PlayButton ──
-            var playBtnGo = CreateButton(canvasGo.transform, "PlayButton",
+            // ── PlayButton (hidden at start) ──
+            var playBtnGo = CreateButton(lessonUIGo.transform, "PlayButton",
                 "\u25b6 PLAY", HexColor("#2ecc71"), HexColor("#555555"));
             SetAnchored(playBtnGo, new Vector2(0.38f, 0.22f), new Vector2(0.62f, 0.33f));
+            playBtnGo.SetActive(false);
+
+            // ══════════════════════════════════════════════════
+            // GAMECORE — all components on one object
+            // ══════════════════════════════════════════════════
+            var gameCoreGo = new GameObject("GameCore");
+            gameCoreGo.AddComponent<Core.BoardStartup>();
+            gameCoreGo.AddComponent<Input.PieceManager>();
+
+            var chalkboardManager = gameCoreGo.AddComponent<ChalkboardDemoManager>();
+            var manager = gameCoreGo.AddComponent<FractionsDemo5Manager>();
+            var sequencer = gameCoreGo.AddComponent<LessonSequencer>();
 
             // ══════════════════════════════════════════════════
             // WIRE UP SERIALIZED REFERENCES
             // ══════════════════════════════════════════════════
+
+            // ChalkboardDemoManager.layers
+            var chalkboardSO = new SerializedObject(chalkboardManager);
+            var layersProp = chalkboardSO.FindProperty("layers");
+            layersProp.arraySize = 4;
+            for (int i = 0; i < 4; i++)
+                layersProp.GetArrayElementAtIndex(i).objectReferenceValue = overlayImages[i];
+            chalkboardSO.ApplyModifiedPropertiesWithoutUndo();
+
+            // LessonSequencer
             var sequencerSO = new SerializedObject(sequencer);
             SetRef(sequencerSO, "subtitleText", subtitleGo.GetComponent<TextMeshProUGUI>());
             sequencerSO.ApplyModifiedPropertiesWithoutUndo();
 
+            // FractionsDemo5Manager
             var managerSO = new SerializedObject(manager);
             SetRef(managerSO, "contentArea", contentAreaRect);
             SetRef(managerSO, "scoreArea", scoreAreaRect);
             SetRef(managerSO, "playButton", playBtnGo.GetComponent<Button>());
             SetRef(managerSO, "playButtonGo", playBtnGo);
             SetRef(managerSO, "sequencer", sequencer);
+            SetRef(managerSO, "chalkboardManager", chalkboardManager);
+            SetRef(managerSO, "contentGroup", contentGroup);
             managerSO.ApplyModifiedPropertiesWithoutUndo();
 
             // ── Save Scene ──
@@ -125,6 +190,11 @@ namespace BoardOfEducation.Game
         }
 
         // ── Helpers ──────────────────────────────────────────
+
+        private static Sprite LoadSprite(string path)
+        {
+            return AssetDatabase.LoadAssetAtPath<Sprite>(path);
+        }
 
         private static GameObject CreateUIElement(string name, Transform parent)
         {
@@ -209,6 +279,33 @@ namespace BoardOfEducation.Game
         {
             ColorUtility.TryParseHtmlString(hex, out var color);
             return color;
+        }
+
+        private static void EnsureSpriteImport(string path)
+        {
+            var importer = AssetImporter.GetAtPath(path) as TextureImporter;
+            if (importer == null)
+            {
+                Debug.LogWarning($"[FractionsDemo5SceneBuilder] No texture importer found for {path}");
+                return;
+            }
+            bool needsReimport = false;
+            if (importer.textureType != TextureImporterType.Sprite)
+            {
+                importer.textureType = TextureImporterType.Sprite;
+                needsReimport = true;
+            }
+            if (importer.spriteImportMode != SpriteImportMode.Single)
+            {
+                importer.spriteImportMode = SpriteImportMode.Single;
+                needsReimport = true;
+            }
+            if (needsReimport)
+            {
+                importer.spritePixelsPerUnit = 100;
+                importer.SaveAndReimport();
+                Debug.Log($"[FractionsDemo5SceneBuilder] Reimported {path} as Single Sprite");
+            }
         }
     }
 }

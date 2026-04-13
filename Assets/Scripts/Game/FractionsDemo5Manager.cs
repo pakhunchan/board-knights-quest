@@ -24,6 +24,10 @@ namespace BoardOfEducation.Game
         [SerializeField] private LessonSequencer sequencer;
         [SerializeField] private bool autoPlay;
 
+        // ── Chalkboard orchestration ──
+        [SerializeField] private ChalkboardDemoManager chalkboardManager;
+        [SerializeField] private CanvasGroup contentGroup;
+
         // ── Equation elements — set by BuildEquation() ──
         private RectTransform equationRow;
         private CanvasGroup equationRowGroup;
@@ -123,6 +127,16 @@ namespace BoardOfEducation.Game
         private const float PillHeight = 42f;
         private const float PillGap = 6f;
 
+        private static readonly string[] EncouragementPhrases = new[] {
+            "Not quite, but good try.",
+            "Not quite, but nice effort.",
+            "Close, but not quite."
+        };
+
+        // ── Lift-piece overlay ──────────────────────────────────────
+        private GameObject liftOverlay;
+        private CanvasGroup liftOverlayGroup;
+
         // ── Play button dwell ──────────────────────────────────────
         private float dwellOnPlay = -1f;
         private Image playButtonImage;
@@ -136,8 +150,35 @@ namespace BoardOfEducation.Game
             if (playButtonImage != null)
                 playButtonBaseColor = playButtonImage.color;
 
-            if (autoPlay)
+            if (chalkboardManager != null)
+            {
+                chalkboardManager.OnFadeComplete += OnChalkboardFadeComplete;
+            }
+            else if (autoPlay)
+            {
                 OnPlayPressed();
+            }
+        }
+
+        private void OnChalkboardFadeComplete()
+        {
+            chalkboardManager.OnFadeComplete -= OnChalkboardFadeComplete;
+            StartCoroutine(CoFadeInContent());
+        }
+
+        private IEnumerator CoFadeInContent()
+        {
+            float duration = 0.5f;
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                contentGroup.alpha = Mathf.Clamp01(elapsed / duration);
+                yield return null;
+            }
+            contentGroup.alpha = 1f;
+
+            OnPlayPressed();
         }
 
         private void Update()
@@ -345,6 +386,7 @@ namespace BoardOfEducation.Game
                     triggerExplanation = false;
                     UpdateScorePill(i, false);
                     DestroyAnswerCircles();
+                    yield return CoWaitForPieceRemoval();
                     yield return CoAnimateFadeOutEquation();
                     ClearContentArea();
                     yield return new WaitForSeconds(0.3f);
@@ -366,6 +408,7 @@ namespace BoardOfEducation.Game
                     fracRightNum.rectTransform.parent as RectTransform,
                     fracRightNum, q.CorrectAnswer, 0.6f, () => writeDone = true));
                 yield return new WaitUntil(() => writeDone);
+                yield return CoWaitForPieceRemoval();
                 yield return new WaitForSeconds(0.8f);
 
                 // Fade out equation before next question
@@ -703,12 +746,15 @@ namespace BoardOfEducation.Game
                             currentQuestionHadWrong = true;
                             triggerExplanation = true;
                             yield return CoFlashCircle(hoveredIndex, CircleWrongColor, 0.5f);
+                            yield return CoShowEncouragement();
+                            yield return CoShowTransitionSubtitle();
                             answered = true; // break out of loop
                         }
                         else
                         {
                             // Subsequent wrong answers (safety)
                             yield return CoFlashCircle(hoveredIndex, CircleWrongColor, 0.5f);
+                            yield return CoShowEncouragement();
                             answerDwellTimes[hoveredIndex] = -1f;
                             ResetCircleColor(hoveredIndex);
                         }
@@ -725,6 +771,24 @@ namespace BoardOfEducation.Game
             var img = answerCircles[index]?.GetComponent<Image>();
             if (img != null)
                 img.color = Color.Lerp(img.color, CircleDefaultColor, Time.deltaTime * 5f);
+        }
+
+        private IEnumerator CoShowEncouragement()
+        {
+            string phrase = EncouragementPhrases[UnityEngine.Random.Range(0, EncouragementPhrases.Length)];
+            bool subDone = false;
+            StartCoroutine(sequencer.CoShowSubtitle(phrase,
+                new LessonStep(phrase).EstimatedDuration, () => subDone = true));
+            yield return new WaitUntil(() => subDone);
+        }
+
+        private IEnumerator CoShowTransitionSubtitle()
+        {
+            string phrase = "Let's review this together.";
+            bool subDone = false;
+            StartCoroutine(sequencer.CoShowSubtitle(phrase,
+                new LessonStep(phrase).EstimatedDuration, () => subDone = true));
+            yield return new WaitUntil(() => subDone);
         }
 
         private IEnumerator CoFlashCircle(int index, Color flashColor, float duration)
@@ -831,6 +895,90 @@ namespace BoardOfEducation.Game
             Destroy(maskGo);
 
             onComplete?.Invoke();
+        }
+
+        // ── Lift-Piece Overlay ───────────────────────────────────────
+
+        private void CreateLiftOverlay()
+        {
+            // Parent to the Canvas (grandparent of contentArea) so ClearContentArea won't destroy it
+            var canvas = contentArea.GetComponentInParent<Canvas>();
+            var parent = canvas != null ? canvas.transform : contentArea;
+
+            liftOverlay = new GameObject("LiftOverlay");
+            liftOverlay.transform.SetParent(parent, false);
+            var rect = liftOverlay.AddComponent<RectTransform>();
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+
+            // Semi-transparent dark background
+            var bg = liftOverlay.AddComponent<Image>();
+            bg.color = new Color(0, 0, 0, 0.85f);
+            bg.raycastTarget = false;
+
+            liftOverlayGroup = liftOverlay.AddComponent<CanvasGroup>();
+            liftOverlayGroup.alpha = 0f;
+            liftOverlayGroup.blocksRaycasts = false;
+
+            // Prompt text
+            var textGo = new GameObject("LiftText");
+            textGo.transform.SetParent(liftOverlay.transform, false);
+            var textRect = textGo.AddComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = Vector2.zero;
+            textRect.offsetMax = Vector2.zero;
+            var tmp = textGo.AddComponent<TextMeshProUGUI>();
+            tmp.text = "Remove your piece to continue";
+            tmp.fontSize = 52;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.color = Color.white;
+            tmp.raycastTarget = false;
+
+            liftOverlay.SetActive(false);
+        }
+
+        private IEnumerator CoWaitForPieceRemoval()
+        {
+            // No piece on the board — skip entirely
+            if (PieceManager.Instance == null || PieceManager.Instance.ActivePieces.Count == 0)
+                yield break;
+
+            // Lazy-create the overlay
+            if (liftOverlay == null)
+                CreateLiftOverlay();
+
+            liftOverlay.SetActive(true);
+            liftOverlay.transform.SetAsLastSibling();
+
+            // Fade in
+            float elapsed = 0f;
+            const float fadeDuration = 0.2f;
+            while (elapsed < fadeDuration)
+            {
+                elapsed += Time.deltaTime;
+                liftOverlayGroup.alpha = Mathf.Lerp(0f, 1f, Mathf.Clamp01(elapsed / fadeDuration));
+                yield return null;
+            }
+            liftOverlayGroup.alpha = 1f;
+
+            // Wait until all pieces are removed
+            yield return new WaitUntil(() =>
+                PieceManager.Instance == null || PieceManager.Instance.ActivePieces.Count == 0);
+
+            // Fade out
+            elapsed = 0f;
+            float startAlpha = liftOverlayGroup.alpha;
+            while (elapsed < fadeDuration)
+            {
+                elapsed += Time.deltaTime;
+                liftOverlayGroup.alpha = Mathf.Lerp(startAlpha, 0f, Mathf.Clamp01(elapsed / fadeDuration));
+                yield return null;
+            }
+            liftOverlayGroup.alpha = 0f;
+            liftOverlay.SetActive(false);
         }
 
         // ── Helpers ───────────────────────────────────────────────
