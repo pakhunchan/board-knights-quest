@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quest Completed! - Knight's Quest: Math Adventure</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=MedievalSharp&family=Cinzel+Decorative:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #1a0e05;
+    background-image:
+      radial-gradient(ellipse at center, #2a1a0a 0%, #0d0704 100%);
+    overflow: hidden;
+    font-family: 'Cinzel', serif;
+  }
+
+  /* -- Ambient floating particles -- */
+  .particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: #ffd700;
+    border-radius: 50%;
+    opacity: 0;
+    animation: floatUp 4s ease-in infinite;
+  }
+
+  @keyframes floatUp {
+    0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+    20%  { opacity: 0.8; }
+    100% { opacity: 0; transform: translateY(-300px) scale(0); }
+  }
+
+  /* -- Scroll container -- */
+  .scroll-wrapper {
+    position: relative;
+    z-index: 1;
+    width: min(600px, 90vw);
+  }
+
+  /* Scroll roll tops and bottoms */
+  .scroll-roll {
+    position: relative;
+    height: 44px;
+    background: linear-gradient(180deg, #8B6914 0%, #C9A84C 20%, #F5E6A3 40%, #C9A84C 60%, #8B6914 80%, #5C4410 100%);
+    border-radius: 22px;
+    z-index: 3;
+    box-shadow:
+      0 4px 12px rgba(0,0,0,0.5),
+      inset 0 2px 4px rgba(255,255,255,0.3),
+      inset 0 -2px 4px rgba(0,0,0,0.3);
+  }
+  .scroll-roll::before,
+  .scroll-roll::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    width: 32px;
+    height: 32px;
+    background: radial-gradient(circle, #F5E6A3 20%, #8B6914 70%, #5C4410 100%);
+    border-radius: 50%;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+  }
+  .scroll-roll::before { left: -10px; }
+  .scroll-roll::after  { right: -10px; }
+
+  .scroll-roll-bottom {
+    position: relative;
+    z-index: 3;
+  }
+
+  /* The parchment body that unfurls */
+  .scroll-body-clip {
+    position: relative;
+    z-index: 2;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .scroll-body-clip.unfurled {
+    max-height: 700px;
+  }
+
+  .scroll-body {
+    position: relative;
+    background:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 28px,
+        rgba(139,109,20,0.03) 28px,
+        rgba(139,109,20,0.03) 29px
+      ),
+      linear-gradient(135deg,
+        #f5e6c8 0%, #ecdbb0 15%, #f2e4c4 30%, #e8d4a4 50%,
+        #f0dfc0 70%, #ecdbb0 85%, #f5e6c8 100%
+      );
+    padding: 40px 48px;
+    border-left: 3px solid #c9a84c;
+    border-right: 3px solid #c9a84c;
+    box-shadow:
+      inset 8px 0 20px rgba(139,109,20,0.15),
+      inset -8px 0 20px rgba(139,109,20,0.15);
+    text-align: center;
+  }
+
+  /* Parchment stain/texture overlay */
+  .scroll-body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 30%, rgba(139,109,20,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(139,109,20,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(101,67,33,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Decorative border inside scroll */
+  .scroll-body::after {
+    content: '';
+    position: absolute;
+    inset: 12px 20px;
+    border: 2px solid rgba(139,109,20,0.2);
+    border-radius: 4px;
+    pointer-events: none;
+  }
+
+  /* Corner ornaments */
+  .ornament {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    opacity: 0.35;
+  }
+  .ornament svg { width: 100%; height: 100%; }
+  .ornament-tl { top: 18px; left: 26px; }
+  .ornament-tr { top: 18px; right: 26px; transform: scaleX(-1); }
+  .ornament-bl { bottom: 18px; left: 26px; transform: scaleY(-1); }
+  .ornament-br { bottom: 18px; right: 26px; transform: scale(-1, -1); }
+
+  /* -- Content elements -- */
+  .quest-header {
+    font-family: 'Cinzel Decorative', 'Cinzel', serif;
+    font-size: clamp(28px, 5vw, 42px);
+    font-weight: 900;
+    color: #5C3310;
+    text-shadow: 1px 1px 0 rgba(201,168,76,0.4);
+    margin-bottom: 6px;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    position: relative;
+  }
+  .quest-header.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Decorative divider */
+  .divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 14px 0;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.3s;
+  }
+  .divider.visible { opacity: 1; }
+  .divider-line {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #8B6914, transparent);
+  }
+  .divider-diamond {
+    width: 10px;
+    height: 10px;
+    background: #8B6914;
+    transform: rotate(45deg);
+  }
+
+  /* Level display */
+  .level-section {
+    margin: 18px 0;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .level-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .level-transition {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    font-family: 'Cinzel', serif;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 700;
+    color: #5C3310;
+  }
+
+  .level-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 100px;
+    padding: 6px 18px;
+    background: linear-gradient(135deg, #8B6914, #C9A84C);
+    color: #fff;
+    border-radius: 6px;
+    font-size: clamp(16px, 2.5vw, 22px);
+    box-shadow: 0 2px 8px rgba(92,68,16,0.3);
+    transition: all 0.5s ease;
+  }
+  .level-badge.leveled-up {
+    background: linear-gradient(135deg, #B8860B, #FFD700);
+    box-shadow: 0 0 20px rgba(255,215,0,0.5), 0 2px 8px rgba(92,68,16,0.3);
+    transform: scale(1.1);
+  }
+
+  .level-arrow {
+    font-size: 24px;
+    color: #8B6914;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .level-arrow.visible { opacity: 1; }
+
+  .level-new {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .level-new.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Title / rank */
+  .title-section {
+    margin: 8px 0 20px;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+  }
+  .title-section.visible { opacity: 1; }
+
+  .rank-label {
+    font-family: 'MedievalSharp', cursive;
+    font-size: clamp(14px, 2vw, 17px);
+    color: #8B6914;
+    margin-bottom: 2px;
+  }
+  .rank-title {
+    font-family: 'Cinzel Decorative', 'Cinzel', serif;
+    font-size: clamp(20px, 3.5vw, 30px);
+    font-weight: 700;
+    color: #5C3310;
+    transition: all 0.5s ease;
+    display: inline-block;
+  }
+  .rank-title.changing {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  .rank-title.new-rank {
+    color: #B8860B;
+    text-shadow: 0 0 10px rgba(255,215,0,0.3);
+  }
+
+  /* XP bar */
+  .xp-section {
+    margin: 16px 0;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .xp-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .xp-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    color: #8B6914;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+
+  .xp-bar-outer {
+    position: relative;
+    height: 26px;
+    background: linear-gradient(180deg, #c4a86a 0%, #a08548 100%);
+    border-radius: 13px;
+    border: 2px solid #8B6914;
+    overflow: hidden;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.25);
+  }
+  .xp-bar-inner {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    bottom: 2px;
+    width: 0%;
+    background: linear-gradient(180deg, #FFD700 0%, #DAA520 50%, #B8860B 100%);
+    border-radius: 10px;
+    transition: width 0.05s linear;
+    box-shadow: 0 0 8px rgba(255,215,0,0.4);
+  }
+  .xp-bar-inner::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    right: 4px;
+    height: 6px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.4), transparent);
+    border-radius: 4px;
+  }
+
+  .xp-bar-inner.flash {
+    background: linear-gradient(180deg, #fff 0%, #FFD700 50%, #DAA520 100%);
+  }
+
+  /* XP reward stamp */
+  .xp-reward {
+    margin-top: 18px;
+    opacity: 0;
+    transform: scale(2) rotate(-15deg);
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .xp-reward.visible {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  .xp-reward-inner {
+    display: inline-block;
+    font-family: 'Cinzel Decorative', 'Cinzel', serif;
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 900;
+    color: #B8860B;
+    text-shadow: 0 0 12px rgba(255,215,0,0.4);
+    padding: 4px 20px;
+    border: 3px solid #B8860B;
+    border-radius: 8px;
+    background: rgba(255,215,0,0.08);
+  }
+
+  /* Wax seal */
+  .wax-seal {
+    position: absolute;
+    bottom: -18px;
+    right: 40px;
+    width: 72px;
+    height: 72px;
+    z-index: 5;
+    opacity: 0;
+    transform: scale(0) rotate(-30deg);
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .wax-seal.visible {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  .wax-seal-circle {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 40% 35%,
+      #d4342a 0%, #b22222 40%, #8b1a1a 80%, #6b1212 100%
+    );
+    border-radius: 50%;
+    box-shadow:
+      0 4px 12px rgba(0,0,0,0.4),
+      inset 0 2px 4px rgba(255,255,255,0.15),
+      inset 0 -3px 8px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #8b1a1a;
+    position: relative;
+  }
+  .wax-seal-circle::before {
+    content: '';
+    position: absolute;
+    inset: 5px;
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: 50%;
+  }
+  .wax-seal-icon {
+    font-size: 28px;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+    line-height: 1;
+  }
+
+  /* Level-up flash overlay */
+  .flash-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(255,215,0,0.6), rgba(255,215,0,0) 70%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+    transition: opacity 0.15s ease;
+  }
+  .flash-overlay.active {
+    opacity: 1;
+    transition: opacity 0.05s ease;
+  }
+
+  /* Celebration burst */
+  .burst {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    z-index: 4;
+  }
+  .burst-ray {
+    position: absolute;
+    width: 3px;
+    height: 0;
+    background: linear-gradient(to top, rgba(255,215,0,0.8), transparent);
+    transform-origin: bottom center;
+    border-radius: 2px;
+    animation: burstOut 0.8s ease-out forwards;
+  }
+  @keyframes burstOut {
+    0%   { height: 0; opacity: 1; }
+    60%  { height: 80px; opacity: 0.8; }
+    100% { height: 100px; opacity: 0; }
+  }
+
+  /* Subtle content fade helper */
+  .content-area { position: relative; z-index: 1; }
+
+  .encouragement {
+    font-family: 'MedievalSharp', cursive;
+    font-size: clamp(14px, 2.2vw, 18px);
+    color: #7a5c2e;
+    margin-top: 10px;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .encouragement.visible { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+<div class="flash-overlay" id="flashOverlay"></div>
+
+<div class="scroll-wrapper">
+  <div class="scroll-roll"></div>
+
+  <div class="scroll-body-clip" id="scrollBody">
+    <div class="scroll-body">
+      <!-- Corner ornaments -->
+      <div class="ornament ornament-tl"><svg viewBox="0 0 40 40"><path d="M0,0 Q20,5 40,0 Q35,20 40,40 Q20,35 0,40 Q5,20 0,0Z" fill="none" stroke="#8B6914" stroke-width="1.5"/><circle cx="20" cy="20" r="3" fill="#8B6914"/></svg></div>
+      <div class="ornament ornament-tr"><svg viewBox="0 0 40 40"><path d="M0,0 Q20,5 40,0 Q35,20 40,40 Q20,35 0,40 Q5,20 0,0Z" fill="none" stroke="#8B6914" stroke-width="1.5"/><circle cx="20" cy="20" r="3" fill="#8B6914"/></svg></div>
+      <div class="ornament ornament-bl"><svg viewBox="0 0 40 40"><path d="M0,0 Q20,5 40,0 Q35,20 40,40 Q20,35 0,40 Q5,20 0,0Z" fill="none" stroke="#8B6914" stroke-width="1.5"/><circle cx="20" cy="20" r="3" fill="#8B6914"/></svg></div>
+      <div class="ornament ornament-br"><svg viewBox="0 0 40 40"><path d="M0,0 Q20,5 40,0 Q35,20 40,40 Q20,35 0,40 Q5,20 0,0Z" fill="none" stroke="#8B6914" stroke-width="1.5"/><circle cx="20" cy="20" r="3" fill="#8B6914"/></svg></div>
+
+      <div class="content-area">
+        <div class="quest-header" id="questHeader">Quest Completed!</div>
+
+        <div class="divider" id="divider1">
+          <div class="divider-line"></div>
+          <div class="divider-diamond"></div>
+          <div class="divider-line"></div>
+        </div>
+
+        <div class="level-section" id="levelSection">
+          <div class="level-transition">
+            <div class="level-badge" id="levelBadge">Level 1</div>
+            <div class="level-arrow" id="levelArrow">&#10140;</div>
+            <div class="level-badge level-new" id="levelNew">Level 2</div>
+          </div>
+        </div>
+
+        <div class="title-section" id="titleSection">
+          <div class="rank-label">Your Rank</div>
+          <div class="rank-title" id="rankTitle">Trainee</div>
+        </div>
+
+        <div class="divider" id="divider2">
+          <div class="divider-line"></div>
+          <div class="divider-diamond"></div>
+          <div class="divider-line"></div>
+        </div>
+
+        <div class="xp-section" id="xpSection">
+          <div class="xp-label">
+            <span>Experience</span>
+            <span id="xpText">0 / 500 XP</span>
+          </div>
+          <div class="xp-bar-outer">
+            <div class="xp-bar-inner" id="xpBar"></div>
+          </div>
+        </div>
+
+        <div class="xp-reward" id="xpReward">
+          <div class="xp-reward-inner">+500 XP</div>
+        </div>
+
+        <div class="encouragement" id="encouragement">
+          Onward to new adventures, brave Explorer!
+        </div>
+      </div>
+
+      <!-- Wax seal -->
+      <div class="wax-seal" id="waxSeal">
+        <div class="wax-seal-circle">
+          <div class="wax-seal-icon">&#9876;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-roll scroll-roll-bottom"></div>
+</div>
+
+<script>
+(function() {
+  // Create floating particles
+  const particlesEl = document.getElementById('particles');
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.top = 60 + Math.random() * 40 + '%';
+    p.style.animationDelay = Math.random() * 4 + 's';
+    p.style.animationDuration = 3 + Math.random() * 3 + 's';
+    p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
+    particlesEl.appendChild(p);
+  }
+
+  // Refs
+  const scrollBody    = document.getElementById('scrollBody');
+  const questHeader   = document.getElementById('questHeader');
+  const divider1      = document.getElementById('divider1');
+  const divider2      = document.getElementById('divider2');
+  const levelSection  = document.getElementById('levelSection');
+  const levelBadge    = document.getElementById('levelBadge');
+  const levelArrow    = document.getElementById('levelArrow');
+  const levelNew      = document.getElementById('levelNew');
+  const titleSection  = document.getElementById('titleSection');
+  const rankTitle     = document.getElementById('rankTitle');
+  const xpSection     = document.getElementById('xpSection');
+  const xpBar         = document.getElementById('xpBar');
+  const xpText        = document.getElementById('xpText');
+  const xpReward      = document.getElementById('xpReward');
+  const flashOverlay  = document.getElementById('flashOverlay');
+  const waxSeal       = document.getElementById('waxSeal');
+  const encouragement = document.getElementById('encouragement');
+
+  // Utility: wait ms
+  function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  // Animate XP bar smoothly from startPct to endPct over duration ms
+  // xpStart/xpMax for the text display
+  function animateXP(startPct, endPct, duration, xpStart, xpMax) {
+    return new Promise(resolve => {
+      const t0 = performance.now();
+      function tick(now) {
+        const elapsed = now - t0;
+        const progress = Math.min(elapsed / duration, 1);
+        // ease-out quad
+        const eased = 1 - (1 - progress) * (1 - progress);
+        const pct = startPct + (endPct - startPct) * eased;
+        xpBar.style.width = pct + '%';
+        const currentXP = Math.round((xpStart + (xpMax - xpStart) * eased));
+        xpText.textContent = currentXP + ' / ' + (pct <= 100 ? 500 : 500) + ' XP';
+        if (progress < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          resolve();
+        }
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+
+  // Create burst rays
+  function createBurst(container) {
+    const burst = document.createElement('div');
+    burst.className = 'burst';
+    container.appendChild(burst);
+    for (let i = 0; i < 12; i++) {
+      const ray = document.createElement('div');
+      ray.className = 'burst-ray';
+      ray.style.transform = 'rotate(' + (i * 30) + 'deg)';
+      ray.style.animationDelay = (i * 0.03) + 's';
+      burst.appendChild(ray);
+    }
+    setTimeout(() => burst.remove(), 1200);
+  }
+
+  // Flash screen
+  function flash() {
+    flashOverlay.classList.add('active');
+    setTimeout(() => flashOverlay.classList.remove('active'), 300);
+  }
+
+  // Main sequence
+  async function runSequence() {
+    await wait(1000);
+
+    // 1. Unfurl scroll
+    scrollBody.classList.add('unfurled');
+    await wait(600);
+
+    // 2. Quest Completed header
+    questHeader.classList.add('visible');
+    await wait(500);
+    divider1.classList.add('visible');
+    await wait(400);
+
+    // 3. Show level and title
+    levelSection.classList.add('visible');
+    await wait(300);
+    titleSection.classList.add('visible');
+    await wait(300);
+    divider2.classList.add('visible');
+    await wait(300);
+
+    // 4. Show XP section and animate bar 0% -> 100%
+    xpSection.classList.add('visible');
+    await wait(400);
+    xpText.textContent = '0 / 500 XP';
+    await animateXP(0, 100, 2000, 0, 500);
+
+    // 5. Level up flash
+    await wait(200);
+    flash();
+    xpBar.classList.add('flash');
+    await wait(150);
+    xpBar.classList.remove('flash');
+
+    // Level badge update
+    levelBadge.classList.add('leveled-up');
+    levelArrow.classList.add('visible');
+    await wait(200);
+    levelNew.classList.add('visible');
+    levelNew.classList.add('leveled-up');
+
+    // Create burst on the scroll body
+    createBurst(document.querySelector('.scroll-body'));
+
+    // Title change
+    await wait(300);
+    rankTitle.classList.add('changing');
+    await wait(400);
+    rankTitle.textContent = 'Explorer';
+    rankTitle.classList.remove('changing');
+    rankTitle.classList.add('new-rank');
+
+    await wait(500);
+
+    // 6. XP bar resets and fills to 50%
+    xpBar.style.transition = 'none';
+    xpBar.style.width = '0%';
+    xpText.textContent = '0 / 500 XP';
+    // Force reflow
+    void xpBar.offsetWidth;
+    xpBar.style.transition = '';
+    await wait(200);
+    await animateXP(0, 50, 1200, 0, 250);
+    xpText.textContent = '250 / 500 XP';
+
+    // 7. +500 XP stamp
+    await wait(400);
+    xpReward.classList.add('visible');
+
+    // 8. Wax seal
+    await wait(500);
+    waxSeal.classList.add('visible');
+
+    // 9. Encouragement
+    await wait(400);
+    encouragement.classList.add('visible');
+  }
+
+  runSequence();
+})();
+</script>
+</body>
+</html>

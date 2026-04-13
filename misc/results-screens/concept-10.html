@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quest Completed - Knight's Quest: Math Adventure</title>
+<link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Quicksand:wght@400;500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #0a1f0a;
+  font-family: 'Quicksand', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* === FOREST BACKGROUND === */
+.forest-scene {
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+.forest-scene.visible { opacity: 1; }
+
+/* Sky gradient */
+.sky {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 20%, #1a3a2a 0%, #0d2415 40%, #071a0c 70%, #04100a 100%);
+}
+
+/* Moonlight */
+.moonlight {
+  position: absolute;
+  top: 8%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(200, 220, 180, 0.15) 0%, rgba(200, 220, 180, 0.05) 40%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(20px);
+}
+.moonlight::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(180, 210, 160, 0.06) 0%, transparent 60%);
+  border-radius: 50%;
+}
+
+/* Dappled light rays */
+.light-rays {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 100%;
+  opacity: 0.08;
+  background:
+    linear-gradient(175deg, rgba(200, 230, 180, 0.3) 0%, transparent 40%) no-repeat 10% 0 / 80px 100%,
+    linear-gradient(172deg, rgba(200, 230, 180, 0.2) 0%, transparent 35%) no-repeat 30% 0 / 60px 100%,
+    linear-gradient(178deg, rgba(200, 230, 180, 0.25) 0%, transparent 45%) no-repeat 55% 0 / 70px 100%,
+    linear-gradient(174deg, rgba(200, 230, 180, 0.15) 0%, transparent 30%) no-repeat 80% 0 / 50px 100%;
+}
+
+/* Tree layers */
+.trees-back, .trees-mid, .trees-front {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.trees-back {
+  height: 100%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Cpath d='M100 30 L40 180 L70 170 L30 280 L170 280 L130 170 L160 180 Z' fill='%23081a0a' /%3E%3Crect x='85' y='240' width='30' height='60' fill='%23081a0a' /%3E%3C/svg%3E") repeat-x;
+  background-size: 180px 100%;
+  background-position: bottom;
+  opacity: 0.7;
+}
+
+.trees-mid {
+  height: 85%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 300'%3E%3Cpath d='M80 50 L30 200 L55 185 L20 290 L140 290 L105 185 L130 200 Z' fill='%230d2210' /%3E%3Crect x='65' y='250' width='30' height='50' fill='%230d2210' /%3E%3C/svg%3E") repeat-x;
+  background-size: 200px 100%;
+  background-position: bottom left -60px;
+  opacity: 0.8;
+}
+
+/* Left and right tree borders to frame the clearing */
+.tree-border-left, .tree-border-right {
+  position: absolute;
+  bottom: 0;
+  width: 30%;
+  height: 100%;
+}
+.tree-border-left {
+  left: 0;
+  background: linear-gradient(to right, #061208 0%, #061208 40%, transparent 100%);
+}
+.tree-border-right {
+  right: 0;
+  background: linear-gradient(to left, #061208 0%, #061208 40%, transparent 100%);
+}
+
+/* Forest floor */
+.forest-floor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 25%;
+  background: linear-gradient(to bottom, transparent 0%, #0a1a0c 20%, #0e1f0e 50%, #12250f 100%);
+}
+.forest-floor::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 60%;
+  background: radial-gradient(ellipse at 50% 100%, #162a14 0%, transparent 70%);
+  border-radius: 50% 50% 0 0;
+}
+
+/* Ferns */
+.fern {
+  position: absolute;
+  bottom: 15%;
+  font-size: 0;
+}
+.fern::before, .fern::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 40px;
+  height: 60px;
+  border-radius: 0 80% 0 80%;
+  background: linear-gradient(135deg, #1a3d18 0%, #0f2a10 100%);
+}
+.fern::after {
+  transform: scaleX(-1);
+  left: 10px;
+}
+.fern:nth-child(1) { left: 15%; }
+.fern:nth-child(2) { left: 22%; transform: scale(0.7); bottom: 13%; }
+.fern:nth-child(3) { right: 18%; }
+.fern:nth-child(4) { right: 24%; transform: scale(0.8); bottom: 14%; }
+
+/* Mushrooms */
+.mushroom {
+  position: absolute;
+  bottom: 14%;
+}
+.mushroom-cap {
+  width: 28px;
+  height: 16px;
+  background: radial-gradient(ellipse at 50% 80%, #8b4a6b, #6b3050);
+  border-radius: 50% 50% 10% 10%;
+  position: relative;
+}
+.mushroom-cap::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  width: 5px;
+  height: 5px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 50%;
+  box-shadow: 10px 2px 0 rgba(255,255,255,0.2), 4px 7px 0 2px rgba(255,255,255,0.15);
+}
+.mushroom-stem {
+  width: 10px;
+  height: 14px;
+  background: linear-gradient(to right, #d4c4a0, #e8dcc0, #d4c4a0);
+  margin: 0 auto;
+  border-radius: 0 0 3px 3px;
+}
+.mushroom:nth-child(1) { left: 28%; }
+.mushroom:nth-child(2) { right: 28%; transform: scale(0.8); bottom: 13%; }
+.mushroom:nth-child(3) { left: 35%; transform: scale(0.6); bottom: 12%; }
+
+/* === FAIRY RING / STUMP PLATFORM === */
+.fairy-ring {
+  position: absolute;
+  bottom: 16%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 60px;
+}
+.fairy-ring-glow {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  height: 40px;
+  background: radial-gradient(ellipse, rgba(140, 200, 120, 0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.fairy-ring-glow.visible { opacity: 1; }
+.fairy-ring-glow.bright {
+  background: radial-gradient(ellipse, rgba(180, 230, 140, 0.3) 0%, rgba(140, 200, 120, 0.1) 50%, transparent 70%);
+  width: 500px;
+  height: 50px;
+}
+
+/* Small ring mushrooms */
+.ring-shroom {
+  position: absolute;
+  bottom: 0;
+}
+.ring-shroom .rs-cap {
+  width: 14px;
+  height: 9px;
+  background: radial-gradient(ellipse at 50% 80%, #a86090, #7a4060);
+  border-radius: 50% 50% 10% 10%;
+}
+.ring-shroom .rs-stem {
+  width: 5px;
+  height: 8px;
+  background: #d8ccaa;
+  margin: 0 auto;
+  border-radius: 0 0 2px 2px;
+}
+.ring-shroom:nth-child(2) { left: 15%; }
+.ring-shroom:nth-child(3) { left: 30%; transform: scale(0.8); }
+.ring-shroom:nth-child(4) { right: 30%; transform: scale(0.9); }
+.ring-shroom:nth-child(5) { right: 15%; transform: scale(0.7); }
+
+/* === FIREFLIES === */
+.firefly {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: radial-gradient(circle, #ffe88a, #ffcc00);
+  border-radius: 50%;
+  box-shadow: 0 0 8px 3px rgba(255, 220, 80, 0.4), 0 0 20px 6px rgba(255, 200, 50, 0.15);
+  opacity: 0;
+  animation: fireflyFloat 8s ease-in-out infinite, fireflyGlow 3s ease-in-out infinite;
+}
+@keyframes fireflyFloat {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(30px, -40px); }
+  50% { transform: translate(-20px, -60px); }
+  75% { transform: translate(40px, -20px); }
+}
+@keyframes fireflyGlow {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.8; }
+}
+
+/* === FLOWERS ALONG XP PATH === */
+.flower-track {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.bloom-flower {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  transform: scale(0);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.bloom-flower.bloomed { transform: scale(1); }
+.bloom-flower.closed { transform: scale(0); transition: transform 0.3s ease-in; }
+
+.bloom-flower .petal {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+}
+.bloom-flower .petal:nth-child(1) { transform: translate(-50%, -100%); }
+.bloom-flower .petal:nth-child(2) { transform: translate(20%, -70%); }
+.bloom-flower .petal:nth-child(3) { transform: translate(20%, -10%); }
+.bloom-flower .petal:nth-child(4) { transform: translate(-50%, 15%); }
+.bloom-flower .petal:nth-child(5) { transform: translate(-120%, -10%); }
+.bloom-flower .petal:nth-child(6) { transform: translate(-120%, -70%); }
+.bloom-flower .center {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #ffe066;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Flower color sets */
+.bloom-flower.pink .petal { background: #f5a0c0; }
+.bloom-flower.purple .petal { background: #c9a0f5; }
+.bloom-flower.yellow .petal { background: #f5e080; }
+.bloom-flower.yellow .center { background: #d4a030; }
+.bloom-flower.blue .petal { background: #a0c8f5; }
+.bloom-flower.white .petal { background: #e8e0f0; }
+
+/* === BUTTERFLIES === */
+.butterfly {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+.butterfly.visible { opacity: 1; }
+
+.butterfly-body {
+  width: 3px;
+  height: 16px;
+  background: #2a1a10;
+  border-radius: 2px;
+  position: relative;
+  margin: 0 auto;
+}
+.wing-left, .wing-right {
+  position: absolute;
+  top: 2px;
+  width: 14px;
+  height: 18px;
+  border-radius: 50% 50% 50% 0;
+  transform-origin: right center;
+  animation: wingFlap 0.4s ease-in-out infinite alternate;
+}
+.wing-left {
+  right: 100%;
+  border-radius: 50% 50% 0 50%;
+  transform-origin: right center;
+}
+.wing-right {
+  left: 100%;
+  border-radius: 50% 50% 50% 0;
+  transform-origin: left center;
+}
+@keyframes wingFlap {
+  0% { transform: rotateY(0deg) scaleX(1); }
+  100% { transform: rotateY(60deg) scaleX(0.4); }
+}
+
+.butterfly:nth-child(1) .wing-left, .butterfly:nth-child(1) .wing-right {
+  background: linear-gradient(135deg, #d080f0, #9060d0);
+}
+.butterfly:nth-child(2) .wing-left, .butterfly:nth-child(2) .wing-right {
+  background: linear-gradient(135deg, #80c0f0, #5090d0);
+}
+.butterfly:nth-child(3) .wing-left, .butterfly:nth-child(3) .wing-right {
+  background: linear-gradient(135deg, #f0b060, #d09040);
+}
+.butterfly:nth-child(4) .wing-left, .butterfly:nth-child(4) .wing-right {
+  background: linear-gradient(135deg, #90e0a0, #60b080);
+}
+
+.butterfly { animation: butterflyPath 6s ease-in-out infinite; }
+.butterfly:nth-child(2) { animation: butterflyPath2 7s ease-in-out infinite; }
+.butterfly:nth-child(3) { animation: butterflyPath3 5.5s ease-in-out infinite; }
+.butterfly:nth-child(4) { animation: butterflyPath4 6.5s ease-in-out infinite; }
+
+@keyframes butterflyPath {
+  0%, 100% { transform: translate(0, 0) rotate(-5deg); }
+  25% { transform: translate(60px, -80px) rotate(5deg); }
+  50% { transform: translate(-30px, -120px) rotate(-8deg); }
+  75% { transform: translate(40px, -50px) rotate(3deg); }
+}
+@keyframes butterflyPath2 {
+  0%, 100% { transform: translate(0, 0) rotate(3deg); }
+  25% { transform: translate(-70px, -60px) rotate(-5deg); }
+  50% { transform: translate(40px, -100px) rotate(8deg); }
+  75% { transform: translate(-50px, -40px) rotate(-3deg); }
+}
+@keyframes butterflyPath3 {
+  0%, 100% { transform: translate(0, 0) rotate(-3deg); }
+  33% { transform: translate(50px, -90px) rotate(6deg); }
+  66% { transform: translate(-40px, -70px) rotate(-6deg); }
+}
+@keyframes butterflyPath4 {
+  0%, 100% { transform: translate(0, 0) rotate(5deg); }
+  33% { transform: translate(-60px, -70px) rotate(-4deg); }
+  66% { transform: translate(30px, -110px) rotate(4deg); }
+}
+
+/* === MAIN CONTENT === */
+.content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  width: 100%;
+  max-width: 560px;
+  padding: 0 20px;
+}
+
+/* Quest Completed Header */
+.quest-header {
+  opacity: 0;
+  transform: translateY(20px) scale(0.9);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  margin-bottom: 28px;
+}
+.quest-header.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.quest-title {
+  font-family: 'Amatic SC', cursive;
+  font-weight: 700;
+  font-size: 72px;
+  color: #c8e8a0;
+  text-shadow:
+    0 0 30px rgba(140, 200, 80, 0.4),
+    0 0 60px rgba(100, 180, 60, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1;
+  letter-spacing: 3px;
+  position: relative;
+}
+.quest-title .vine-deco {
+  display: inline-block;
+  color: #6a9a50;
+  font-size: 40px;
+  vertical-align: middle;
+  opacity: 0.6;
+}
+
+/* Level display */
+.level-section {
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  margin-bottom: 20px;
+}
+.level-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.level-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.level-badge {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 32px;
+  color: #b8d898;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  transition: all 0.5s ease;
+}
+.level-badge.highlight {
+  color: #ffe88a;
+  text-shadow: 0 0 15px rgba(255, 220, 80, 0.5), 0 1px 3px rgba(0,0,0,0.5);
+  transform: scale(1.15);
+}
+
+.level-arrow {
+  font-size: 24px;
+  color: #8ab870;
+  opacity: 0;
+  transform: scaleX(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.level-arrow.visible {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.level-new {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.level-new.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.rank-title {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 22px;
+  color: #9ac080;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+  transition: all 0.5s ease;
+  min-height: 30px;
+}
+.rank-title.highlight {
+  color: #ffe88a;
+  text-shadow: 0 0 12px rgba(255, 220, 80, 0.4), 0 1px 2px rgba(0,0,0,0.4);
+  font-size: 26px;
+}
+
+/* XP Bar */
+.xp-section {
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  margin-bottom: 16px;
+}
+.xp-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.xp-bar-container {
+  position: relative;
+  width: 100%;
+  height: 28px;
+  background: rgba(10, 30, 10, 0.6);
+  border-radius: 14px;
+  border: 2px solid rgba(100, 160, 70, 0.3);
+  overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.xp-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #4a8a30, #6aaa40, #88cc55);
+  border-radius: 12px;
+  transition: none;
+  position: relative;
+  box-shadow: 0 0 10px rgba(100, 180, 60, 0.3);
+}
+.xp-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 8px;
+  right: 8px;
+  height: 6px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.2), transparent);
+  border-radius: 3px;
+}
+
+.xp-bar-fill.maxed {
+  background: linear-gradient(90deg, #6aaa40, #88cc55, #aaee66);
+  box-shadow: 0 0 20px rgba(140, 220, 80, 0.5);
+}
+
+.xp-text {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  color: #b8d898;
+  margin-top: 6px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+/* Flower track above XP bar */
+.flower-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  width: 100%;
+  height: 28px;
+  margin-bottom: 4px;
+}
+
+/* +500 XP popup */
+.xp-bonus {
+  opacity: 0;
+  transform: translateY(10px) scale(0.8);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-top: 14px;
+}
+.xp-bonus.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.xp-bonus-text {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 36px;
+  color: #ffe88a;
+  text-shadow:
+    0 0 20px rgba(255, 220, 80, 0.5),
+    0 0 40px rgba(255, 200, 50, 0.2),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+  display: inline-block;
+  animation: none;
+}
+.xp-bonus-text.glow {
+  animation: bonusGlow 2s ease-in-out infinite;
+}
+@keyframes bonusGlow {
+  0%, 100% { text-shadow: 0 0 20px rgba(255, 220, 80, 0.5), 0 0 40px rgba(255, 200, 50, 0.2), 0 2px 4px rgba(0, 0, 0, 0.5); }
+  50% { text-shadow: 0 0 30px rgba(255, 220, 80, 0.7), 0 0 60px rgba(255, 200, 50, 0.3), 0 2px 4px rgba(0, 0, 0, 0.5); }
+}
+
+/* Level up flash */
+.level-up-flash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(180, 230, 120, 0.3), transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 5;
+}
+.level-up-flash.active {
+  opacity: 1;
+}
+
+/* === AMBIENT PARTICLES === */
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: rgba(180, 220, 140, 0.3);
+  border-radius: 50%;
+  animation: particleDrift 10s linear infinite;
+}
+@keyframes particleDrift {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.6; }
+  100% { transform: translateY(-200px) translateX(30px); opacity: 0; }
+}
+
+/* Sparkle burst for level-up */
+.sparkle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #ffe88a;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.sparkle.burst {
+  animation: sparkleBurst 1s ease-out forwards;
+}
+@keyframes sparkleBurst {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(0); }
+}
+
+/* Leaf particles during level up */
+.leaf {
+  position: absolute;
+  width: 10px;
+  height: 14px;
+  background: linear-gradient(135deg, #5a9a40, #3a7a28);
+  border-radius: 0 50% 50% 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.leaf.falling {
+  animation: leafFall 3s ease-in forwards;
+}
+@keyframes leafFall {
+  0% { opacity: 0.8; transform: translateY(0) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(200px) rotate(360deg) translateX(var(--lx)); }
+}
+</style>
+</head>
+<body>
+
+<div class="forest-scene" id="forestScene">
+  <div class="sky"></div>
+  <div class="moonlight"></div>
+  <div class="light-rays"></div>
+  <div class="trees-back"></div>
+  <div class="trees-mid"></div>
+  <div class="tree-border-left"></div>
+  <div class="tree-border-right"></div>
+
+  <!-- Forest floor elements -->
+  <div class="forest-floor"></div>
+  <div class="fern"></div>
+  <div class="fern"></div>
+  <div class="fern"></div>
+  <div class="fern"></div>
+
+  <div class="mushroom">
+    <div class="mushroom-cap"></div>
+    <div class="mushroom-stem"></div>
+  </div>
+  <div class="mushroom">
+    <div class="mushroom-cap"></div>
+    <div class="mushroom-stem"></div>
+  </div>
+  <div class="mushroom">
+    <div class="mushroom-cap"></div>
+    <div class="mushroom-stem"></div>
+  </div>
+
+  <!-- Fairy ring -->
+  <div class="fairy-ring">
+    <div class="fairy-ring-glow" id="fairyGlow"></div>
+    <div class="ring-shroom"><div class="rs-cap"></div><div class="rs-stem"></div></div>
+    <div class="ring-shroom"><div class="rs-cap"></div><div class="rs-stem"></div></div>
+    <div class="ring-shroom"><div class="rs-cap"></div><div class="rs-stem"></div></div>
+    <div class="ring-shroom"><div class="rs-cap"></div><div class="rs-stem"></div></div>
+  </div>
+
+  <!-- Fireflies (created by JS) -->
+  <div id="fireflyContainer"></div>
+
+  <!-- Butterflies -->
+  <div id="butterflyContainer">
+    <div class="butterfly" style="top: 25%; left: 20%;">
+      <div class="butterfly-body"><div class="wing-left"></div><div class="wing-right"></div></div>
+    </div>
+    <div class="butterfly" style="top: 30%; right: 22%;">
+      <div class="butterfly-body"><div class="wing-left"></div><div class="wing-right"></div></div>
+    </div>
+    <div class="butterfly" style="top: 18%; left: 40%;">
+      <div class="butterfly-body"><div class="wing-left"></div><div class="wing-right"></div></div>
+    </div>
+    <div class="butterfly" style="top: 35%; right: 38%;">
+      <div class="butterfly-body"><div class="wing-left"></div><div class="wing-right"></div></div>
+    </div>
+  </div>
+
+  <!-- Ambient particles -->
+  <div id="particleContainer"></div>
+
+  <!-- Level up flash overlay -->
+  <div class="level-up-flash" id="levelUpFlash"></div>
+</div>
+
+<!-- Main content -->
+<div class="content">
+  <div class="quest-header" id="questHeader">
+    <div class="quest-title">
+      <span class="vine-deco">~</span>
+      Quest Completed!
+      <span class="vine-deco">~</span>
+    </div>
+  </div>
+
+  <div class="level-section" id="levelSection">
+    <div class="level-display">
+      <span class="level-badge" id="levelOld">Level 1</span>
+      <span class="level-arrow" id="levelArrow">&#10140;</span>
+      <span class="level-badge level-new" id="levelNew">Level 2</span>
+    </div>
+    <div class="rank-title" id="rankTitle">Trainee</div>
+  </div>
+
+  <div class="xp-section" id="xpSection">
+    <div class="flower-row" id="flowerRow"></div>
+    <div class="xp-bar-container">
+      <div class="xp-bar-fill" id="xpBarFill"></div>
+    </div>
+    <div class="xp-text" id="xpText">0 / 500 XP</div>
+  </div>
+
+  <div class="xp-bonus" id="xpBonus">
+    <span class="xp-bonus-text" id="xpBonusText">+500 XP</span>
+  </div>
+</div>
+
+<!-- Sparkle container for level up effect -->
+<div id="sparkleContainer" style="position:fixed;inset:0;pointer-events:none;z-index:20;"></div>
+
+<script>
+(function() {
+  // === CREATE FIREFLIES ===
+  const fireflyContainer = document.getElementById('fireflyContainer');
+  for (let i = 0; i < 18; i++) {
+    const f = document.createElement('div');
+    f.className = 'firefly';
+    f.style.left = (10 + Math.random() * 80) + '%';
+    f.style.top = (10 + Math.random() * 70) + '%';
+    f.style.animationDelay = (Math.random() * 8) + 's, ' + (Math.random() * 3) + 's';
+    f.style.animationDuration = (6 + Math.random() * 6) + 's, ' + (2 + Math.random() * 2) + 's';
+    fireflyContainer.appendChild(f);
+  }
+
+  // === CREATE AMBIENT PARTICLES ===
+  const particleContainer = document.getElementById('particleContainer');
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = (10 + Math.random() * 80) + '%';
+    p.style.top = (30 + Math.random() * 60) + '%';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.animationDuration = (8 + Math.random() * 8) + 's';
+    particleContainer.appendChild(p);
+  }
+
+  // === CREATE FLOWERS IN ROW ===
+  const flowerRow = document.getElementById('flowerRow');
+  const flowerColors = ['pink', 'purple', 'yellow', 'blue', 'white', 'pink', 'yellow', 'purple', 'blue', 'pink', 'white', 'yellow'];
+  const flowers = [];
+  for (let i = 0; i < 12; i++) {
+    const f = document.createElement('div');
+    f.className = 'bloom-flower ' + flowerColors[i];
+    f.innerHTML = '<div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="center"></div>';
+    flowerRow.appendChild(f);
+    flowers.push(f);
+  }
+
+  // === REFS ===
+  const forestScene = document.getElementById('forestScene');
+  const questHeader = document.getElementById('questHeader');
+  const levelSection = document.getElementById('levelSection');
+  const xpSection = document.getElementById('xpSection');
+  const xpBarFill = document.getElementById('xpBarFill');
+  const xpText = document.getElementById('xpText');
+  const xpBonus = document.getElementById('xpBonus');
+  const xpBonusText = document.getElementById('xpBonusText');
+  const levelOld = document.getElementById('levelOld');
+  const levelArrow = document.getElementById('levelArrow');
+  const levelNew = document.getElementById('levelNew');
+  const rankTitle = document.getElementById('rankTitle');
+  const fairyGlow = document.getElementById('fairyGlow');
+  const levelUpFlash = document.getElementById('levelUpFlash');
+  const sparkleContainer = document.getElementById('sparkleContainer');
+  const butterflies = document.querySelectorAll('.butterfly');
+
+  // === HELPERS ===
+  function wait(ms) {
+    return new Promise(r => setTimeout(r, ms));
+  }
+
+  function animateXP(from, to, max, duration) {
+    return new Promise(resolve => {
+      const start = performance.now();
+      function tick(now) {
+        const t = Math.min((now - start) / duration, 1);
+        const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        const current = Math.round(from + (to - from) * eased);
+        const pct = (current / max) * 100;
+        xpBarFill.style.width = pct + '%';
+        xpText.textContent = current + ' / ' + max + ' XP';
+
+        // Bloom flowers proportionally
+        const flowerIndex = Math.floor((current / max) * flowers.length);
+        for (let i = 0; i < flowers.length; i++) {
+          if (i <= flowerIndex && current > 0) {
+            if (!flowers[i].classList.contains('bloomed')) {
+              flowers[i].classList.remove('closed');
+              flowers[i].classList.add('bloomed');
+            }
+          }
+        }
+
+        if (t < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          resolve();
+        }
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+
+  function closeFlowers() {
+    flowers.forEach(f => {
+      f.classList.remove('bloomed');
+      f.classList.add('closed');
+    });
+  }
+
+  function spawnSparkles(cx, cy, count) {
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+      const dist = 40 + Math.random() * 80;
+      s.style.left = cx + 'px';
+      s.style.top = cy + 'px';
+      s.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
+      s.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
+      s.style.background = ['#ffe88a', '#c8e8a0', '#f5a0c0', '#c9a0f5', '#88cc55'][Math.floor(Math.random() * 5)];
+      sparkleContainer.appendChild(s);
+      requestAnimationFrame(() => s.classList.add('burst'));
+      setTimeout(() => s.remove(), 1100);
+    }
+  }
+
+  function spawnLeaves() {
+    for (let i = 0; i < 12; i++) {
+      const l = document.createElement('div');
+      l.className = 'leaf';
+      l.style.left = (20 + Math.random() * 60) + '%';
+      l.style.top = (10 + Math.random() * 30) + '%';
+      l.style.setProperty('--lx', (Math.random() - 0.5) * 100 + 'px');
+      l.style.animationDelay = (Math.random() * 0.8) + 's';
+      sparkleContainer.appendChild(l);
+      requestAnimationFrame(() => l.classList.add('falling'));
+      setTimeout(() => l.remove(), 4000);
+    }
+  }
+
+  // === ANIMATION SEQUENCE ===
+  async function runSequence() {
+    // 1. Forest fades in
+    await wait(1000);
+    forestScene.classList.add('visible');
+    fairyGlow.classList.add('visible');
+    await wait(1200);
+
+    // 2. "Quest Completed!" appears
+    questHeader.classList.add('visible');
+    await wait(800);
+
+    // 3. Level and XP sections appear
+    levelSection.classList.add('visible');
+    await wait(400);
+    xpSection.classList.add('visible');
+    await wait(600);
+
+    // 4. XP bar fills from 0 to 500/500 (100%)
+    await animateXP(0, 500, 500, 2200);
+    xpBarFill.classList.add('maxed');
+    await wait(400);
+
+    // 5. LEVEL UP!
+    // Flash
+    levelUpFlash.classList.add('active');
+    fairyGlow.classList.add('bright');
+
+    // Sparkles from center
+    const rect = levelSection.getBoundingClientRect();
+    spawnSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2, 24);
+    spawnLeaves();
+
+    // Show butterflies
+    butterflies.forEach((b, i) => {
+      setTimeout(() => b.classList.add('visible'), i * 150);
+    });
+
+    await wait(300);
+    levelUpFlash.classList.remove('active');
+
+    // Transition level text
+    levelOld.classList.add('highlight');
+    await wait(300);
+    levelArrow.classList.add('visible');
+    await wait(300);
+    levelNew.classList.add('visible');
+    await wait(200);
+    levelNew.querySelector ? null : null;
+    levelNew.classList.add('highlight');
+    levelOld.classList.remove('highlight');
+
+    // Change rank
+    rankTitle.classList.add('highlight');
+    rankTitle.textContent = 'Explorer';
+
+    // More sparkles
+    spawnSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2, 16);
+    await wait(800);
+
+    // 6. XP bar resets, flowers close
+    xpBarFill.classList.remove('maxed');
+    closeFlowers();
+    xpBarFill.style.width = '0%';
+    xpText.textContent = '0 / 600 XP';
+    await wait(600);
+
+    // 7. Fill to 50% of new level (300/600)
+    await animateXP(0, 300, 600, 1600);
+    xpText.textContent = '300 / 600 XP';
+    await wait(400);
+
+    // 8. +500 XP appears
+    xpBonus.classList.add('visible');
+    await wait(200);
+    xpBonusText.classList.add('glow');
+
+    // Final firefly-carried sparkles around the bonus text
+    const bonusRect = xpBonusText.getBoundingClientRect();
+    spawnSparkles(bonusRect.left + bonusRect.width / 2, bonusRect.top + bonusRect.height / 2, 12);
+  }
+
+  runSequence();
+})();
+</script>
+</body>
+</html>

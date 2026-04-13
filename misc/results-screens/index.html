@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quest Completed — Design Concepts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: #0f0f1a;
+            color: #e8e0d4;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            padding: 3rem 2rem 2rem;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #d4af37, #f5d76e, #d4af37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #8a8a9a;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #1a1a2e;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(212, 175, 55, 0.5);
+            box-shadow: 0 8px 32px rgba(212, 175, 55, 0.15);
+        }
+
+        .card-preview {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        .card-number {
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #d4af37;
+            margin-bottom: 0.35rem;
+        }
+
+        .card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #f0e6d3;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-desc {
+            font-size: 0.9rem;
+            color: #7a7a8a;
+            line-height: 1.5;
+        }
+
+        /* Individual card themes */
+        .card:nth-child(1) .card-preview { background: linear-gradient(135deg, #8B6914, #C4A35A, #8B6914); }
+        .card:nth-child(2) .card-preview { background: linear-gradient(135deg, #1a0a3e, #2d1b69, #0d47a1); }
+        .card:nth-child(3) .card-preview { background: linear-gradient(135deg, #f5f0e1, #e8dcc8, #d4c5a0); }
+        .card:nth-child(4) .card-preview { background: linear-gradient(135deg, #0a0a2e, #141452, #0a0a2e); }
+        .card:nth-child(5) .card-preview { background: linear-gradient(135deg, #1a237e, #b71c1c, #1a237e); }
+        .card:nth-child(6) .card-preview { background: linear-gradient(135deg, #3e2723, #5d4037, #4e342e); }
+        .card:nth-child(7) .card-preview { background: linear-gradient(135deg, #1a0033, #2d0066, #1a0033); }
+        .card:nth-child(8) .card-preview { background: linear-gradient(135deg, #4fc3f7, #81d4fa, #29b6f6); }
+        .card:nth-child(9) .card-preview { background: linear-gradient(135deg, #f5f5f5, #e0e0e0, #f5f5f5); }
+        .card:nth-child(10) .card-preview { background: linear-gradient(135deg, #1b5e20, #2e7d32, #1b5e20); }
+
+        .card:nth-child(3) .card-preview { color: #5d4037; }
+        .card:nth-child(9) .card-preview { color: #333; }
+
+        .section-divider {
+            text-align: center;
+            padding: 3rem 2rem 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-divider h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #5a9a5a, #8ac88a, #5a9a5a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-divider p {
+            font-size: 1rem;
+            color: #8a8a9a;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .variant-card:hover {
+            border-color: rgba(120, 200, 120, 0.5) !important;
+            box-shadow: 0 8px 32px rgba(120, 200, 120, 0.15) !important;
+        }
+
+        .variant-card .card-number {
+            color: #6aaa6a;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: #555;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 720px) {
+            .grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            header h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Quest Completed — Results Screen</h1>
+        <p>10 design concepts for Knight's Quest: Math Adventure. Click any card to view the full animated prototype.</p>
+    </header>
+
+    <div class="grid">
+        <a class="card" href="concept-1.html">
+            <div class="card-preview">📜</div>
+            <div class="card-body">
+                <div class="card-number">Concept 1</div>
+                <div class="card-title">Royal Scroll</div>
+                <div class="card-desc">Parchment/scroll aesthetic with medieval calligraphy, wax seals, and an unfurling reveal animation.</div>
+            </div>
+        </a>
+
+        <a class="card" href="concept-2.html">
+            <div class="card-preview">🔮</div>
+            <div class="card-body">
+                <div class="card-number">Concept 2</div>
+                <div class="card-title">Crystal Shield</div>
+                <div class="card-desc">Glowing crystal/gem shield badge with translucent glass UI and prismatic light effects.</div>
+            </div>
+        </a>
+
+        <a class="card" href="concept-3.html">
+            <div class="card-preview">📖</div>
+            <div class="card-body">
+                <div class="card-number">Concept 3</div>
+                <div class="card-title">Storybook Page</div>
+                <div class="card-desc">Illustrated storybook page with narrative text, illuminated borders, and watercolor gradients.</div>
+            </div>
+        </a>
+
+        <a class="card" href="concept-4.html">
+            <div class="card-preview">⭐</div>
+            <div class="card-body">
+                <div class="card-number">Concept 4</div>
+                <div class="card-title">Star Map</div>
+                <div class="card-desc">Constellation/night sky theme where stars light up and connect as XP accumulates.</div>
+            </div>
+        </a>
+
+        <a class="card" href="concept-5.html">
+            <div class="card-preview">🏴</div>
+            <div class="card-body">
+                <div class="card-number">Concept 5</div>
+                <div class="card-title">Knight's Banner</div>
+                <div class="card-desc">Heraldic banner/flag with coat of arms, bold vertical composition, and trumpet fanfare effects.</div>
+            </div>
+        </a>
+
+        <a class="card" href="concept-6.html">
+            <div class="card-preview">💎</div>
+            <div class="card-body">
+                <div class="card-number">Concept 6</div>
+                <div class="card-title">Treasure Chest</div>
+                <div class="card-desc">Chest opening animation with coins and gems spilling out as XP rewards are revealed.</div>
+            </div>
+        </a>
+
+        <a class="card" href="concept-7.html">
+            <div class="card-preview">✨</div>
+            <div class="card-body">
+                <div class="card-number">Concept 7</div>
+                <div class="card-title">Magic Spell Book</div>
+                <div class="card-desc">Open spell book with glowing runes, magical particles, and spell-casting effects.</div>
+            </div>
+        </a>
+
+        <a class="card" href="concept-8.html">
+            <div class="card-preview">🏰</div>
+            <div class="card-body">
+                <div class="card-number">Concept 8</div>
+                <div class="card-title">Castle Tower</div>
+                <div class="card-desc">Tower that builds upward brick by brick as XP fills, with a knight climbing higher.</div>
+            </div>
+        </a>
+
+        <a class="card" href="concept-9.html">
+            <div class="card-preview">🏅</div>
+            <div class="card-body">
+                <div class="card-number">Concept 9</div>
+                <div class="card-title">Medal Podium</div>
+                <div class="card-desc">Sports-inspired podium/medal ceremony with confetti, spotlights, and clean modern design.</div>
+            </div>
+        </a>
+
+        <a class="card" href="concept-10.html">
+            <div class="card-preview">🌿</div>
+            <div class="card-body">
+                <div class="card-number">Concept 10</div>
+                <div class="card-title">Enchanted Forest</div>
+                <div class="card-desc">Magical forest clearing where flowers bloom and fireflies dance as XP fills.</div>
+            </div>
+        </a>
+    </div>
+
+    <div class="section-divider">
+        <h2>Concept 10 — Soft Meadow Variants</h2>
+        <p>10 variants of Concept 10 (Enchanted Forest) refined to match the game's soft pastel meadow background art.</p>
+    </div>
+
+    <div class="grid">
+        <a class="card variant-card" href="concept-10-variant-1.html" style="border-color: rgba(120, 200, 120, 0.15);">
+            <div class="card-preview" style="background: linear-gradient(135deg, #e8c888, #f5dca0, #e8c080);">🌅</div>
+            <div class="card-body">
+                <div class="card-number">Variant 1</div>
+                <div class="card-title">Morning Meadow</div>
+                <div class="card-desc">Warm sunrise tones, golden hour lighting, gentle amber highlights over soft green hills.</div>
+            </div>
+        </a>
+
+        <a class="card variant-card" href="concept-10-variant-2.html" style="border-color: rgba(120, 200, 120, 0.15);">
+            <div class="card-preview" style="background: linear-gradient(135deg, #c8e8e8, #e8f4f8, #d8eef4);">☁️</div>
+            <div class="card-body">
+                <div class="card-number">Variant 2</div>
+                <div class="card-title">Cloud Garden</div>
+                <div class="card-desc">Content floats on cloud-like panels with emphasis on sky, clouds, and airy lightness.</div>
+            </div>
+        </a>
+
+        <a class="card variant-card" href="concept-10-variant-3.html" style="border-color: rgba(120, 200, 120, 0.15);">
+            <div class="card-preview" style="background: linear-gradient(135deg, #e8ddd0, #f0e8da, #ddd4c4);">🎨</div>
+            <div class="card-body">
+                <div class="card-number">Variant 3</div>
+                <div class="card-title">Watercolor Wash</div>
+                <div class="card-desc">Soft watercolor-style gradients with painterly edges and a muted, hand-painted palette.</div>
+            </div>
+        </a>
+
+        <a class="card variant-card" href="concept-10-variant-4.html" style="border-color: rgba(120, 200, 120, 0.15);">
+            <div class="card-preview" style="background: linear-gradient(135deg, #e8e060, #f0e880, #d8d850);">☀️</div>
+            <div class="card-body">
+                <div class="card-number">Variant 4</div>
+                <div class="card-title">Sunny Hillside</div>
+                <div class="card-desc">Bright and cheerful with yellow/green dominance, sunbeam effects, and cartoon energy.</div>
+            </div>
+        </a>
+
+        <a class="card variant-card" href="concept-10-variant-5.html" style="border-color: rgba(120, 200, 120, 0.15);">
+            <div class="card-preview" style="background: linear-gradient(135deg, #f0e8d8, #f5efe0, #e8dcc8);">📕</div>
+            <div class="card-body">
+                <div class="card-number">Variant 5</div>
+                <div class="card-title">Storybook Meadow</div>
+                <div class="card-desc">Cream parchment panel with illustrated vine border, warm tones, and cozy storybook feel.</div>
+            </div>
+        </a>
+
+        <a class="card variant-card" href="concept-10-variant-6.html" style="border-color: rgba(120, 200, 120, 0.15);">
+            <div class="card-preview" style="background: linear-gradient(135deg, #f5c6d0, #d4c4e8, #c8e8d8);">🌸</div>
+            <div class="card-body">
+                <div class="card-number">Variant 6</div>
+                <div class="card-title">Pastel Garden</div>
+                <div class="card-desc">Ultra-soft pink/lavender/mint pastel trio. The gentlest, most soothing variant.</div>
+            </div>
+        </a>
+
+        <a class="card variant-card" href="concept-10-variant-7.html" style="border-color: rgba(120, 200, 120, 0.15);">
+            <div class="card-preview" style="background: linear-gradient(135deg, #8ab8b8, #a8d0cc, #7aa8a8);">🏔️</div>
+            <div class="card-body">
+                <div class="card-number">Variant 7</div>
+                <div class="card-title">Mountain Vista</div>
+                <div class="card-desc">Mountains prominent, cooler blue-greens, alpine meadow feel with frosted glass panel.</div>
+            </div>
+        </a>
+
+        <a class="card variant-card" href="concept-10-variant-8.html" style="border-color: rgba(120, 200, 120, 0.15);">
+            <div class="card-preview" style="background: linear-gradient(135deg, #c8e8c0, #d8f0d0, #b8d8b0);">🦋</div>
+            <div class="card-body">
+                <div class="card-number">Variant 8</div>
+                <div class="card-title">Butterfly Meadow</div>
+                <div class="card-desc">Butterflies as the star — more of them, more playful animation, spring energy.</div>
+            </div>
+        </a>
+
+        <a class="card variant-card" href="concept-10-variant-9.html" style="border-color: rgba(120, 200, 120, 0.15);">
+            <div class="card-preview" style="background: linear-gradient(135deg, #6a9a5a, #8aba7a, #5a8a4a);">🌲</div>
+            <div class="card-body">
+                <div class="card-number">Variant 9</div>
+                <div class="card-title">Gentle Forest</div>
+                <div class="card-desc">Closest to original Concept 10 but shifted to warm daytime — enchanted forest in sunlight.</div>
+            </div>
+        </a>
+
+        <a class="card variant-card" href="concept-10-variant-10.html" style="border-color: rgba(120, 200, 120, 0.15);">
+            <div class="card-preview" style="background: linear-gradient(135deg, #b8e0d8, #c8e8d8, #a8d4cc);">🖼️</div>
+            <div class="card-body">
+                <div class="card-number">Variant 10</div>
+                <div class="card-title">Flat Illustration</div>
+                <div class="card-desc">Most closely matches the exact flat-art style of landscape_bg_soft.png. Clean, geometric.</div>
+            </div>
+        </a>
+    </div>
+
+    <footer>
+        Knight's Quest: Math Adventure — Results Screen Concepts
+    </footer>
+</body>
+</html>

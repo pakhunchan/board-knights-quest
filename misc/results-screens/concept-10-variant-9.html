@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quest Completed - Knight's Quest: Math Adventure</title>
+<link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Quicksand:wght@400;500;600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #7aaa70;
+  font-family: 'Quicksand', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* === FOREST BACKGROUND === */
+.forest-scene {
+  position: fixed;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+.forest-scene.visible { opacity: 1; }
+
+/* Sky gradient - daytime green-teal */
+.sky {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, #a8d8c0 0%, #b8e0cc 30%, #c8e8d8 60%, #d0ecd8 100%);
+}
+
+/* Soft white clouds */
+.cloud {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  filter: blur(6px);
+}
+.cloud::before, .cloud::after {
+  content: '';
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+}
+.cloud:nth-child(1) { top: 8%; left: 12%; width: 120px; height: 40px; }
+.cloud:nth-child(1)::before { width: 60px; height: 50px; top: -20px; left: 20px; }
+.cloud:nth-child(1)::after { width: 80px; height: 35px; top: -10px; left: 50px; }
+.cloud:nth-child(2) { top: 14%; right: 15%; width: 100px; height: 35px; }
+.cloud:nth-child(2)::before { width: 50px; height: 40px; top: -18px; left: 15px; }
+.cloud:nth-child(2)::after { width: 60px; height: 30px; top: -8px; left: 40px; }
+.cloud:nth-child(3) { top: 6%; left: 55%; width: 80px; height: 28px; opacity: 0.5; }
+.cloud:nth-child(3)::before { width: 40px; height: 32px; top: -14px; left: 12px; }
+
+/* Gray-brown mountains */
+.mountains {
+  position: absolute;
+  bottom: 35%;
+  left: 0;
+  width: 100%;
+  height: 30%;
+}
+.mountains svg { width: 100%; height: 100%; }
+
+/* Sunlight - dappled golden patches filtering through canopy */
+.sunlight {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 2s ease;
+}
+.sunlight.visible { opacity: 1; }
+
+.sun-patch {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 230, 140, 0.25) 0%, rgba(255, 215, 100, 0.1) 50%, transparent 70%);
+  filter: blur(15px);
+}
+.sun-patch:nth-child(1) { top: 15%; left: 35%; width: 200px; height: 200px; }
+.sun-patch:nth-child(2) { top: 25%; left: 55%; width: 150px; height: 150px; }
+.sun-patch:nth-child(3) { top: 40%; left: 25%; width: 120px; height: 120px; opacity: 0.7; }
+.sun-patch:nth-child(4) { top: 10%; left: 60%; width: 100px; height: 100px; opacity: 0.5; }
+
+/* Dappled light rays - warm golden */
+.light-rays {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 100%;
+  opacity: 0.2;
+  background:
+    linear-gradient(175deg, rgba(255, 220, 120, 0.4) 0%, transparent 50%) no-repeat 10% 0 / 80px 100%,
+    linear-gradient(172deg, rgba(255, 220, 120, 0.3) 0%, transparent 45%) no-repeat 30% 0 / 60px 100%,
+    linear-gradient(178deg, rgba(255, 220, 120, 0.35) 0%, transparent 55%) no-repeat 55% 0 / 70px 100%,
+    linear-gradient(174deg, rgba(255, 220, 120, 0.25) 0%, transparent 40%) no-repeat 80% 0 / 50px 100%;
+}
+
+/* Tree canopy at top */
+.canopy {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 25%;
+  pointer-events: none;
+}
+
+/* Tree layers - medium green friendly shapes */
+.trees-back, .trees-mid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.trees-back {
+  height: 100%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 300'%3E%3Cellipse cx='100' cy='140' rx='70' ry='90' fill='%234a8a42'/%3E%3Cellipse cx='100' cy='110' rx='55' ry='70' fill='%2358a050'/%3E%3Crect x='90' y='210' width='20' height='90' rx='4' fill='%23785a3a'/%3E%3C/svg%3E") repeat-x;
+  background-size: 180px 100%;
+  background-position: bottom;
+  opacity: 0.6;
+}
+
+.trees-mid {
+  height: 85%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 160 300'%3E%3Cellipse cx='80' cy='150' rx='60' ry='85' fill='%23509848'/%3E%3Cellipse cx='80' cy='120' rx='48' ry='65' fill='%235da855'/%3E%3Crect x='70' y='215' width='20' height='85' rx='4' fill='%23856540'/%3E%3C/svg%3E") repeat-x;
+  background-size: 200px 100%;
+  background-position: bottom left -60px;
+  opacity: 0.7;
+}
+
+/* Left and right tree borders - soft dappled green gradients */
+.tree-border-left, .tree-border-right {
+  position: absolute;
+  bottom: 0;
+  width: 28%;
+  height: 100%;
+}
+.tree-border-left {
+  left: 0;
+  background: linear-gradient(to right, rgba(60, 110, 50, 0.85) 0%, rgba(70, 120, 55, 0.5) 40%, transparent 100%);
+}
+.tree-border-right {
+  right: 0;
+  background: linear-gradient(to left, rgba(60, 110, 50, 0.85) 0%, rgba(70, 120, 55, 0.5) 40%, transparent 100%);
+}
+
+/* Canopy leaves at top */
+.canopy-left, .canopy-right {
+  position: absolute;
+  top: 0;
+  width: 35%;
+  height: 18%;
+}
+.canopy-left {
+  left: 0;
+  background: radial-gradient(ellipse at 0% 0%, rgba(60, 110, 50, 0.8) 0%, rgba(70, 125, 55, 0.4) 50%, transparent 75%);
+}
+.canopy-right {
+  right: 0;
+  background: radial-gradient(ellipse at 100% 0%, rgba(60, 110, 50, 0.8) 0%, rgba(70, 125, 55, 0.4) 50%, transparent 75%);
+}
+
+/* Rolling green hills */
+.hills {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 35%;
+}
+
+/* Forest floor - soft mossy green */
+.forest-floor {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 25%;
+  background: linear-gradient(to bottom, transparent 0%, #5a8a50 20%, #68995a 50%, #7aaa70 100%);
+}
+.forest-floor::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 60%;
+  background: radial-gradient(ellipse at 50% 100%, #80b570 0%, transparent 70%);
+  border-radius: 50% 50% 0 0;
+}
+
+/* Ferns - medium sage green */
+.fern {
+  position: absolute;
+  bottom: 15%;
+  font-size: 0;
+}
+.fern::before, .fern::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 40px;
+  height: 60px;
+  border-radius: 0 80% 0 80%;
+  background: linear-gradient(135deg, #6aad58 0%, #4e8a42 100%);
+}
+.fern::after {
+  transform: scaleX(-1);
+  left: 10px;
+}
+.fern:nth-child(1) { left: 15%; }
+.fern:nth-child(2) { left: 22%; transform: scale(0.7); bottom: 13%; }
+.fern:nth-child(3) { right: 18%; }
+.fern:nth-child(4) { right: 24%; transform: scale(0.8); bottom: 14%; }
+
+/* Mushrooms - cheerful fairy tale red caps with white spots */
+.mushroom {
+  position: absolute;
+  bottom: 14%;
+}
+.mushroom-cap {
+  width: 28px;
+  height: 16px;
+  background: radial-gradient(ellipse at 50% 80%, #d05040, #c04535);
+  border-radius: 50% 50% 10% 10%;
+  position: relative;
+}
+.mushroom-cap::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 6px;
+  width: 6px;
+  height: 6px;
+  background: rgba(255,255,255,0.85);
+  border-radius: 50%;
+  box-shadow: 10px 2px 0 rgba(255,255,255,0.75), 4px 7px 0 2px rgba(255,255,255,0.6);
+}
+.mushroom-stem {
+  width: 10px;
+  height: 14px;
+  background: linear-gradient(to right, #e8dcc0, #f5edd8, #e8dcc0);
+  margin: 0 auto;
+  border-radius: 0 0 3px 3px;
+}
+.mushroom:nth-child(1) { left: 28%; }
+.mushroom:nth-child(2) { right: 28%; transform: scale(0.8); bottom: 13%; }
+.mushroom:nth-child(3) { left: 35%; transform: scale(0.6); bottom: 12%; }
+
+/* === FAIRY RING / STUMP PLATFORM === */
+.fairy-ring {
+  position: absolute;
+  bottom: 16%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500px;
+  height: 60px;
+}
+.fairy-ring-glow {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  height: 40px;
+  background: radial-gradient(ellipse, rgba(230, 200, 80, 0.15) 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+.fairy-ring-glow.visible { opacity: 1; }
+.fairy-ring-glow.bright {
+  background: radial-gradient(ellipse, rgba(255, 220, 100, 0.35) 0%, rgba(230, 200, 80, 0.15) 50%, transparent 70%);
+  width: 500px;
+  height: 50px;
+}
+
+/* Small ring mushrooms - brightened fairy tale style */
+.ring-shroom {
+  position: absolute;
+  bottom: 0;
+}
+.ring-shroom .rs-cap {
+  width: 14px;
+  height: 9px;
+  background: radial-gradient(ellipse at 50% 80%, #d85848, #c04030);
+  border-radius: 50% 50% 10% 10%;
+  position: relative;
+}
+.ring-shroom .rs-cap::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  width: 3px;
+  height: 3px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 50%;
+  box-shadow: 5px 1px 0 rgba(255,255,255,0.7);
+}
+.ring-shroom .rs-stem {
+  width: 5px;
+  height: 8px;
+  background: #f0e4cc;
+  margin: 0 auto;
+  border-radius: 0 0 2px 2px;
+}
+.ring-shroom:nth-child(2) { left: 15%; }
+.ring-shroom:nth-child(3) { left: 30%; transform: scale(0.8); }
+.ring-shroom:nth-child(4) { right: 30%; transform: scale(0.9); }
+.ring-shroom:nth-child(5) { right: 15%; transform: scale(0.7); }
+
+/* === GOLDEN DUST MOTES / SUN SPARKLES (replaces fireflies) === */
+.firefly {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: radial-gradient(circle, rgba(255, 230, 140, 0.9), rgba(255, 210, 80, 0.5));
+  border-radius: 50%;
+  box-shadow: 0 0 6px 2px rgba(255, 220, 100, 0.3), 0 0 14px 4px rgba(255, 200, 60, 0.1);
+  opacity: 0;
+  animation: dustFloat 8s ease-in-out infinite, dustGlow 3s ease-in-out infinite;
+}
+@keyframes dustFloat {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(25px, -30px); }
+  50% { transform: translate(-15px, -50px); }
+  75% { transform: translate(35px, -15px); }
+}
+@keyframes dustGlow {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.6; }
+}
+
+/* === FLOWERS ALONG XP PATH === */
+.flower-track {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+}
+
+.bloom-flower {
+  width: 20px;
+  height: 20px;
+  position: relative;
+  transform: scale(0);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.bloom-flower.bloomed { transform: scale(1); }
+.bloom-flower.closed { transform: scale(0); transition: transform 0.3s ease-in; }
+
+.bloom-flower .petal {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+}
+.bloom-flower .petal:nth-child(1) { transform: translate(-50%, -100%); }
+.bloom-flower .petal:nth-child(2) { transform: translate(20%, -70%); }
+.bloom-flower .petal:nth-child(3) { transform: translate(20%, -10%); }
+.bloom-flower .petal:nth-child(4) { transform: translate(-50%, 15%); }
+.bloom-flower .petal:nth-child(5) { transform: translate(-120%, -10%); }
+.bloom-flower .petal:nth-child(6) { transform: translate(-120%, -70%); }
+.bloom-flower .center {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #ffe066;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Flower color sets */
+.bloom-flower.pink .petal { background: #f5a0c0; }
+.bloom-flower.purple .petal { background: #c9a0f5; }
+.bloom-flower.yellow .petal { background: #f5e080; }
+.bloom-flower.yellow .center { background: #d4a030; }
+.bloom-flower.blue .petal { background: #a0c8f5; }
+.bloom-flower.white .petal { background: #e8e0f0; }
+
+/* === BUTTERFLIES === */
+.butterfly {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+.butterfly.visible { opacity: 1; }
+
+.butterfly-body {
+  width: 3px;
+  height: 16px;
+  background: #4a3a28;
+  border-radius: 2px;
+  position: relative;
+  margin: 0 auto;
+}
+.wing-left, .wing-right {
+  position: absolute;
+  top: 2px;
+  width: 14px;
+  height: 18px;
+  border-radius: 50% 50% 50% 0;
+  transform-origin: right center;
+  animation: wingFlap 0.4s ease-in-out infinite alternate;
+}
+.wing-left {
+  right: 100%;
+  border-radius: 50% 50% 0 50%;
+  transform-origin: right center;
+}
+.wing-right {
+  left: 100%;
+  border-radius: 50% 50% 50% 0;
+  transform-origin: left center;
+}
+@keyframes wingFlap {
+  0% { transform: rotateY(0deg) scaleX(1); }
+  100% { transform: rotateY(60deg) scaleX(0.4); }
+}
+
+.butterfly:nth-child(1) .wing-left, .butterfly:nth-child(1) .wing-right {
+  background: linear-gradient(135deg, #d080f0, #9060d0);
+}
+.butterfly:nth-child(2) .wing-left, .butterfly:nth-child(2) .wing-right {
+  background: linear-gradient(135deg, #80c0f0, #5090d0);
+}
+.butterfly:nth-child(3) .wing-left, .butterfly:nth-child(3) .wing-right {
+  background: linear-gradient(135deg, #f0b060, #d09040);
+}
+.butterfly:nth-child(4) .wing-left, .butterfly:nth-child(4) .wing-right {
+  background: linear-gradient(135deg, #90e0a0, #60b080);
+}
+
+.butterfly { animation: butterflyPath 6s ease-in-out infinite; }
+.butterfly:nth-child(2) { animation: butterflyPath2 7s ease-in-out infinite; }
+.butterfly:nth-child(3) { animation: butterflyPath3 5.5s ease-in-out infinite; }
+.butterfly:nth-child(4) { animation: butterflyPath4 6.5s ease-in-out infinite; }
+
+@keyframes butterflyPath {
+  0%, 100% { transform: translate(0, 0) rotate(-5deg); }
+  25% { transform: translate(60px, -80px) rotate(5deg); }
+  50% { transform: translate(-30px, -120px) rotate(-8deg); }
+  75% { transform: translate(40px, -50px) rotate(3deg); }
+}
+@keyframes butterflyPath2 {
+  0%, 100% { transform: translate(0, 0) rotate(3deg); }
+  25% { transform: translate(-70px, -60px) rotate(-5deg); }
+  50% { transform: translate(40px, -100px) rotate(8deg); }
+  75% { transform: translate(-50px, -40px) rotate(-3deg); }
+}
+@keyframes butterflyPath3 {
+  0%, 100% { transform: translate(0, 0) rotate(-3deg); }
+  33% { transform: translate(50px, -90px) rotate(6deg); }
+  66% { transform: translate(-40px, -70px) rotate(-6deg); }
+}
+@keyframes butterflyPath4 {
+  0%, 100% { transform: translate(0, 0) rotate(5deg); }
+  33% { transform: translate(-60px, -70px) rotate(-4deg); }
+  66% { transform: translate(30px, -110px) rotate(4deg); }
+}
+
+/* === MAIN CONTENT === */
+.content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  width: 100%;
+  max-width: 560px;
+  padding: 0 20px;
+}
+
+/* Quest Completed Header */
+.quest-header {
+  opacity: 0;
+  transform: translateY(20px) scale(0.9);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  margin-bottom: 28px;
+}
+.quest-header.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.quest-title {
+  font-family: 'Amatic SC', cursive;
+  font-weight: 700;
+  font-size: 72px;
+  color: #2a5a20;
+  text-shadow:
+    0 0 30px rgba(100, 180, 60, 0.3),
+    0 0 60px rgba(80, 160, 40, 0.15),
+    0 2px 4px rgba(255, 255, 255, 0.3);
+  line-height: 1;
+  letter-spacing: 3px;
+  position: relative;
+}
+.quest-title .vine-deco {
+  display: inline-block;
+  color: #5a9a40;
+  font-size: 40px;
+  vertical-align: middle;
+  opacity: 0.7;
+}
+
+/* Level display */
+.level-section {
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  margin-bottom: 20px;
+}
+.level-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.level-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.level-badge {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 32px;
+  color: #3a6a2a;
+  text-shadow: 0 1px 3px rgba(255,255,255,0.3);
+  transition: all 0.5s ease;
+}
+.level-badge.highlight {
+  color: #c88a10;
+  text-shadow: 0 0 15px rgba(200, 160, 30, 0.4), 0 1px 3px rgba(255,255,255,0.3);
+  transform: scale(1.15);
+}
+
+.level-arrow {
+  font-size: 24px;
+  color: #5a9a40;
+  opacity: 0;
+  transform: scaleX(0);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.level-arrow.visible {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.level-new {
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.level-new.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.rank-title {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 22px;
+  color: #3a7a28;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+  transition: all 0.5s ease;
+  min-height: 30px;
+}
+.rank-title.highlight {
+  color: #c88a10;
+  text-shadow: 0 0 12px rgba(200, 160, 30, 0.4), 0 1px 2px rgba(255,255,255,0.3);
+  font-size: 26px;
+}
+
+/* Title promotion overlay */
+.title-promoted {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-top: 8px;
+  margin-bottom: -8px;
+}
+.title-promoted.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+.title-promoted-text {
+  font-family: 'Amatic SC', cursive;
+  font-weight: 700;
+  font-size: 42px;
+  color: #8a6a10;
+  text-shadow:
+    0 0 20px rgba(200, 170, 50, 0.4),
+    0 0 40px rgba(180, 150, 30, 0.2),
+    0 2px 3px rgba(255, 255, 255, 0.3);
+  letter-spacing: 2px;
+}
+.title-promoted-sub {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 24px;
+  color: #6a8a30;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+  margin-top: 2px;
+}
+.title-promoted-sub .arrow {
+  color: #c88a10;
+  margin: 0 6px;
+}
+
+/* XP Bar */
+.xp-section {
+  opacity: 0;
+  transform: translateY(15px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  margin-bottom: 16px;
+}
+.xp-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.xp-bar-container {
+  position: relative;
+  width: 100%;
+  height: 28px;
+  background: rgba(80, 100, 60, 0.35);
+  border-radius: 14px;
+  border: 2px solid rgba(90, 140, 60, 0.4);
+  overflow: hidden;
+  box-shadow: inset 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.xp-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #5aaa40, #78cc55, #90dd66);
+  border-radius: 12px;
+  transition: none;
+  position: relative;
+  box-shadow: 0 0 10px rgba(120, 200, 70, 0.3);
+}
+.xp-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 8px;
+  right: 8px;
+  height: 6px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+  border-radius: 3px;
+}
+
+.xp-bar-fill.maxed {
+  background: linear-gradient(90deg, #78cc55, #99dd66, #bbee77);
+  box-shadow: 0 0 20px rgba(150, 230, 90, 0.4);
+}
+
+.xp-text {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  color: #3a6a28;
+  margin-top: 6px;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+}
+
+/* Flower track above XP bar */
+.flower-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  width: 100%;
+  height: 28px;
+  margin-bottom: 4px;
+}
+
+/* +500 XP popup */
+.xp-bonus {
+  opacity: 0;
+  transform: translateY(10px) scale(0.8);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  margin-top: 14px;
+}
+.xp-bonus.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.xp-bonus-text {
+  font-family: 'Patrick Hand', cursive;
+  font-size: 36px;
+  color: #c89020;
+  text-shadow:
+    0 0 20px rgba(200, 170, 50, 0.5),
+    0 0 40px rgba(180, 150, 30, 0.2),
+    0 2px 4px rgba(255, 255, 255, 0.3);
+  display: inline-block;
+  animation: none;
+}
+.xp-bonus-text.glow {
+  animation: bonusGlow 2s ease-in-out infinite;
+}
+@keyframes bonusGlow {
+  0%, 100% { text-shadow: 0 0 20px rgba(200, 170, 50, 0.5), 0 0 40px rgba(180, 150, 30, 0.2), 0 2px 4px rgba(255, 255, 255, 0.3); }
+  50% { text-shadow: 0 0 30px rgba(200, 170, 50, 0.7), 0 0 60px rgba(180, 150, 30, 0.3), 0 2px 4px rgba(255, 255, 255, 0.3); }
+}
+
+/* Level up flash - golden-green */
+.level-up-flash {
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(230, 210, 100, 0.3), transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 5;
+}
+.level-up-flash.active {
+  opacity: 1;
+}
+
+/* === AMBIENT PARTICLES - golden dust motes === */
+.particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: rgba(255, 220, 120, 0.5);
+  border-radius: 50%;
+  animation: particleDrift 10s linear infinite;
+}
+@keyframes particleDrift {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-200px) translateX(30px); opacity: 0; }
+}
+
+/* Sparkle burst for level-up */
+.sparkle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: #ffe88a;
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.sparkle.burst {
+  animation: sparkleBurst 1s ease-out forwards;
+}
+@keyframes sparkleBurst {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(0); }
+}
+
+/* Leaf particles during level up */
+.leaf {
+  position: absolute;
+  width: 10px;
+  height: 14px;
+  background: linear-gradient(135deg, #6abc50, #4a9a38);
+  border-radius: 0 50% 50% 50%;
+  opacity: 0;
+  pointer-events: none;
+}
+.leaf.falling {
+  animation: leafFall 3s ease-in forwards;
+}
+@keyframes leafFall {
+  0% { opacity: 0.7; transform: translateY(0) rotate(0deg); }
+  100% { opacity: 0; transform: translateY(200px) rotate(360deg) translateX(var(--lx)); }
+}
+</style>
+</head>
+<body>
+
+<div class="forest-scene" id="forestScene">
+  <div class="sky"></div>
+
+  <!-- Clouds -->
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+  <div class="cloud"></div>
+
+  <!-- Mountains -->
+  <div class="mountains">
+    <svg viewBox="0 0 1200 300" preserveAspectRatio="none">
+      <path d="M0 300 L0 180 Q100 100 200 160 Q280 80 380 140 Q440 60 520 120 Q600 40 700 130 Q780 70 860 140 Q940 90 1020 150 Q1100 100 1200 170 L1200 300 Z" fill="#9aa090"/>
+      <path d="M0 300 L0 200 Q150 140 300 190 Q420 120 550 170 Q650 100 780 160 Q900 120 1050 180 L1200 200 L1200 300 Z" fill="#a8b09a"/>
+      <path d="M0 300 L0 230 Q200 180 400 220 Q550 170 700 210 Q850 180 1000 230 L1200 220 L1200 300 Z" fill="#b5c0a8"/>
+    </svg>
+  </div>
+
+  <!-- Rolling green hills -->
+  <div class="hills">
+    <svg viewBox="0 0 1200 350" preserveAspectRatio="none" style="width:100%;height:100%;position:absolute;bottom:0;">
+      <ellipse cx="300" cy="350" rx="500" ry="180" fill="#6a9a58"/>
+      <ellipse cx="900" cy="380" rx="450" ry="160" fill="#72a862"/>
+      <ellipse cx="600" cy="400" rx="600" ry="140" fill="#7aaa70"/>
+      <ellipse cx="100" cy="400" rx="300" ry="120" fill="#80b578"/>
+      <ellipse cx="1100" cy="400" rx="300" ry="130" fill="#78a868"/>
+    </svg>
+  </div>
+
+  <!-- Sunlight dappled patches -->
+  <div class="sunlight" id="sunlight">
+    <div class="sun-patch"></div>
+    <div class="sun-patch"></div>
+    <div class="sun-patch"></div>
+    <div class="sun-patch"></div>
+  </div>
+
+  <div class="light-rays"></div>
+  <div class="trees-back"></div>
+  <div class="trees-mid"></div>
+  <div class="tree-border-left"></div>
+  <div class="tree-border-right"></div>
+  <div class="canopy-left"></div>
+  <div class="canopy-right"></div>
+
+  <!-- Forest floor elements -->
+  <div class="forest-floor"></div>
+  <div class="fern"></div>
+  <div class="fern"></div>
+  <div class="fern"></div>
+  <div class="fern"></div>
+
+  <div class="mushroom">
+    <div class="mushroom-cap"></div>
+    <div class="mushroom-stem"></div>
+  </div>
+  <div class="mushroom">
+    <div class="mushroom-cap"></div>
+    <div class="mushroom-stem"></div>
+  </div>
+  <div class="mushroom">
+    <div class="mushroom-cap"></div>
+    <div class="mushroom-stem"></div>
+  </div>
+
+  <!-- Fairy ring -->
+  <div class="fairy-ring">
+    <div class="fairy-ring-glow" id="fairyGlow"></div>
+    <div class="ring-shroom"><div class="rs-cap"></div><div class="rs-stem"></div></div>
+    <div class="ring-shroom"><div class="rs-cap"></div><div class="rs-stem"></div></div>
+    <div class="ring-shroom"><div class="rs-cap"></div><div class="rs-stem"></div></div>
+    <div class="ring-shroom"><div class="rs-cap"></div><div class="rs-stem"></div></div>
+  </div>
+
+  <!-- Dust motes / sun sparkles (created by JS) -->
+  <div id="fireflyContainer"></div>
+
+  <!-- Butterflies -->
+  <div id="butterflyContainer">
+    <div class="butterfly" style="top: 25%; left: 20%;">
+      <div class="butterfly-body"><div class="wing-left"></div><div class="wing-right"></div></div>
+    </div>
+    <div class="butterfly" style="top: 30%; right: 22%;">
+      <div class="butterfly-body"><div class="wing-left"></div><div class="wing-right"></div></div>
+    </div>
+    <div class="butterfly" style="top: 18%; left: 40%;">
+      <div class="butterfly-body"><div class="wing-left"></div><div class="wing-right"></div></div>
+    </div>
+    <div class="butterfly" style="top: 35%; right: 38%;">
+      <div class="butterfly-body"><div class="wing-left"></div><div class="wing-right"></div></div>
+    </div>
+  </div>
+
+  <!-- Ambient golden particles -->
+  <div id="particleContainer"></div>
+
+  <!-- Level up flash overlay -->
+  <div class="level-up-flash" id="levelUpFlash"></div>
+</div>
+
+<!-- Main content -->
+<div class="content">
+  <div class="quest-header" id="questHeader">
+    <div class="quest-title">
+      <span class="vine-deco">~</span>
+      Quest Completed!
+      <span class="vine-deco">~</span>
+    </div>
+  </div>
+
+  <div class="level-section" id="levelSection">
+    <div class="level-display">
+      <span class="level-badge" id="levelOld">Level 1</span>
+      <span class="level-arrow" id="levelArrow">&#10140;</span>
+      <span class="level-badge level-new" id="levelNew">Level 2</span>
+    </div>
+    <div class="rank-title" id="rankTitle">Trainee</div>
+    <div class="title-promoted" id="titlePromoted">
+      <div class="title-promoted-text">Title Promoted!</div>
+      <div class="title-promoted-sub">
+        Trainee <span class="arrow">&#10140;</span> Explorer
+      </div>
+    </div>
+  </div>
+
+  <div class="xp-section" id="xpSection">
+    <div class="flower-row" id="flowerRow"></div>
+    <div class="xp-bar-container">
+      <div class="xp-bar-fill" id="xpBarFill"></div>
+    </div>
+    <div class="xp-text" id="xpText">0 / 500 XP</div>
+  </div>
+
+  <div class="xp-bonus" id="xpBonus">
+    <span class="xp-bonus-text" id="xpBonusText">+500 XP</span>
+  </div>
+</div>
+
+<!-- Sparkle container for level up effect -->
+<div id="sparkleContainer" style="position:fixed;inset:0;pointer-events:none;z-index:20;"></div>
+
+<script>
+(function() {
+  // === CREATE GOLDEN DUST MOTES ===
+  const fireflyContainer = document.getElementById('fireflyContainer');
+  for (let i = 0; i < 18; i++) {
+    const f = document.createElement('div');
+    f.className = 'firefly';
+    f.style.left = (10 + Math.random() * 80) + '%';
+    f.style.top = (10 + Math.random() * 70) + '%';
+    f.style.animationDelay = (Math.random() * 8) + 's, ' + (Math.random() * 3) + 's';
+    f.style.animationDuration = (6 + Math.random() * 6) + 's, ' + (2 + Math.random() * 2) + 's';
+    fireflyContainer.appendChild(f);
+  }
+
+  // === CREATE AMBIENT PARTICLES ===
+  const particleContainer = document.getElementById('particleContainer');
+  for (let i = 0; i < 20; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = (10 + Math.random() * 80) + '%';
+    p.style.top = (30 + Math.random() * 60) + '%';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.animationDuration = (8 + Math.random() * 8) + 's';
+    particleContainer.appendChild(p);
+  }
+
+  // === CREATE FLOWERS IN ROW ===
+  const flowerRow = document.getElementById('flowerRow');
+  const flowerColors = ['pink', 'purple', 'yellow', 'blue', 'white', 'pink', 'yellow', 'purple', 'blue', 'pink', 'white', 'yellow'];
+  const flowers = [];
+  for (let i = 0; i < 12; i++) {
+    const f = document.createElement('div');
+    f.className = 'bloom-flower ' + flowerColors[i];
+    f.innerHTML = '<div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="petal"></div><div class="center"></div>';
+    flowerRow.appendChild(f);
+    flowers.push(f);
+  }
+
+  // === REFS ===
+  const forestScene = document.getElementById('forestScene');
+  const questHeader = document.getElementById('questHeader');
+  const levelSection = document.getElementById('levelSection');
+  const xpSection = document.getElementById('xpSection');
+  const xpBarFill = document.getElementById('xpBarFill');
+  const xpText = document.getElementById('xpText');
+  const xpBonus = document.getElementById('xpBonus');
+  const xpBonusText = document.getElementById('xpBonusText');
+  const levelOld = document.getElementById('levelOld');
+  const levelArrow = document.getElementById('levelArrow');
+  const levelNew = document.getElementById('levelNew');
+  const rankTitle = document.getElementById('rankTitle');
+  const fairyGlow = document.getElementById('fairyGlow');
+  const levelUpFlash = document.getElementById('levelUpFlash');
+  const sparkleContainer = document.getElementById('sparkleContainer');
+  const butterflies = document.querySelectorAll('.butterfly');
+  const titlePromoted = document.getElementById('titlePromoted');
+  const sunlight = document.getElementById('sunlight');
+
+  // === HELPERS ===
+  function wait(ms) {
+    return new Promise(r => setTimeout(r, ms));
+  }
+
+  function animateXP(from, to, max, duration) {
+    return new Promise(resolve => {
+      const start = performance.now();
+      function tick(now) {
+        const t = Math.min((now - start) / duration, 1);
+        const eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+        const current = Math.round(from + (to - from) * eased);
+        const pct = (current / max) * 100;
+        xpBarFill.style.width = pct + '%';
+        xpText.textContent = current + ' / ' + max + ' XP';
+
+        // Bloom flowers proportionally
+        const flowerIndex = Math.floor((current / max) * flowers.length);
+        for (let i = 0; i < flowers.length; i++) {
+          if (i <= flowerIndex && current > 0) {
+            if (!flowers[i].classList.contains('bloomed')) {
+              flowers[i].classList.remove('closed');
+              flowers[i].classList.add('bloomed');
+            }
+          }
+        }
+
+        if (t < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          resolve();
+        }
+      }
+      requestAnimationFrame(tick);
+    });
+  }
+
+  function closeFlowers() {
+    flowers.forEach(f => {
+      f.classList.remove('bloomed');
+      f.classList.add('closed');
+    });
+  }
+
+  function spawnSparkles(cx, cy, count) {
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+      const dist = 40 + Math.random() * 80;
+      s.style.left = cx + 'px';
+      s.style.top = cy + 'px';
+      s.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
+      s.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
+      s.style.background = ['#ffe88a', '#90cc60', '#f5a0c0', '#c9a0f5', '#bbdd66'][Math.floor(Math.random() * 5)];
+      sparkleContainer.appendChild(s);
+      requestAnimationFrame(() => s.classList.add('burst'));
+      setTimeout(() => s.remove(), 1100);
+    }
+  }
+
+  function spawnLeaves() {
+    for (let i = 0; i < 12; i++) {
+      const l = document.createElement('div');
+      l.className = 'leaf';
+      l.style.left = (20 + Math.random() * 60) + '%';
+      l.style.top = (10 + Math.random() * 30) + '%';
+      l.style.setProperty('--lx', (Math.random() - 0.5) * 100 + 'px');
+      l.style.animationDelay = (Math.random() * 0.8) + 's';
+      sparkleContainer.appendChild(l);
+      requestAnimationFrame(() => l.classList.add('falling'));
+      setTimeout(() => l.remove(), 4000);
+    }
+  }
+
+  // === ANIMATION SEQUENCE ===
+  async function runSequence() {
+    // 1. Forest fades in
+    await wait(1000);
+    forestScene.classList.add('visible');
+    sunlight.classList.add('visible');
+    fairyGlow.classList.add('visible');
+    await wait(1200);
+
+    // 2. "Quest Completed!" appears
+    questHeader.classList.add('visible');
+    await wait(800);
+
+    // 3. Level and XP sections appear
+    levelSection.classList.add('visible');
+    await wait(400);
+    xpSection.classList.add('visible');
+    await wait(600);
+
+    // 4. XP bar fills from 0 to 500/500 (100%)
+    await animateXP(0, 500, 500, 2200);
+    xpBarFill.classList.add('maxed');
+    await wait(400);
+
+    // 5. LEVEL UP!
+    // Flash
+    levelUpFlash.classList.add('active');
+    fairyGlow.classList.add('bright');
+
+    // Sparkles from center
+    const rect = levelSection.getBoundingClientRect();
+    spawnSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2, 24);
+    spawnLeaves();
+
+    // Show butterflies
+    butterflies.forEach((b, i) => {
+      setTimeout(() => b.classList.add('visible'), i * 150);
+    });
+
+    await wait(300);
+    levelUpFlash.classList.remove('active');
+
+    // Transition level text
+    levelOld.classList.add('highlight');
+    await wait(300);
+    levelArrow.classList.add('visible');
+    await wait(300);
+    levelNew.classList.add('visible');
+    await wait(200);
+    levelNew.classList.add('highlight');
+    levelOld.classList.remove('highlight');
+
+    // Change rank
+    rankTitle.classList.add('highlight');
+    rankTitle.textContent = 'Explorer';
+
+    // More sparkles
+    spawnSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2, 16);
+    await wait(500);
+
+    // 5b. Title Promoted! with forest magic burst
+    titlePromoted.classList.add('visible');
+    // Golden-green magic burst
+    const promoRect = titlePromoted.getBoundingClientRect();
+    spawnSparkles(promoRect.left + promoRect.width / 2, promoRect.top + promoRect.height / 2, 20);
+    // Second flash for the promotion
+    levelUpFlash.classList.add('active');
+    await wait(200);
+    levelUpFlash.classList.remove('active');
+    await wait(800);
+
+    // 6. XP bar resets, flowers close
+    xpBarFill.classList.remove('maxed');
+    closeFlowers();
+    xpBarFill.style.width = '0%';
+    xpText.textContent = '0 / 600 XP';
+    await wait(600);
+
+    // Hide title promoted
+    titlePromoted.classList.remove('visible');
+    await wait(300);
+
+    // 7. Fill to 50% of new level (300/600)
+    await animateXP(0, 300, 600, 1600);
+    xpText.textContent = '300 / 600 XP';
+    await wait(400);
+
+    // 8. +500 XP appears
+    xpBonus.classList.add('visible');
+    await wait(200);
+    xpBonusText.classList.add('glow');
+
+    // Final sparkles around the bonus text
+    const bonusRect = xpBonusText.getBoundingClientRect();
+    spawnSparkles(bonusRect.left + bonusRect.width / 2, bonusRect.top + bonusRect.height / 2, 12);
+  }
+
+  runSequence();
+})();
+</script>
+</body>
+</html>
