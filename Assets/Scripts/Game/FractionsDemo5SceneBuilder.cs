@@ -45,6 +45,7 @@ namespace BoardOfEducation.Game
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = HexColor("#0f0e2a");
             cameraGo.tag = "MainCamera";
+            cameraGo.AddComponent<AudioListener>();
 
             // ── EventSystem ──
             var eventSystemGo = new GameObject("EventSystem");
@@ -135,6 +136,8 @@ namespace BoardOfEducation.Game
             var gameCoreGo = new GameObject("GameCore");
             gameCoreGo.AddComponent<Core.BoardStartup>();
             gameCoreGo.AddComponent<Input.PieceManager>();
+            gameCoreGo.AddComponent<AudioSource>();
+            gameCoreGo.AddComponent<BoardOfEducation.Audio.TTSAudioProvider>();
 
             var manager = gameCoreGo.AddComponent<FractionsDemo5Manager>();
             var sequencer = gameCoreGo.AddComponent<LessonSequencer>();

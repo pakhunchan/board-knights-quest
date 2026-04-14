@@ -46,6 +46,7 @@ namespace BoardOfEducation.Game
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = HexColor("#0f0e2a");
             cameraGo.tag = "MainCamera";
+            cameraGo.AddComponent<AudioListener>();
 
             // ── EventSystem ──
             var eventSystemGo = new GameObject("EventSystem");
@@ -140,6 +141,8 @@ namespace BoardOfEducation.Game
             lessonManager.enabled = false; // stays disabled until chalkboard fade completes
             var sequencer = gameCoreGo.AddComponent<LessonSequencer>();
             var orchestrator = gameCoreGo.AddComponent<TotalFractions2DemoWithBGManager>();
+            gameCoreGo.AddComponent<AudioSource>();
+            gameCoreGo.AddComponent<BoardOfEducation.Audio.TTSAudioProvider>();
 
             // ══════════════════════════════════════════════════
             // WIRE UP SERIALIZED REFERENCES

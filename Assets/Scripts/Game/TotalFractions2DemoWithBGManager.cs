@@ -37,6 +37,16 @@ namespace BoardOfEducation.Game
             }
             contentGroup.alpha = 1f;
 
+            // Wire TTS provider into the lesson sequencer (before enabling lesson)
+            var ttsProvider = GetComponent<BoardOfEducation.Audio.TTSAudioProvider>();
+            if (ttsProvider == null)
+                ttsProvider = gameObject.AddComponent<BoardOfEducation.Audio.TTSAudioProvider>();
+            if (GetComponent<AudioSource>() == null)
+                gameObject.AddComponent<AudioSource>();
+            var seq = GetComponent<BoardOfEducation.Lessons.LessonSequencer>();
+            seq.TTSProvider = ttsProvider.SpeakCoroutine;
+            Debug.Log("[TTS] Provider wired to sequencer");
+
             // Enable the lesson manager — Unity will call its Start() this frame
             lessonManager.enabled = true;
         }

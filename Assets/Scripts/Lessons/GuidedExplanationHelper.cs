@@ -74,6 +74,17 @@ namespace BoardOfEducation.Lessons
             this.sequencer = sequencer;
         }
 
+        // ── TTS side-channel ──
+        private bool _ttsDone;
+        private void StartTTS(string text)
+        {
+            _ttsDone = false;
+            if (sequencer.TTSProvider != null)
+                host.StartCoroutine(sequencer.TTSProvider(text, () => _ttsDone = true));
+            else
+                _ttsDone = true;
+        }
+
         // ── Public Entry Point ──────────────────────────────────────
 
         /// <summary>
@@ -107,9 +118,10 @@ namespace BoardOfEducation.Lessons
             // Fix grammar: "one halves" → "one half", etc.
             introSub = FixSingularDenominator(introSub, leftNum, leftDen);
             bool subDone = false;
+            StartTTS(introSub);
             host.StartCoroutine(sequencer.CoShowSubtitle(introSub,
                 new LessonStep(introSub).EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            yield return new WaitUntil(() => subDone && _ttsDone);
             yield return new WaitForSeconds(0.5f);
 
             // Step 4: Slide apart
@@ -121,13 +133,14 @@ namespace BoardOfEducation.Lessons
             string multiplySub = $"We have to multiply {leftNumWord} {leftDenPlural} by something to figure out how many {rightDenPlural} it's equal to";
             multiplySub = FixSingularDenominator(multiplySub, leftNum, leftDen);
             subDone = false;
+            StartTTS(multiplySub);
             host.StartCoroutine(sequencer.CoShowSubtitle(multiplySub,
                 new LessonStep(multiplySub).EstimatedDuration, () => subDone = true));
 
             // Step 6: Fade in multiply operator + middle fraction (concurrent with subtitle)
             animDone = false;
             host.StartCoroutine(CoAnimateFadeInMultiply(() => animDone = true));
-            yield return new WaitUntil(() => subDone && animDone);
+            yield return new WaitUntil(() => subDone && animDone && _ttsDone);
             yield return new WaitForSeconds(0.5f);
 
             // ── Denominator interaction ──
@@ -143,9 +156,10 @@ namespace BoardOfEducation.Lessons
             string summarySub = $"Good job! {leftNumWord} {leftDenPlural} is equal to {finalAnswerWord} {rightDenPlural}";
             summarySub = FixSingularDenominator(summarySub, leftNum, leftDen);
             subDone = false;
+            StartTTS(summarySub);
             host.StartCoroutine(sequencer.CoShowSubtitle(summarySub,
                 new LessonStep(summarySub).EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            yield return new WaitUntil(() => subDone && _ttsDone);
             yield return new WaitForSeconds(0.5f);
 
             // Fade out and clean up
@@ -177,17 +191,19 @@ namespace BoardOfEducation.Lessons
             string rightDenWord = NumberWords.ToCardinal(rightDen);
             string promptSub = $"{denWord} times what equals {rightDenWord}?";
             bool subDone = false;
+            StartTTS(promptSub);
             host.StartCoroutine(sequencer.CoShowSubtitle(promptSub,
                 new LessonStep(promptSub).EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            yield return new WaitUntil(() => subDone && _ttsDone);
             yield return new WaitForSeconds(1f);
 
             // Subtitle: "three times three is equal to nine, so move your piece to the three"
             string hintSub = $"{denWord} times {multiplierWord} is equal to {rightDenWord}, so move your piece to the {multiplierWord}";
             subDone = false;
+            StartTTS(hintSub);
             host.StartCoroutine(sequencer.CoShowSubtitle(hintSub,
                 new LessonStep(hintSub).EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            yield return new WaitUntil(() => subDone && _ttsDone);
 
             // Wait for correct answer
             yield return CoWaitForAnswer(correctIdx);
@@ -218,9 +234,10 @@ namespace BoardOfEducation.Lessons
             // Subtitle
             string sub = $"Whatever value we used for the bottom, we have to use for the top, so put a {multiplierWord} on the top as well";
             bool subDone = false;
+            StartTTS(sub);
             host.StartCoroutine(sequencer.CoShowSubtitle(sub,
                 new LessonStep(sub).EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            yield return new WaitUntil(() => subDone && _ttsDone);
 
             yield return CoWaitForAnswer(correctIdx);
             yield return CoWaitForPieceRemoval();
@@ -244,31 +261,35 @@ namespace BoardOfEducation.Lessons
             // "Let's now multiply the top values"
             string sub1 = "Let's now multiply the top values";
             bool subDone = false;
+            StartTTS(sub1);
             host.StartCoroutine(sequencer.CoShowSubtitle(sub1,
                 new LessonStep(sub1).EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            yield return new WaitUntil(() => subDone && _ttsDone);
 
             // "two times three equals what?"
             string sub2 = $"{leftNumWord} times {multiplierWord} equals what?";
             subDone = false;
+            StartTTS(sub2);
             host.StartCoroutine(sequencer.CoShowSubtitle(sub2,
                 new LessonStep(sub2).EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            yield return new WaitUntil(() => subDone && _ttsDone);
             yield return new WaitForSeconds(1f);
 
             // "two times three equals six"
             string sub3 = $"{leftNumWord} times {multiplierWord} equals {finalAnswerWord}";
             subDone = false;
+            StartTTS(sub3);
             host.StartCoroutine(sequencer.CoShowSubtitle(sub3,
                 new LessonStep(sub3).EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            yield return new WaitUntil(() => subDone && _ttsDone);
 
             // "Move your piece to the six"
             string sub4 = $"Move your piece to the {finalAnswerWord}";
             subDone = false;
+            StartTTS(sub4);
             host.StartCoroutine(sequencer.CoShowSubtitle(sub4,
                 new LessonStep(sub4).EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            yield return new WaitUntil(() => subDone && _ttsDone);
 
             yield return CoWaitForAnswer(correctIdx);
             yield return CoWaitForPieceRemoval();
@@ -668,9 +689,10 @@ namespace BoardOfEducation.Lessons
         {
             string phrase = EncouragementPhrases[UnityEngine.Random.Range(0, EncouragementPhrases.Length)];
             bool subDone = false;
+            StartTTS(phrase);
             host.StartCoroutine(sequencer.CoShowSubtitle(phrase,
                 new LessonStep(phrase).EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            yield return new WaitUntil(() => subDone && _ttsDone);
         }
 
         private IEnumerator CoFlashCircle(int index, Color flashColor, float duration)

@@ -53,66 +53,76 @@ namespace BoardOfEducation.Game
         private RectTransform[] answerCircleRects;
         private float[] answerDwellTimes;
 
-        // ── Step Definitions (43 steps) ──────────────────────────────────
+        // ── TTS side-channel for direct subtitle calls ──
+        private bool _ttsSideDone;
+        private void StartTTSSide(string text)
+        {
+            _ttsSideDone = false;
+            if (sequencer.TTSProvider != null)
+                StartCoroutine(sequencer.TTSProvider(text, () => _ttsSideDone = true));
+            else
+                _ttsSideDone = true;
+        }
+
+        // ── Step Definitions (42 steps) ──────────────────────────────────
 
         private readonly LessonStep[] steps = new LessonStep[]
         {
-            // Phase 1: Circles (steps 0–11)
+            // Phase 1: Circles (steps 0–10)
             new LessonStep("Let's start with a circle.",                             "showCircle:left"),    // 0
-            new LessonStep("If we draw a line down the middle and",                  "lines:left"),         // 1
-            new LessonStep("shade the left side, we'll have two pieces and one will be shaded", "shade:left"), // 2
-            new LessonStep("In math, we say that one-half is shaded",                 "label:left"),         // 3
-            new LessonStep("Here is another circle.",                                "showCircle:right"),   // 4
-            new LessonStep("If we draw lines to split the circle into 6 pieces",     "lines:right"),        // 5
-            new LessonStep("and shade the 3 pieces to the left",                     "shade:right"),        // 6
-            new LessonStep("we get three-sixths",                                    "label:right"),        // 7
-            new LessonStep("You can see that the shaded area in these two circles are equal. This means that their fractions, one half and three sixths, are equal too."), // 8
-            new LessonStep("But is there a simple way to go from one fraction to another fraction without drawing it out every time?"), // 9
-            new LessonStep("There is, and we will learn that today"),                                       // 10
-            new LessonStep("Let's jump into an example"),                                                   // 11
+            new LessonStep("If we draw a line down the middle and shade the left side, we'll have two pieces and one will be shaded"), // 1 (karaoke: lines+shade)
+            new LessonStep("In math, we say that one-half is shaded",                 "label:left"),         // 2
+            new LessonStep("Here is another circle.",                                "showCircle:right"),   // 3
+            new LessonStep("If we draw lines to split the circle into 6 pieces",     "lines:right"),        // 4
+            new LessonStep("and shade the 3 pieces to the left",                     "shade:right"),        // 5
+            new LessonStep("we get three-sixths",                                    "label:right"),        // 6
+            new LessonStep("You can see that the shaded area in these two circles are equal. This means that their fractions, one half and three sixths, are equal too."), // 7
+            new LessonStep("But is there a simple way to go from one fraction to another fraction without drawing it out every time?"), // 8
+            new LessonStep("There is, and we will learn that today"),                                       // 9
+            new LessonStep("Let's jump into an example"),                                                   // 10
 
-            // Transition 1→2 (step 12)
-            new LessonStep(" ",                                                     "transition1to2"),     // 12
+            // Transition 1→2 (step 11)
+            new LessonStep(" ",                                                     "transition1to2"),     // 11
 
-            // Phase 2: Equation 1/2 = ?/6 (steps 13–21)
-            new LessonStep("One half equals how many sixths? We know the answer is three sixths because of the circles before, but let's see how we can calculate this in a mathematical way"), // 13
-            new LessonStep("Let's start by shifting this over to the right to make space",                                                  "slideApart"),     // 14
-            new LessonStep("We need to multiply one half by something to turn it into something over six.",                                 "fadeInMultiply"), // 15
-            new LessonStep("First, focus on the bottom numbers, the denominators.",                                                         "zoomInDenom"),    // 16
-            new LessonStep("Two times three equals six.",                                                                                    "swapDenom3"),     // 17
-            new LessonStep("Let's now come back to the full equation. The rule is: whatever you multiply the bottom by, you have to multiply the top by the same value.", "zoomOut"), // 18
-            new LessonStep("Since we multiplied the bottom by three, we have to multiply the top by three."),                                                   // 19
-            new LessonStep("Multiplying the top is one times three, which is equal to three."),                                                                 // 20
-            new LessonStep("So now we know that one-half is equal to three-sixths."),                                                                           // 21
+            // Phase 2: Equation 1/2 = ?/6 (steps 12–20)
+            new LessonStep("One half equals how many sixths? We know the answer is three sixths because of the circles before, but let's see how we can calculate this in a mathematical way"), // 12
+            new LessonStep("Let's start by shifting this over to the right to make space",                                                  "slideApart"),     // 13
+            new LessonStep("We need to multiply one half by something to turn it into something over six.",                                 "fadeInMultiply"), // 14
+            new LessonStep("First, focus on the bottom numbers, the denominators.",                                                         "zoomInDenom"),    // 15
+            new LessonStep("Two times three equals six.",                                                                                    "swapDenom3"),     // 16
+            new LessonStep("Let's now come back to the full equation. The rule is: whatever you multiply the bottom by, you have to multiply the top by the same value.", "zoomOut"), // 17
+            new LessonStep("Since we multiplied the bottom by three, we have to multiply the top by three."),                                                   // 18
+            new LessonStep("Multiplying the top is one times three, which is equal to three."),                                                                 // 19
+            new LessonStep("So now we know that one-half is equal to three-sixths."),                                                                           // 20
 
-            // Transition 2→3 (step 22)
-            new LessonStep(" ",                                                     "transition2to3"),     // 22
+            // Transition 2→3 (step 21)
+            new LessonStep(" ",                                                     "transition2to3"),     // 21
 
-            // Phase 3: Equation 2/3 = ?/9 (steps 23–35)
-            new LessonStep("You're doing amazing, so let's continue with another example"),                                                                                    // 23
-            new LessonStep("Two thirds is equal to how many ninths?",               "p3_showEquation"),    // 24
-            new LessonStep("First we'll make some space",                           "p3_slideApart"),      // 25
-            new LessonStep("We have to multiply two thirds by something to figure out how many ninths it's equal to", "p3_fadeInMultiply"), // 26
-            new LessonStep("Three times what equals nine?"),                                                                                // 27
-            new LessonStep("Three times three is equal to nine, so move your piece to the three"),                                          // 28
-            new LessonStep("Whatever value we used for the bottom, we have to use for the top, so put a three on the top as well"),         // 29
-            new LessonStep("Let's now multiply the top values"),                                                                            // 30
-            new LessonStep("Two times three equals what?"),                                                                                 // 31
-            new LessonStep("Two times three equals six"),                                                                                   // 32
-            new LessonStep("Move your piece to the six"),                                                                                   // 33
-            new LessonStep("Good job"),                                                                                                     // 34
-            new LessonStep("So now we know that two thirds is equal to six ninths"),                                                        // 35
+            // Phase 3: Equation 2/3 = ?/9 (steps 22–34)
+            new LessonStep("You're doing amazing, so let's continue with another example"),                                                                                    // 22
+            new LessonStep("Two thirds is equal to how many ninths?",               "p3_showEquation"),    // 23
+            new LessonStep("First we'll make some space",                           "p3_slideApart"),      // 24
+            new LessonStep("We have to multiply two thirds by something to figure out how many ninths it's equal to", "p3_fadeInMultiply"), // 25
+            new LessonStep("Three times what equals nine?"),                                                                                // 26
+            new LessonStep("Three times three is equal to nine, so move your piece to the three"),                                          // 27
+            new LessonStep("Whatever value we used for the bottom, we have to use for the top, so put a three on the top as well"),         // 28
+            new LessonStep("Let's now multiply the top values"),                                                                            // 29
+            new LessonStep("Two times three equals what?"),                                                                                 // 30
+            new LessonStep("Two times three equals six"),                                                                                   // 31
+            new LessonStep("Move your piece to the six"),                                                                                   // 32
+            new LessonStep("Good job"),                                                                                                     // 33
+            new LessonStep("So now we know that two thirds is equal to six ninths"),                                                        // 34
 
-            // Transition 3→4 (step 36)
-            new LessonStep(" ",                                                     "transition3to4"),     // 36
+            // Transition 3→4 (step 35)
+            new LessonStep(" ",                                                     "transition3to4"),     // 35
 
-            // Phase 4: Equation 3/5 = ?/20 (steps 37–42)
-            new LessonStep("You're doing great, so let's try another example",      "p4_showEquation"),    // 37
-            new LessonStep("Three fifths is equal to how many twentieths?"),                                                                // 38
-            new LessonStep("First, look at the bottom numbers, the denominators.", "p4_showRules"),                                            // 39
-            new LessonStep("Second, find the times number. Five times what number equals twenty?"),                                         // 40
-            new LessonStep("Third, multiple the top by that times number to get the answer"),                                               // 41
-            new LessonStep("How many twentieths is three fifths?"),                                                                         // 42
+            // Phase 4: Equation 3/5 = ?/20 (steps 36–41)
+            new LessonStep("You're doing great, so let's try another example",      "p4_showEquation"),    // 36
+            new LessonStep("Three fifths is equal to how many twentieths?"),                                                                // 37
+            new LessonStep("First, look at the bottom numbers, the denominators.", "p4_showRules"),                                            // 38
+            new LessonStep("Second, find the times number. Five times what number equals twenty?"),                                         // 39
+            new LessonStep("Third, multiply the top by that times number to get the answer"),                                               // 40
+            new LessonStep("How many twentieths is three fifths?"),                                                                         // 41
         };
 
         // ── Animation Registry ─────────────────────────────────────
@@ -125,9 +135,7 @@ namespace BoardOfEducation.Game
             {
                 ["showCircle:left"]  = cb => CoAnimateShowCircle(leftCircle, leftCircleGroup, cb),
                 ["showCircle:right"] = cb => CoAnimateShowCircle(rightCircle, rightCircleGroup, cb),
-                ["lines:left"]       = cb => CoAnimateLines(leftCircle, cb),
                 ["lines:right"]      = cb => CoAnimateLines(rightCircle, cb),
-                ["shade:left"]       = cb => CoAnimateShading(leftCircle, cb),
                 ["shade:right"]      = cb => CoAnimateShading(rightCircle, cb),
                 ["label:left"]       = cb => CoAnimateLabel(leftLabelGroup, cb),
                 ["label:right"]      = cb => CoAnimateLabel(rightLabelGroup, cb),
@@ -705,15 +713,23 @@ namespace BoardOfEducation.Game
 
         private IEnumerator CoPlaySequence()
         {
+            // Clean up any content from a previous playthrough
+            for (int i = contentArea.childCount - 1; i >= 0; i--)
+                Destroy(contentArea.GetChild(i).gameObject);
+            NullEquationRefs();
+            DestroyAnswerCircles();
+            if (rulesContainer != null) { Destroy(rulesContainer.gameObject); rulesContainer = null; }
+
             // ── Intro Card + Welcome subtitle ──
             sequencer.Begin();
             yield return CoFadeInIntroCard("Completing\nEquivalent Fractions");
 
             bool welcomeDone = false;
+            StartTTSSide("Hello! Welcome to today's lesson on completing equivalent fractions. We'll jump right in.");
             StartCoroutine(sequencer.CoShowKaraokeSubtitle(
                 "Hello! Welcome to today's lesson on completing equivalent fractions. We'll jump right in.",
                 3f, null, () => welcomeDone = true));
-            yield return new WaitUntil(() => welcomeDone);
+            yield return new WaitUntil(() => welcomeDone && _ttsSideDone);
             yield return new WaitForSeconds(1.2f);
 
             yield return CoFadeOutIntroCard();
@@ -723,57 +739,62 @@ namespace BoardOfEducation.Game
             BuildPhase1Registry();
             yield return new WaitForSeconds(0.3f);
 
-            for (int i = 0; i <= 11; i++)
+            // Step 0: showCircle:left
+            yield return sequencer.RunStep(steps[0], ResolveAnimation(steps[0].animationKey));
+            // Step 1: combined lines+shade (karaoke)
+            yield return RunP1LeftLinesAndShade();
+            // Steps 2-10 (label:left, showCircle:right, lines:right, shade:right, label:right, then subtitle-only steps)
+            for (int i = 2; i <= 10; i++)
                 yield return sequencer.RunStep(steps[i], ResolveAnimation(steps[i].animationKey));
 
-            // Step 12: transition1to2 (circles → equation 1/2=?/6)
-            yield return sequencer.RunStep(steps[12], ResolveAnimation(steps[12].animationKey));
+            // Step 11: transition1to2 (circles → equation 1/2=?/6)
+            yield return sequencer.RunStep(steps[11], ResolveAnimation(steps[11].animationKey));
 
             // ── Phase 2: Equation 1/2 = ?/6 ──
-            for (int i = 13; i <= 19; i++)
+            for (int i = 12; i <= 18; i++)
                 yield return sequencer.RunStep(steps[i], ResolveAnimation(steps[i].animationKey));
 
-            yield return RunP2KaraokeStep();   // step 20
-            yield return RunP2SummaryStep();   // step 21
+            yield return RunP2KaraokeStep();   // step 19
+            yield return RunP2SummaryStep();   // step 20
 
-            // Step 22: transition2to3 (equation → new equation 2/3=?/9)
-            yield return sequencer.RunStep(steps[22], ResolveAnimation(steps[22].animationKey));
+            // Step 21: transition2to3 (equation → new equation 2/3=?/9)
+            yield return sequencer.RunStep(steps[21], ResolveAnimation(steps[21].animationKey));
 
             // ── Phase 3: Equation 2/3 = ?/9 ──
-            for (int i = 23; i <= 26; i++)
+            for (int i = 22; i <= 25; i++)
                 yield return sequencer.RunStep(steps[i], ResolveAnimation(steps[i].animationKey));
 
-            yield return RunP3DenominatorInteraction();      // steps 27–28
-            yield return RunP3NumeratorInteraction();         // step 29
-            yield return RunP3FinalProductInteraction();      // steps 30–33
-            yield return sequencer.RunStep(steps[34], null);  // "Good job"
-            yield return RunP3SummaryStep();                  // step 35
+            yield return RunP3DenominatorInteraction();      // steps 26–27
+            yield return RunP3NumeratorInteraction();         // step 28
+            yield return RunP3FinalProductInteraction();      // steps 29–32
+            yield return sequencer.RunStep(steps[33], null);  // "Good job"
+            yield return RunP3SummaryStep();                  // step 34
 
-            // Step 36: transition3to4 (equation → new equation 3/5=?/20)
-            yield return sequencer.RunStep(steps[36], ResolveAnimation(steps[36].animationKey));
+            // Step 35: transition3to4 (equation → new equation 3/5=?/20)
+            yield return sequencer.RunStep(steps[35], ResolveAnimation(steps[35].animationKey));
 
             // ── Phase 4: Equation 3/5 = ?/20 ──
-            yield return sequencer.RunStep(steps[37], ResolveAnimation(steps[37].animationKey));
+            yield return sequencer.RunStep(steps[36], ResolveAnimation(steps[36].animationKey));
             yield return new WaitForSeconds(1f);
-            yield return sequencer.RunStep(steps[38], null);
+            yield return sequencer.RunStep(steps[37], null);
             yield return new WaitForSeconds(1f);
 
-            // Step 39: "First, look at the bottom..." — animation writes "Rules:" title
-            yield return sequencer.RunStep(steps[39], ResolveAnimation(steps[39].animationKey));
+            // Step 38: "First, look at the bottom..." — animation writes "Rules:" title
+            yield return sequencer.RunStep(steps[38], ResolveAnimation(steps[38].animationKey));
             yield return CoRevealRuleLine(0);  // "1. Look at the bottom"
             yield return new WaitForSeconds(1f);
 
-            // Step 40: "Second, find the times number..."
-            yield return sequencer.RunStep(steps[40], null);
+            // Step 39: "Second, find the times number..."
+            yield return sequencer.RunStep(steps[39], null);
             yield return CoRevealRuleLine(1);  // "2. Find the times number"
             yield return new WaitForSeconds(0.5f);
 
-            // Step 41: "Third, multiply the top..."
-            yield return sequencer.RunStep(steps[41], null);
+            // Step 40: "Third, multiply the top..."
+            yield return sequencer.RunStep(steps[40], null);
             yield return CoRevealRuleLine(2);  // "3. Multiply the top by the times number"
             yield return new WaitForSeconds(0.5f);
 
-            // Step 42: interactive answer
+            // Step 41: interactive answer
             yield return RunP4AnswerInteraction();
 
             sequencer.End();
@@ -1131,6 +1152,31 @@ namespace BoardOfEducation.Game
         }
 
         // ══════════════════════════════════════════════════════════════
+        //  PHASE 1: Combined Lines + Shade Karaoke Step
+        // ══════════════════════════════════════════════════════════════
+
+        // "If we draw a line down the middle and shade the left side, we'll have two pieces and one will be shaded"
+        //  If(0) we(1) draw(2) a(3) line(4) down(5) the(6) middle(7) and(8) shade(9) the(10) left(11) side,(12) we'll(13) have(14) two(15) pieces(16) and(17) one(18) will(19) be(20) shaded(21)
+        private IEnumerator RunP1LeftLinesAndShade()
+        {
+            var step = steps[1];
+            bool karaokeDone = false;
+            StartTTSSide(step.subtitle);
+            StartCoroutine(sequencer.CoShowKaraokeSubtitle(
+                step.subtitle, 3f,
+                (idx, word, duration) =>
+                {
+                    if (idx == 0)
+                        StartCoroutine(CoAnimateLines(leftCircle, null));
+                    else if (idx == 9) // "shade"
+                        StartCoroutine(CoAnimateShading(leftCircle, null));
+                },
+                () => karaokeDone = true));
+            yield return new WaitUntil(() => karaokeDone && _ttsSideDone);
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        // ══════════════════════════════════════════════════════════════
         //  PHASE 2: Special Steps (Karaoke + Summary)
         // ══════════════════════════════════════════════════════════════
 
@@ -1138,9 +1184,10 @@ namespace BoardOfEducation.Game
         //  Multiplying(0) the(1) top(2) is(3) one(4) times(5) three,(6) which(7) is(8) equal(9) to(10) three.(11)
         private IEnumerator RunP2KaraokeStep()
         {
-            var step = steps[20];
+            var step = steps[19];
             bool karaokeDone = false;
 
+            StartTTSSide(step.subtitle);
             StartCoroutine(sequencer.CoShowKaraokeSubtitle(
                 step.subtitle, 3f,
                 (idx, word, duration) =>
@@ -1158,7 +1205,7 @@ namespace BoardOfEducation.Game
                 },
                 () => karaokeDone = true));
 
-            yield return new WaitUntil(() => karaokeDone);
+            yield return new WaitUntil(() => karaokeDone && _ttsSideDone);
             yield return new WaitForSeconds(0.5f);
         }
 
@@ -1166,9 +1213,10 @@ namespace BoardOfEducation.Game
         //  So(0) now(1) we(2) know(3) that(4) one-half(5) is(6) equal(7) to(8) three-sixths.(9)
         private IEnumerator RunP2SummaryStep()
         {
-            var step = steps[21];
+            var step = steps[20];
             bool done = false;
 
+            StartTTSSide(step.subtitle);
             StartCoroutine(sequencer.CoShowKaraokeSubtitle(
                 step.subtitle, 3f,
                 (idx, word, duration) =>
@@ -1180,7 +1228,7 @@ namespace BoardOfEducation.Game
                 },
                 () => done = true));
 
-            yield return new WaitUntil(() => done);
+            yield return new WaitUntil(() => done && _ttsSideDone);
             yield return new WaitForSeconds(0.5f);
         }
 
@@ -1198,16 +1246,18 @@ namespace BoardOfEducation.Game
             // Show answer circles (2, 3, 4)
             yield return CoShowAnswerCircles(new string[] { "2", "3", "4" });
 
-            // Step 27: "Three times what equals nine?"
+            // Step 26: "Three times what equals nine?"
             bool subDone = false;
-            StartCoroutine(sequencer.CoShowSubtitle(steps[27].subtitle, steps[27].EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            StartTTSSide(steps[26].subtitle);
+            StartCoroutine(sequencer.CoShowSubtitle(steps[26].subtitle, steps[26].EstimatedDuration, () => subDone = true));
+            yield return new WaitUntil(() => subDone && _ttsSideDone);
             yield return new WaitForSeconds(1f);
 
-            // Step 28: "Three times three is equal to nine..."
+            // Step 27: "Three times three is equal to nine..."
             subDone = false;
-            StartCoroutine(sequencer.CoShowSubtitle(steps[28].subtitle, steps[28].EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            StartTTSSide(steps[27].subtitle);
+            StartCoroutine(sequencer.CoShowSubtitle(steps[27].subtitle, steps[27].EstimatedDuration, () => subDone = true));
+            yield return new WaitUntil(() => subDone && _ttsSideDone);
 
             // Wait for correct answer: circle index 1 ("3")
             yield return CoWaitForAnswer(1);
@@ -1232,10 +1282,11 @@ namespace BoardOfEducation.Game
             // Show answer circles (2, 3, 4)
             yield return CoShowAnswerCircles(new string[] { "2", "3", "4" });
 
-            // Step 29 subtitle
+            // Step 28 subtitle
             bool subDone = false;
-            StartCoroutine(sequencer.CoShowSubtitle(steps[29].subtitle, steps[29].EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            StartTTSSide(steps[28].subtitle);
+            StartCoroutine(sequencer.CoShowSubtitle(steps[28].subtitle, steps[28].EstimatedDuration, () => subDone = true));
+            yield return new WaitUntil(() => subDone && _ttsSideDone);
 
             // Wait for correct answer: circle index 1 ("3")
             yield return CoWaitForAnswer(1);
@@ -1255,26 +1306,30 @@ namespace BoardOfEducation.Game
             // Show answer circles (4, 5, 6)
             yield return CoShowAnswerCircles(new string[] { "4", "5", "6" });
 
-            // Step 30: "Let's now multiply the top values"
+            // Step 29: "Let's now multiply the top values"
             bool subDone = false;
-            StartCoroutine(sequencer.CoShowSubtitle(steps[30].subtitle, steps[30].EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            StartTTSSide(steps[29].subtitle);
+            StartCoroutine(sequencer.CoShowSubtitle(steps[29].subtitle, steps[29].EstimatedDuration, () => subDone = true));
+            yield return new WaitUntil(() => subDone && _ttsSideDone);
 
-            // Step 31: "Two times three equals what?"
+            // Step 30: "Two times three equals what?"
             subDone = false;
-            StartCoroutine(sequencer.CoShowSubtitle(steps[31].subtitle, steps[31].EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            StartTTSSide(steps[30].subtitle);
+            StartCoroutine(sequencer.CoShowSubtitle(steps[30].subtitle, steps[30].EstimatedDuration, () => subDone = true));
+            yield return new WaitUntil(() => subDone && _ttsSideDone);
             yield return new WaitForSeconds(1f);
 
-            // Step 32: "Two times three equals six"
+            // Step 31: "Two times three equals six"
             subDone = false;
-            StartCoroutine(sequencer.CoShowSubtitle(steps[32].subtitle, steps[32].EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            StartTTSSide(steps[31].subtitle);
+            StartCoroutine(sequencer.CoShowSubtitle(steps[31].subtitle, steps[31].EstimatedDuration, () => subDone = true));
+            yield return new WaitUntil(() => subDone && _ttsSideDone);
 
-            // Step 33: "Move your piece to the six"
+            // Step 32: "Move your piece to the six"
             subDone = false;
-            StartCoroutine(sequencer.CoShowSubtitle(steps[33].subtitle, steps[33].EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            StartTTSSide(steps[32].subtitle);
+            StartCoroutine(sequencer.CoShowSubtitle(steps[32].subtitle, steps[32].EstimatedDuration, () => subDone = true));
+            yield return new WaitUntil(() => subDone && _ttsSideDone);
 
             // Wait for correct answer: circle index 2 ("6")
             yield return CoWaitForAnswer(2);
@@ -1293,9 +1348,10 @@ namespace BoardOfEducation.Game
         //  So(0) now(1) we(2) know(3) that(4) two(5) thirds(6) is(7) equal(8) to(9) six(10) ninths(11)
         private IEnumerator RunP3SummaryStep()
         {
-            var step = steps[35];
+            var step = steps[34];
             bool done = false;
 
+            StartTTSSide(step.subtitle);
             StartCoroutine(sequencer.CoShowKaraokeSubtitle(
                 step.subtitle, 3f,
                 (idx, word, duration) =>
@@ -1309,7 +1365,7 @@ namespace BoardOfEducation.Game
                 },
                 () => done = true));
 
-            yield return new WaitUntil(() => done);
+            yield return new WaitUntil(() => done && _ttsSideDone);
             yield return new WaitForSeconds(0.5f);
         }
 
@@ -1322,10 +1378,11 @@ namespace BoardOfEducation.Game
             // Show answer circles (10, 12, 14)
             yield return CoShowAnswerCircles(new string[] { "10", "12", "14" });
 
-            // Step 42: "How many twentieths is three fifths?"
+            // Step 41: "How many twentieths is three fifths?"
             bool subDone = false;
-            StartCoroutine(sequencer.CoShowSubtitle(steps[42].subtitle, steps[42].EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            StartTTSSide(steps[41].subtitle);
+            StartCoroutine(sequencer.CoShowSubtitle(steps[41].subtitle, steps[41].EstimatedDuration, () => subDone = true));
+            yield return new WaitUntil(() => subDone && _ttsSideDone);
 
             // Wait for correct answer: circle index 1 ("12")
             yield return CoWaitForAnswer(1);

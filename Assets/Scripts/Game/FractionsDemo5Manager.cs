@@ -8,6 +8,7 @@ using BoardOfEducation.Input;
 using BoardOfEducation.Navigation;
 using BoardOfEducation.Lessons;
 using BoardOfEducation.UI;
+using BoardOfEducation.Audio;
 
 namespace BoardOfEducation.Game
 {
@@ -133,6 +134,17 @@ namespace BoardOfEducation.Game
             "Close, but not quite."
         };
 
+        // ── TTS side-channel for direct subtitle calls ──
+        private bool _ttsSideDone;
+        private void StartTTSSide(string text)
+        {
+            _ttsSideDone = false;
+            if (sequencer.TTSProvider != null)
+                StartCoroutine(sequencer.TTSProvider(text, () => _ttsSideDone = true));
+            else
+                _ttsSideDone = true;
+        }
+
         // ── Lift-piece overlay ──────────────────────────────────────
         private GameObject liftOverlay;
         private CanvasGroup liftOverlayGroup;
@@ -144,6 +156,15 @@ namespace BoardOfEducation.Game
 
         private void Start()
         {
+            // ── Wire TTS provider (add components at runtime if scene predates builder update) ──
+            var ttsProvider = GetComponent<TTSAudioProvider>();
+            if (ttsProvider == null)
+                ttsProvider = gameObject.AddComponent<TTSAudioProvider>();
+            if (GetComponent<AudioSource>() == null)
+                gameObject.AddComponent<AudioSource>();
+            sequencer.TTSProvider = ttsProvider.SpeakCoroutine;
+            Debug.Log("[TTS] Provider wired to sequencer");
+
             playButton.onClick.AddListener(OnPlayPressed);
 
             playButtonImage = playButtonGo.GetComponent<Image>();
@@ -373,8 +394,9 @@ namespace BoardOfEducation.Game
                 // Show answer circles
                 yield return CoShowAnswerCircles(q.choices);
 
-                // Show karaoke subtitle (concurrent with waiting for answer)
+                // Show karaoke subtitle + TTS (concurrent with waiting for answer)
                 bool subDone = false;
+                StartTTSSide(q.subtitle);
                 StartCoroutine(sequencer.CoShowSubtitle(q.subtitle,
                     new LessonStep(q.subtitle).EstimatedDuration, () => subDone = true));
 
@@ -778,18 +800,20 @@ namespace BoardOfEducation.Game
         {
             string phrase = EncouragementPhrases[UnityEngine.Random.Range(0, EncouragementPhrases.Length)];
             bool subDone = false;
+            StartTTSSide(phrase);
             StartCoroutine(sequencer.CoShowSubtitle(phrase,
                 new LessonStep(phrase).EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            yield return new WaitUntil(() => subDone && _ttsSideDone);
         }
 
         private IEnumerator CoShowTransitionSubtitle()
         {
             string phrase = "Let's review this together.";
             bool subDone = false;
+            StartTTSSide(phrase);
             StartCoroutine(sequencer.CoShowSubtitle(phrase,
                 new LessonStep(phrase).EstimatedDuration, () => subDone = true));
-            yield return new WaitUntil(() => subDone);
+            yield return new WaitUntil(() => subDone && _ttsSideDone);
         }
 
         private IEnumerator CoFlashCircle(int index, Color flashColor, float duration)
