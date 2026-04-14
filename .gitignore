@@ -54,3 +54,6 @@ memory-bank/
 
 # Lesson design examples (local scratch)
 lesson-examples/
+
+# Playwright MCP artifacts
+.playwright-mcp/
