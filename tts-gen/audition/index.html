@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Knight Voice Audition</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    max-width: 640px;
+    margin: 40px auto;
+    padding: 0 20px;
+    color: #1a1a1a;
+    background: #fafafa;
+  }
+  h1 { font-size: 1.4rem; margin-bottom: 16px; }
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+  }
+  .tab {
+    padding: 8px 16px;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    background: #eee;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  .tab.active {
+    background: #fff;
+    font-weight: 600;
+    border-bottom: 1px solid #fff;
+    margin-bottom: -1px;
+  }
+  .tab-content {
+    display: none;
+    border-top: 1px solid #ddd;
+    padding-top: 24px;
+  }
+  .tab-content.active { display: block; }
+  .narration {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 32px;
+    font-style: italic;
+    line-height: 1.6;
+    color: #333;
+  }
+  .voice {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .voice h2 { font-size: 1.1rem; margin-bottom: 2px; }
+  .voice .desc { font-size: 0.85rem; color: #666; margin-bottom: 10px; }
+  audio { width: 100%; }
+</style>
+</head>
+<body>
+  <h1>Knight Voice Audition</h1>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('intro3')">Intro3</div>
+    <div class="tab" onclick="switchTab('outro1')">Outro1</div>
+    <div class="tab" onclick="switchTab('lesson')">Lesson</div>
+  </div>
+
+  <div id="intro3" class="tab-content active">
+    <div class="narration">
+      "Brave adventurer, you've already conquered tricky paths, discovered treasure,
+      and proven your courage. Now it's time to face your greatest quest yet:
+      mastering the magic of math!"
+    </div>
+
+    <div class="voice">
+      <h2>Brian</h2>
+      <p class="desc">Deep, resonant, comforting</p>
+      <audio controls preload="metadata" src="Brian.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Adam</h2>
+      <p class="desc">Warm, emotionally resonant</p>
+      <audio controls preload="metadata" src="Adam.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>George</h2>
+      <p class="desc">British, warm, medieval feel</p>
+      <audio controls preload="metadata" src="George.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Clyde</h2>
+      <p class="desc">Grizzled but good-hearted</p>
+      <audio controls preload="metadata" src="Clyde.mp3"></audio>
+    </div>
+
+    <div class="voice" style="border-color: #b8860b;">
+      <h2>Brian — Epic v1</h2>
+      <p class="desc">Slower (0.8x), dramatic pauses, monolingual v1</p>
+      <audio controls preload="metadata" src="Brian-Epic-v1.mp3"></audio>
+    </div>
+
+    <div class="voice" style="border-color: #b8860b;">
+      <h2>Brian — Epic v2</h2>
+      <p class="desc">Same settings, different generation</p>
+      <audio controls preload="metadata" src="Brian-Epic-v2.mp3"></audio>
+    </div>
+
+    <div class="voice" style="border-color: #b8860b;">
+      <h2>Brian — Epic v3</h2>
+      <p class="desc">Same settings, 0.65x speed</p>
+      <audio controls preload="metadata" src="Brian-Epic-v3.mp3"></audio>
+    </div>
+
+    <div class="voice" style="border-color: #b8860b;">
+      <h2>Brian — Epic v4</h2>
+      <p class="desc">speed: 0.7 inside voice_settings, multilingual v2</p>
+      <audio controls preload="metadata" src="Brian-Epic-v4.mp3"></audio>
+    </div>
+
+    <div class="voice" style="border-color: #b8860b;">
+      <h2>George — Epic</h2>
+      <p class="desc">Deeper, slower (0.8x), dramatic pauses between list items</p>
+      <audio controls preload="metadata" src="George-Epic.mp3"></audio>
+    </div>
+  </div>
+
+  <div id="outro1" class="tab-content">
+    <div class="narration">
+      "You did it, brave knight! Every math challenge you conquer makes you
+      sharper, stronger, and one step closer to becoming a true Math Knight—
+      so return soon for your next adventure."
+    </div>
+
+    <div class="voice" style="border-color: #b8860b;">
+      <h2>Brian — Epic v1</h2>
+      <p class="desc">Brian-Epic v3 settings (0.65x, monolingual v1, dramatic pauses)</p>
+      <audio controls preload="metadata" src="Outro1-Brian-Epic-v1.mp3"></audio>
+    </div>
+
+    <div class="voice" style="border-color: #b8860b;">
+      <h2>Brian — Epic v2</h2>
+      <p class="desc">Same settings, different generation</p>
+      <audio controls preload="metadata" src="Outro1-Brian-Epic-v2.mp3"></audio>
+    </div>
+
+    <div class="voice" style="border-color: #b8860b;">
+      <h2>Brian — Epic v3</h2>
+      <p class="desc">Same settings, different generation</p>
+      <audio controls preload="metadata" src="Outro1-Brian-Epic-v3.mp3"></audio>
+    </div>
+  </div>
+
+  <div id="lesson" class="tab-content">
+    <div class="narration">
+      "This is a circle. If we draw a line down the middle and shade the left side,
+      we get one-half. You can see that these fractions are equal. But how do we go
+      from one fraction to another fraction? Focus first on the bottom numbers, the
+      denominators. Two times three equals six. So now we know that one-half is equal
+      to three-sixths."
+    </div>
+
+    <div class="voice">
+      <h2>Rachel</h2>
+      <p class="desc">Warm, calm, clear</p>
+      <audio controls preload="metadata" src="Lesson-Rachel.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Bella</h2>
+      <p class="desc">Soft, bright, friendly</p>
+      <audio controls preload="metadata" src="Lesson-Bella.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Elli</h2>
+      <p class="desc">Young, cheerful, upbeat</p>
+      <audio controls preload="metadata" src="Lesson-Elli.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Dorothy</h2>
+      <p class="desc">Warm, bright, expressive</p>
+      <audio controls preload="metadata" src="Lesson-Dorothy.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Charlotte</h2>
+      <p class="desc">Warm, mature, Swedish-English accent</p>
+      <audio controls preload="metadata" src="Lesson-Charlotte.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Alice</h2>
+      <p class="desc">Confident, clear, British</p>
+      <audio controls preload="metadata" src="Lesson-Alice.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Matilda</h2>
+      <p class="desc">Warm, friendly, young adult</p>
+      <audio controls preload="metadata" src="Lesson-Matilda.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Lily</h2>
+      <p class="desc">Bright, clear, British</p>
+      <audio controls preload="metadata" src="Lesson-Lily.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Jessica v1</h2>
+      <p class="desc">Playful, bright, warm (Cookie tutor from superbuilder)</p>
+      <audio controls preload="metadata" src="Lesson-Jessica-v1.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Jessica v2</h2>
+      <p class="desc">speed at top-level (broken), 0.7x</p>
+      <audio controls preload="metadata" src="Lesson-Jessica-v2.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Jessica v3</h2>
+      <p class="desc">speed: 0.7 inside voice_settings (fixed)</p>
+      <audio controls preload="metadata" src="Lesson-Jessica-v3.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Jessica v4</h2>
+      <p class="desc">speed: 0.8 inside voice_settings</p>
+      <audio controls preload="metadata" src="Lesson-Jessica-v4.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Grace</h2>
+      <p class="desc">Gentle, warm, soothing</p>
+      <audio controls preload="metadata" src="Lesson-Grace.mp3"></audio>
+    </div>
+
+    <div class="voice">
+      <h2>Serena</h2>
+      <p class="desc">Calm, clear, pleasant</p>
+      <audio controls preload="metadata" src="Lesson-Serena.mp3"></audio>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(id) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>
