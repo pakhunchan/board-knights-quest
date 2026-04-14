@@ -59,8 +59,7 @@ TOTAL_FRACTIONS2_INTRO = [
 # TotalFractions2Manager.cs — Phase 1: Circles (steps 0–11)
 TOTAL_FRACTIONS2_PHASE1 = [
     "Let's start with a circle.",
-    "If we draw a line down the middle and",
-    "shade the left side, we'll have two pieces and one will be shaded",
+    "If we draw a line down the middle and shade the left side, we'll have two pieces and one will be shaded",
     "In math, we say that one-half is shaded",
     "Here is another circle.",
     "If we draw lines to split the circle into 6 pieces",
@@ -108,7 +107,7 @@ TOTAL_FRACTIONS2_PHASE4 = [
     "Three fifths is equal to how many twentieths?",
     "First, look at the bottom numbers, the denominators.",
     "Second, find the times number. Five times what number equals twenty?",
-    "Third, multiple the top by that times number to get the answer",
+    "Third, multiply the top by that times number to get the answer",
     "How many twentieths is three fifths?",
 ]
 
@@ -141,6 +140,95 @@ FRACTIONS_DEMO5_OTHER = [
     "Amazing! Great work today. You answered all ten questions!",
 ]
 
+# GuidedExplanationHelper — dynamic strings for all 10 FractionsDemo5 questions
+GUIDED_EXPLANATION_STRINGS = [
+    # ── introSub (only 4 that differ from FRACTIONS_DEMO5_QUESTIONS) ──
+    "one half is equal to how many sixths?",
+    "five eighths is equal to how many sixty-fourths?",
+    "three sevenths is equal to how many forty-ninths?",
+    "three eighths is equal to how many forty-eighths?",
+    # ── multiplySub ──
+    "We have to multiply one half by something to figure out how many sixths it's equal to",
+    "We have to multiply three fifths by something to figure out how many tenths it's equal to",
+    "We have to multiply two thirds by something to figure out how many sixths it's equal to",
+    "We have to multiply four fifths by something to figure out how many tenths it's equal to",
+    "We have to multiply three sixths by something to figure out how many eighteenths it's equal to",
+    "We have to multiply four sevenths by something to figure out how many thirty-fifths it's equal to",
+    "We have to multiply two ninths by something to figure out how many forty-fifths it's equal to",
+    "We have to multiply five eighths by something to figure out how many sixty-fourths it's equal to",
+    "We have to multiply three sevenths by something to figure out how many forty-ninths it's equal to",
+    "We have to multiply three eighths by something to figure out how many forty-eighths it's equal to",
+    # ── promptSub (9 unique — Q2=Q4) ──
+    "two times what equals six?",
+    "five times what equals ten?",
+    "three times what equals six?",
+    "six times what equals eighteen?",
+    "seven times what equals thirty-five?",
+    "nine times what equals forty-five?",
+    "eight times what equals sixty-four?",
+    "seven times what equals forty-nine?",
+    "eight times what equals forty-eight?",
+    # ── hintSub (9 unique — Q2=Q4) ──
+    "two times three is equal to six, so move your piece to the three",
+    "five times two is equal to ten, so move your piece to the two",
+    "three times two is equal to six, so move your piece to the two",
+    "six times three is equal to eighteen, so move your piece to the three",
+    "seven times five is equal to thirty-five, so move your piece to the five",
+    "nine times five is equal to forty-five, so move your piece to the five",
+    "eight times eight is equal to sixty-four, so move your piece to the eight",
+    "seven times seven is equal to forty-nine, so move your piece to the seven",
+    "eight times six is equal to forty-eight, so move your piece to the six",
+    # ── sub (numerator — 5 new, "three" variant already in PHASE3) ──
+    "Whatever value we used for the bottom, we have to use for the top, so put a two on the top as well",
+    "Whatever value we used for the bottom, we have to use for the top, so put a five on the top as well",
+    "Whatever value we used for the bottom, we have to use for the top, so put a eight on the top as well",
+    "Whatever value we used for the bottom, we have to use for the top, so put a seven on the top as well",
+    "Whatever value we used for the bottom, we have to use for the top, so put a six on the top as well",
+    # ── sub2 ──
+    "one times three equals what?",
+    "three times two equals what?",
+    "two times two equals what?",
+    "four times two equals what?",
+    "three times three equals what?",
+    "four times five equals what?",
+    "two times five equals what?",
+    "five times eight equals what?",
+    "three times seven equals what?",
+    "three times six equals what?",
+    # ── sub3 ──
+    "one times three equals three",
+    "three times two equals six",
+    "two times two equals four",
+    "four times two equals eight",
+    "three times three equals nine",
+    "four times five equals twenty",
+    "two times five equals ten",
+    "five times eight equals forty",
+    "three times seven equals twenty-one",
+    "three times six equals eighteen",
+    # ── sub4 (9 new — "six" variant already in PHASE3) ──
+    "Move your piece to the three",
+    "Move your piece to the four",
+    "Move your piece to the eight",
+    "Move your piece to the nine",
+    "Move your piece to the twenty",
+    "Move your piece to the ten",
+    "Move your piece to the forty",
+    "Move your piece to the twenty-one",
+    "Move your piece to the eighteen",
+    # ── summarySub ──
+    "Good job! one half is equal to three sixths",
+    "Good job! three fifths is equal to six tenths",
+    "Good job! two thirds is equal to four sixths",
+    "Good job! four fifths is equal to eight tenths",
+    "Good job! three sixths is equal to nine eighteenths",
+    "Good job! four sevenths is equal to twenty thirty-fifths",
+    "Good job! two ninths is equal to ten forty-fifths",
+    "Good job! five eighths is equal to forty sixty-fourths",
+    "Good job! three sevenths is equal to twenty-one forty-ninths",
+    "Good job! three eighths is equal to eighteen forty-eighths",
+]
+
 # Combine all lesson lines (Jessica voice)
 ALL_LESSON_LINES = (
     TOTAL_FRACTIONS2_INTRO
@@ -151,6 +239,7 @@ ALL_LESSON_LINES = (
     + FRACTIONS_DEMO5_QUESTIONS
     + FRACTIONS_DEMO5_ENCOURAGEMENT
     + FRACTIONS_DEMO5_OTHER
+    + GUIDED_EXPLANATION_STRINGS
 )
 
 
