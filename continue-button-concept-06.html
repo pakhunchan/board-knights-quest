@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept 06: Magical Gem - Knight's Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka', sans-serif;
+    background: linear-gradient(180deg,
+      #2A1B3D 0%,
+      #3B2654 15%,
+      #44336B 30%,
+      #2E4A5A 50%,
+      #1F5C3A 70%,
+      #1A4E32 85%,
+      #15402A 100%
+    );
+    position: relative;
+  }
+
+  /* --- Firefly particles --- */
+  .firefly {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #FFE89A;
+    box-shadow: 0 0 6px 2px rgba(255, 232, 154, 0.7), 0 0 14px 4px rgba(255, 214, 102, 0.3);
+    animation: fireflyFloat linear infinite, fireflyGlow ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes fireflyFloat {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(12px, -18px); }
+    50% { transform: translate(-8px, -30px); }
+    75% { transform: translate(15px, -12px); }
+    100% { transform: translate(0, 0); }
+  }
+
+  @keyframes fireflyGlow {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.9; }
+  }
+
+  /* --- Label --- */
+  .label {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.55);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+
+  /* --- Gem Button --- */
+  .gem-btn {
+    position: relative;
+    width: 270px;
+    height: 80px;
+    border: none;
+    border-radius: 40px;
+    cursor: pointer;
+    font-family: 'Fredoka One', cursive;
+    font-size: 28px;
+    letter-spacing: 2.5px;
+    color: #fff;
+    text-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.35),
+      0 0 12px rgba(255, 214, 102, 0.25);
+    background:
+      linear-gradient(
+        175deg,
+        rgba(255, 255, 255, 0.28) 0%,
+        rgba(255, 255, 255, 0.08) 30%,
+        transparent 50%
+      ),
+      linear-gradient(
+        180deg,
+        #6DC87D 0%,
+        #5BAD6B 25%,
+        #4A9B5C 50%,
+        #3E8B5E 75%,
+        #347A50 100%
+      );
+    box-shadow:
+      /* outer glow */
+      0 0 20px rgba(91, 173, 107, 0.35),
+      /* depth shadow */
+      0 6px 16px rgba(0, 0, 0, 0.35),
+      0 2px 4px rgba(0, 0, 0, 0.2),
+      /* gem edge highlight top */
+      inset 0 2px 3px rgba(255, 255, 255, 0.35),
+      /* gem edge shadow bottom */
+      inset 0 -3px 6px rgba(30, 80, 45, 0.5),
+      /* inner glow */
+      inset 0 0 18px rgba(91, 173, 107, 0.3);
+    outline: none;
+    transition: all 0.2s ease, box-shadow 0.25s ease, transform 0.15s ease;
+    z-index: 10;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Glass highlight / refraction band */
+  .gem-btn::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 20px;
+    right: 20px;
+    height: 26px;
+    border-radius: 20px;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.38) 0%,
+      rgba(255, 255, 255, 0.12) 60%,
+      transparent 100%
+    );
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  /* Inner glow pulse layer */
+  .gem-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 40px;
+    background: radial-gradient(
+      ellipse 60% 80% at 50% 55%,
+      rgba(255, 214, 102, 0.25) 0%,
+      rgba(91, 173, 107, 0.1) 40%,
+      transparent 70%
+    );
+    animation: gemPulse 3s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes gemPulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+
+  /* Hover state */
+  .gem-btn:hover {
+    transform: scale(1.06) translateY(-2px);
+    box-shadow:
+      0 0 30px rgba(91, 173, 107, 0.5),
+      0 0 50px rgba(255, 214, 102, 0.2),
+      0 8px 24px rgba(0, 0, 0, 0.35),
+      0 2px 4px rgba(0, 0, 0, 0.2),
+      inset 0 2px 3px rgba(255, 255, 255, 0.4),
+      inset 0 -3px 6px rgba(30, 80, 45, 0.45),
+      inset 0 0 24px rgba(130, 210, 140, 0.35);
+    background:
+      linear-gradient(
+        175deg,
+        rgba(255, 255, 255, 0.35) 0%,
+        rgba(255, 255, 255, 0.12) 30%,
+        transparent 50%
+      ),
+      linear-gradient(
+        180deg,
+        #78D488 0%,
+        #64B874 25%,
+        #52A564 50%,
+        #449560 75%,
+        #3A8454 100%
+      );
+  }
+
+  .gem-btn:hover::after {
+    animation: gemPulseHover 1.8s ease-in-out infinite;
+  }
+
+  @keyframes gemPulseHover {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  /* Active / pressed state */
+  .gem-btn:active {
+    transform: scale(1.0) translateY(1px);
+    transition: all 0.06s ease;
+    background:
+      linear-gradient(
+        175deg,
+        rgba(255, 255, 255, 0.18) 0%,
+        rgba(255, 255, 255, 0.04) 30%,
+        transparent 50%
+      ),
+      linear-gradient(
+        180deg,
+        #56A466 0%,
+        #4A9558 25%,
+        #3E8650 50%,
+        #357A4A 75%,
+        #2D6C40 100%
+      );
+    box-shadow:
+      0 0 14px rgba(91, 173, 107, 0.3),
+      0 2px 6px rgba(0, 0, 0, 0.35),
+      0 1px 2px rgba(0, 0, 0, 0.2),
+      inset 0 2px 6px rgba(30, 60, 35, 0.45),
+      inset 0 -1px 2px rgba(255, 255, 255, 0.15),
+      inset 0 0 12px rgba(50, 120, 60, 0.3);
+  }
+
+  .gem-btn:active::before {
+    opacity: 0.5;
+  }
+
+  /* Focus state */
+  .gem-btn:focus-visible {
+    box-shadow:
+      0 0 0 4px rgba(212, 168, 67, 0.5),
+      0 0 20px rgba(255, 214, 102, 0.45),
+      0 0 40px rgba(255, 214, 102, 0.15),
+      0 6px 16px rgba(0, 0, 0, 0.35),
+      0 2px 4px rgba(0, 0, 0, 0.2),
+      inset 0 2px 3px rgba(255, 255, 255, 0.35),
+      inset 0 -3px 6px rgba(30, 80, 45, 0.5),
+      inset 0 0 18px rgba(91, 173, 107, 0.3);
+  }
+
+  /* --- Sparkle elements --- */
+  .sparkle-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    border-radius: 40px;
+    overflow: hidden;
+  }
+
+  .sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fff 0%, rgba(255, 230, 140, 0.8) 40%, transparent 70%);
+    opacity: 0;
+    animation: sparkleFloat 4s ease-in-out infinite;
+  }
+
+  .sparkle:nth-child(1) {
+    top: 18px; left: 40px;
+    animation-delay: 0s;
+    animation-duration: 3.5s;
+  }
+  .sparkle:nth-child(2) {
+    top: 50px; left: 200px;
+    animation-delay: 1.2s;
+    animation-duration: 4.2s;
+    width: 4px; height: 4px;
+  }
+  .sparkle:nth-child(3) {
+    top: 30px; left: 130px;
+    animation-delay: 2.4s;
+    animation-duration: 3.8s;
+    width: 5px; height: 5px;
+  }
+  .sparkle:nth-child(4) {
+    top: 55px; left: 70px;
+    animation-delay: 0.8s;
+    animation-duration: 4.5s;
+    width: 3px; height: 3px;
+  }
+  .sparkle:nth-child(5) {
+    top: 14px; left: 220px;
+    animation-delay: 1.8s;
+    animation-duration: 3.2s;
+    width: 4px; height: 4px;
+  }
+
+  @keyframes sparkleFloat {
+    0%, 100% { opacity: 0; transform: translateY(0) scale(0.5); }
+    15% { opacity: 0.9; transform: translateY(-4px) scale(1); }
+    30% { opacity: 0.3; transform: translateY(-8px) scale(0.7); }
+    45% { opacity: 0.8; transform: translateY(-3px) scale(1.1); }
+    60% { opacity: 0; transform: translateY(-10px) scale(0.4); }
+  }
+
+  /* Hover sparkle burst - only shows on hover */
+  .gem-btn:hover .sparkle {
+    animation-duration: 2s;
+  }
+  .gem-btn:hover .sparkle:nth-child(1) { animation-delay: 0s; }
+  .gem-btn:hover .sparkle:nth-child(2) { animation-delay: 0.3s; }
+  .gem-btn:hover .sparkle:nth-child(3) { animation-delay: 0.6s; }
+  .gem-btn:hover .sparkle:nth-child(4) { animation-delay: 0.15s; }
+  .gem-btn:hover .sparkle:nth-child(5) { animation-delay: 0.45s; }
+
+  /* --- Gem facet shimmer (refraction) --- */
+  .gem-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+      105deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.12) 45%,
+      rgba(255, 255, 255, 0.06) 50%,
+      transparent 55%
+    );
+    border-radius: 40px;
+    pointer-events: none;
+    animation: shimmerSlide 6s ease-in-out infinite;
+    animation-delay: 1s;
+  }
+
+  @keyframes shimmerSlide {
+    0%, 100% { left: -100%; opacity: 0; }
+    10% { opacity: 1; }
+    50% { left: 180%; opacity: 1; }
+    60% { opacity: 0; }
+  }
+
+  /* --- Button text wrapper --- */
+  .btn-text {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+</head>
+<body>
+
+<div class="label">Concept 06: Magical Gem</div>
+
+<button class="gem-btn" type="button">
+  <div class="sparkle-container">
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+  </div>
+  <div class="gem-shimmer"></div>
+  <span class="btn-text">CONTINUE</span>
+</button>
+
+<script>
+  // Create firefly particles
+  (function() {
+    var fireflyCount = 18;
+    var body = document.body;
+    for (var i = 0; i < fireflyCount; i++) {
+      var dot = document.createElement('div');
+      dot.className = 'firefly';
+      dot.style.left = (Math.random() * 100) + '%';
+      dot.style.top = (Math.random() * 100) + '%';
+      dot.style.width = (2 + Math.random() * 4) + 'px';
+      dot.style.height = dot.style.width;
+      dot.style.animationDuration = (4 + Math.random() * 8) + 's, ' + (2 + Math.random() * 4) + 's';
+      dot.style.animationDelay = (Math.random() * 6) + 's, ' + (Math.random() * 3) + 's';
+      body.appendChild(dot);
+    }
+  })();
+</script>
+
+</body>
+</html>

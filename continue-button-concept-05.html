@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept 05: Knight Shield Button</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Boogaloo&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background:
+      linear-gradient(180deg,
+        #87BADD 0%,
+        #A8D0E8 30%,
+        #C9DFB8 55%,
+        #D6CBA8 65%,
+        #C4B08A 75%,
+        #B8A07A 85%,
+        #A89070 100%
+      );
+    overflow: hidden;
+    font-family: 'Fredoka One', sans-serif;
+  }
+
+  .concept-label {
+    font-family: 'Boogaloo', sans-serif;
+    font-size: 22px;
+    color: #5A4A3A;
+    margin-bottom: 36px;
+    text-shadow: 0 1px 2px rgba(255,255,255,0.5);
+    letter-spacing: 0.5px;
+  }
+
+  /* ---- Shield Button ---- */
+  .shield-btn {
+    position: relative;
+    width: 200px;
+    height: 220px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+    transition: transform 0.22s cubic-bezier(.34,1.4,.64,1), filter 0.25s ease;
+    filter: drop-shadow(0 6px 10px rgba(60,40,20,0.30));
+  }
+
+  .shield-btn:hover {
+    transform: translateY(-5px) scale(1.04);
+    filter: drop-shadow(0 12px 22px rgba(180,140,40,0.40))
+            drop-shadow(0 0 18px rgba(212,168,67,0.35));
+  }
+
+  .shield-btn:active {
+    transform: translateY(2px) scale(0.97);
+    filter: drop-shadow(0 2px 4px rgba(60,40,20,0.35));
+    transition: transform 0.08s ease, filter 0.08s ease;
+  }
+
+  .shield-btn:focus-visible .shield-border {
+    filter: drop-shadow(0 0 0 transparent);
+    outline: none;
+  }
+  .shield-btn:focus-visible .shield-focus-ring {
+    opacity: 1;
+  }
+
+  /* Shield shape via clip-path — heater shield / kite shield feel */
+  .shield-shape {
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(
+      10% 0%,
+      90% 0%,
+      100% 5%,
+      100% 40%,
+      96% 55%,
+      85% 72%,
+      70% 85%,
+      50% 100%,
+      30% 85%,
+      15% 72%,
+      4% 55%,
+      0% 40%,
+      0% 5%
+    );
+  }
+
+  /* Metallic border layer (slightly larger, behind) */
+  .shield-border {
+    composes: shield-shape;
+    position: absolute;
+    /* Expand beyond button bounds for border thickness */
+    top: -4px; left: -4px; right: -4px; bottom: -4px;
+    width: calc(100% + 8px);
+    height: calc(100% + 8px);
+    clip-path: polygon(
+      10% 0%,
+      90% 0%,
+      100% 5%,
+      100% 40%,
+      96% 55%,
+      85% 72%,
+      70% 85%,
+      50% 100%,
+      30% 85%,
+      15% 72%,
+      4% 55%,
+      0% 40%,
+      0% 5%
+    );
+    background: linear-gradient(
+      160deg,
+      #E8D9A0 0%,
+      #D4A843 20%,
+      #C49835 40%,
+      #B8892E 55%,
+      #D4A843 70%,
+      #E8D9A0 85%,
+      #D4A843 100%
+    );
+  }
+
+  /* Main shield face */
+  .shield-face {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    clip-path: polygon(
+      10% 0%,
+      90% 0%,
+      100% 5%,
+      100% 40%,
+      96% 55%,
+      85% 72%,
+      70% 85%,
+      50% 100%,
+      30% 85%,
+      15% 72%,
+      4% 55%,
+      0% 40%,
+      0% 5%
+    );
+    background: linear-gradient(
+      170deg,
+      #5A9E58 0%,
+      #6B8E4E 30%,
+      #5C7E42 70%,
+      #4E6E38 100%
+    );
+    overflow: hidden;
+  }
+
+  /* Inner shield bevel / frame line */
+  .shield-face::before {
+    content: '';
+    position: absolute;
+    top: 10px; left: 12px; right: 12px; bottom: 14px;
+    clip-path: polygon(
+      10% 0%,
+      90% 0%,
+      100% 6%,
+      100% 40%,
+      96% 56%,
+      84% 73%,
+      69% 86%,
+      50% 100%,
+      31% 86%,
+      16% 73%,
+      4% 56%,
+      0% 40%,
+      0% 6%
+    );
+    border: 2px solid rgba(212,168,67,0.35);
+    background: linear-gradient(
+      175deg,
+      rgba(255,255,255,0.10) 0%,
+      rgba(255,255,255,0.02) 40%,
+      rgba(0,0,0,0.06) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* Shine sweep animation */
+  .shield-face::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -80%;
+    width: 60%;
+    height: 140%;
+    background: linear-gradient(
+      105deg,
+      transparent 0%,
+      transparent 35%,
+      rgba(255,255,240,0.18) 42%,
+      rgba(255,255,240,0.30) 50%,
+      rgba(255,255,240,0.18) 58%,
+      transparent 65%,
+      transparent 100%
+    );
+    animation: shineSwipe 4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes shineSwipe {
+    0%, 100% { left: -80%; opacity: 0; }
+    10% { opacity: 1; }
+    50% { left: 120%; opacity: 1; }
+    60% { opacity: 0; }
+    61% { left: -80%; }
+  }
+
+  /* Focus ring (same shield shape, golden glow) */
+  .shield-focus-ring {
+    position: absolute;
+    top: -8px; left: -8px; right: -8px; bottom: -8px;
+    width: calc(100% + 16px);
+    height: calc(100% + 16px);
+    clip-path: polygon(
+      10% 0%,
+      90% 0%,
+      100% 5%,
+      100% 40%,
+      96% 55%,
+      85% 72%,
+      70% 85%,
+      50% 100%,
+      30% 85%,
+      15% 72%,
+      4% 55%,
+      0% 40%,
+      0% 5%
+    );
+    background: rgba(212,168,67,0.50);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+  }
+
+  /* Emblem: small star above text */
+  .shield-emblem {
+    position: absolute;
+    top: 38px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* 4-pointed star via rotated squares */
+  .shield-emblem::before,
+  .shield-emblem::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 16px;
+    height: 16px;
+    background: linear-gradient(135deg, #F0DFA0, #D4A843);
+    border-radius: 2px;
+  }
+  .shield-emblem::before {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  .shield-emblem::after {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  /* Small diamond accent below star */
+  .shield-accent {
+    position: absolute;
+    top: 68px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid rgba(212,168,67,0.45);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Horizontal divider line */
+  .shield-divider {
+    position: absolute;
+    top: 80px;
+    left: 26%;
+    width: 48%;
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(212,168,67,0.40) 20%,
+      rgba(212,168,67,0.50) 50%,
+      rgba(212,168,67,0.40) 80%,
+      transparent
+    );
+    border-radius: 1px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Button text */
+  .shield-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    font-family: 'Fredoka One', sans-serif;
+    font-size: 24px;
+    letter-spacing: 2px;
+    color: #FFF8E7;
+    text-shadow:
+      0 2px 3px rgba(40,60,20,0.45),
+      0 0 8px rgba(40,60,20,0.15);
+    pointer-events: none;
+    z-index: 2;
+    user-select: none;
+    line-height: 1;
+  }
+
+  /* Tiny bottom flourish */
+  .shield-bottom-accent {
+    position: absolute;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(240,223,160,0.35), transparent);
+    border-radius: 1px;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Hover glow overlay inside shield */
+  .shield-glow {
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(
+      10% 0%,
+      90% 0%,
+      100% 5%,
+      100% 40%,
+      96% 55%,
+      85% 72%,
+      70% 85%,
+      50% 100%,
+      30% 85%,
+      15% 72%,
+      4% 55%,
+      0% 40%,
+      0% 5%
+    );
+    background: radial-gradient(
+      ellipse at 50% 30%,
+      rgba(255,240,180,0.25) 0%,
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .shield-btn:hover .shield-glow {
+    opacity: 1;
+  }
+  .shield-btn:active .shield-glow {
+    opacity: 0.5;
+  }
+
+  /* Ambient floating particles */
+  .particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(212,168,67,0.25);
+    animation: floatUp linear infinite;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<p class="concept-label">Concept 05: Knight Shield</p>
+
+<button class="shield-btn" type="button" aria-label="Continue">
+  <!-- Focus ring (behind everything) -->
+  <div class="shield-focus-ring" aria-hidden="true"></div>
+  <!-- Metallic border -->
+  <div class="shield-border" aria-hidden="true"></div>
+  <!-- Main shield face (includes shine sweep via ::after) -->
+  <div class="shield-face" aria-hidden="true"></div>
+  <!-- Hover glow -->
+  <div class="shield-glow" aria-hidden="true"></div>
+  <!-- Emblem star -->
+  <div class="shield-emblem" aria-hidden="true"></div>
+  <div class="shield-accent" aria-hidden="true"></div>
+  <div class="shield-divider" aria-hidden="true"></div>
+  <!-- Text -->
+  <span class="shield-text">CONTINUE</span>
+  <div class="shield-bottom-accent" aria-hidden="true"></div>
+</button>
+
+<script>
+  // Spawn ambient particles
+  (function() {
+    var container = document.getElementById('particles');
+    for (var i = 0; i < 12; i++) {
+      var p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = (10 + Math.random() * 80) + '%';
+      p.style.animationDuration = (6 + Math.random() * 8) + 's';
+      p.style.animationDelay = (Math.random() * 10) + 's';
+      p.style.width = p.style.height = (2 + Math.random() * 4) + 'px';
+      p.style.background = 'rgba(212,168,67,' + (0.12 + Math.random() * 0.18) + ')';
+      container.appendChild(p);
+    }
+  })();
+</script>
+
+</body>
+</html>

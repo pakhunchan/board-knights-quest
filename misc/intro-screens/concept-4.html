@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080, initial-scale=1">
+<title>Knight's Quest: Math Adventures — Concept 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=MedievalSharp&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    background-image: url('../../Assets/Textures/landscape_bg_soft.png');
+    background-size: cover;
+    background-position: center;
+    font-family: 'MedievalSharp', cursive;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Semi-transparent overlay */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    background: linear-gradient(
+      180deg,
+      rgba(30, 60, 40, 0.45) 0%,
+      rgba(40, 70, 60, 0.35) 40%,
+      rgba(50, 80, 70, 0.40) 100%
+    );
+    z-index: 0;
+  }
+
+  .page-content {
+    position: relative;
+    z-index: 1;
+    width: 1920px;
+    height: 1080px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* ── Top Banner Ribbon ── */
+  .top-banner {
+    position: relative;
+    width: 1200px;
+    margin-top: 30px;
+    text-align: center;
+  }
+
+  .ribbon-bg {
+    position: relative;
+    background: linear-gradient(180deg, #5b2a2a 0%, #7a3333 30%, #8b3a3a 50%, #7a3333 70%, #5b2a2a 100%);
+    padding: 22px 80px;
+    border-radius: 6px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  }
+
+  .ribbon-bg::before,
+  .ribbon-bg::after {
+    content: '';
+    position: absolute;
+    top: 12px;
+    bottom: 12px;
+    width: 60px;
+    z-index: -1;
+  }
+
+  .ribbon-bg::before {
+    left: -45px;
+    background: linear-gradient(180deg, #4a2020, #6b2d2d, #4a2020);
+    clip-path: polygon(100% 0%, 100% 100%, 0% 50%);
+    border-radius: 2px;
+  }
+
+  .ribbon-bg::after {
+    right: -45px;
+    background: linear-gradient(180deg, #4a2020, #6b2d2d, #4a2020);
+    clip-path: polygon(0% 0%, 0% 100%, 100% 50%);
+    border-radius: 2px;
+  }
+
+  /* Ribbon fold triangles */
+  .ribbon-fold-left,
+  .ribbon-fold-right {
+    position: absolute;
+    width: 0;
+    height: 0;
+  }
+
+  .ribbon-fold-left {
+    left: -10px;
+    bottom: -10px;
+    border-left: 10px solid transparent;
+    border-top: 10px solid #3a1515;
+  }
+
+  .ribbon-fold-right {
+    right: -10px;
+    bottom: -10px;
+    border-right: 10px solid transparent;
+    border-top: 10px solid #3a1515;
+  }
+
+  .title-text {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: 48px;
+    letter-spacing: 3px;
+    background: linear-gradient(180deg, #ffd700 0%, #f0c040 25%, #ffec80 50%, #f0c040 75%, #c8960a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    line-height: 1.2;
+  }
+
+  .title-sub {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 26px;
+    background: linear-gradient(180deg, #ffe680, #f0c040);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-top: 2px;
+    letter-spacing: 6px;
+  }
+
+  /* ── Character Area ── */
+  .character-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: -10px;
+  }
+
+  .squire-container {
+    position: relative;
+    width: 400px;
+    height: 420px;
+  }
+
+  .squire-body-group {
+    animation: shiftWeight 4s ease-in-out infinite;
+    transform-origin: center bottom;
+  }
+
+  @keyframes shiftWeight {
+    0%, 100% { transform: translateX(-2px); }
+    50% { transform: translateX(2px); }
+  }
+
+  /* Banner wave */
+  .banner-flag {
+    animation: waveFlag 3s ease-in-out infinite;
+    transform-origin: left center;
+  }
+
+  @keyframes waveFlag {
+    0%, 100% { transform: skewY(0deg) scaleX(1); }
+    25% { transform: skewY(-2deg) scaleX(1.02); }
+    50% { transform: skewY(1deg) scaleX(0.98); }
+    75% { transform: skewY(-1deg) scaleX(1.01); }
+  }
+
+  .banner-text-group {
+    animation: waveFlagText 3s ease-in-out infinite;
+    transform-origin: left center;
+  }
+
+  @keyframes waveFlagText {
+    0%, 100% { transform: skewY(0deg); }
+    25% { transform: skewY(-2deg); }
+    50% { transform: skewY(1deg); }
+    75% { transform: skewY(-1deg); }
+  }
+
+  /* ── Parchment Scroll ── */
+  .parchment-area {
+    margin-bottom: 30px;
+  }
+
+  .parchment {
+    position: relative;
+    background: linear-gradient(180deg, #f5e6c8 0%, #ecdbb4 20%, #f0dfc0 50%, #e8d5a8 80%, #f2e0c0 100%);
+    width: 800px;
+    padding: 36px 60px 32px;
+    border-radius: 8px;
+    box-shadow:
+      0 4px 16px rgba(0,0,0,0.25),
+      inset 0 0 30px rgba(160,120,60,0.15);
+    border: 2px solid #c8a868;
+  }
+
+  /* Scroll roll tops and bottoms */
+  .parchment::before,
+  .parchment::after {
+    content: '';
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    height: 18px;
+    border-radius: 50%;
+  }
+
+  .parchment::before {
+    top: -9px;
+    background: linear-gradient(180deg, #d4be8a, #e8d5a8 40%, #c8a868);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  .parchment::after {
+    bottom: -9px;
+    background: linear-gradient(180deg, #c8a868, #e8d5a8 60%, #d4be8a);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  .script-text {
+    font-family: 'MedievalSharp', cursive;
+    font-size: 24px;
+    color: #3a2a10;
+    line-height: 1.6;
+    text-align: center;
+    text-shadow: 0 1px 1px rgba(255,240,200,0.3);
+  }
+
+  /* ── CTA Ribbon Button ── */
+  .cta-area {
+    margin-bottom: 50px;
+    margin-top: 10px;
+  }
+
+  .cta-button {
+    position: relative;
+    display: inline-block;
+    background: linear-gradient(180deg, #a02020 0%, #8b1a1a 40%, #7a1515 60%, #6b1010 100%);
+    color: #ffd700;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: 2px;
+    padding: 18px 70px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    box-shadow:
+      0 4px 12px rgba(0,0,0,0.35),
+      inset 0 1px 0 rgba(255,200,100,0.2),
+      inset 0 -1px 0 rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  /* Curled ribbon ends */
+  .cta-button::before,
+  .cta-button::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    width: 36px;
+    transition: all 0.3s ease;
+    z-index: -1;
+  }
+
+  .cta-button::before {
+    left: -28px;
+    background: linear-gradient(180deg, #8a1818, #6b1010, #8a1818);
+    clip-path: polygon(100% 0%, 100% 100%, 30% 85%, 0% 50%, 30% 15%);
+  }
+
+  .cta-button::after {
+    right: -28px;
+    background: linear-gradient(180deg, #8a1818, #6b1010, #8a1818);
+    clip-path: polygon(0% 0%, 0% 100%, 70% 85%, 100% 50%, 70% 15%);
+  }
+
+  .cta-button:hover {
+    background: linear-gradient(180deg, #b82525 0%, #a01e1e 40%, #8b1919 60%, #7a1414 100%);
+    box-shadow:
+      0 6px 20px rgba(0,0,0,0.4),
+      inset 0 1px 0 rgba(255,200,100,0.3),
+      inset 0 -1px 0 rgba(0,0,0,0.2),
+      0 0 20px rgba(255,180,50,0.15);
+    transform: scale(1.03);
+  }
+
+  .cta-button:hover::before {
+    left: -34px;
+    width: 40px;
+  }
+
+  .cta-button:hover::after {
+    right: -34px;
+    width: 40px;
+  }
+
+  /* Gold border accent on button */
+  .cta-button-border {
+    position: absolute;
+    inset: 2px;
+    border: 1px solid rgba(255, 215, 0, 0.25);
+    border-radius: 3px;
+    pointer-events: none;
+  }
+
+  /* Decorative corner ornaments for parchment */
+  .corner-ornament {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    opacity: 0.3;
+  }
+
+  .corner-ornament.tl { top: 12px; left: 20px; }
+  .corner-ornament.tr { top: 12px; right: 20px; transform: scaleX(-1); }
+  .corner-ornament.bl { bottom: 12px; left: 20px; transform: scaleY(-1); }
+  .corner-ornament.br { bottom: 12px; right: 20px; transform: scale(-1, -1); }
+</style>
+</head>
+<body>
+
+<div class="overlay"></div>
+
+<div class="page-content">
+
+  <!-- ── Top Ribbon Banner ── -->
+  <div class="top-banner">
+    <div class="ribbon-bg">
+      <div class="ribbon-fold-left"></div>
+      <div class="ribbon-fold-right"></div>
+      <div class="title-text">Knight's Quest</div>
+      <div class="title-sub">Math Adventures</div>
+    </div>
+  </div>
+
+  <!-- ── Character: Squire with Banner ── -->
+  <div class="character-area">
+    <svg class="squire-container" viewBox="0 0 400 420" width="400" height="420" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Tunic pattern -->
+        <pattern id="tunicPattern" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+          <rect width="10" height="10" fill="none"/>
+          <line x1="0" y1="5" x2="10" y2="5" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+          <line x1="5" y1="0" x2="5" y2="10" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+        </pattern>
+        <!-- Banner gradient -->
+        <linearGradient id="bannerGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#8b1a1a"/>
+          <stop offset="50%" stop-color="#a02828"/>
+          <stop offset="100%" stop-color="#7a1515"/>
+        </linearGradient>
+        <!-- Skin gradient -->
+        <linearGradient id="skinGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f5d0a8"/>
+          <stop offset="100%" stop-color="#e8b888"/>
+        </linearGradient>
+        <!-- Hair gradient -->
+        <linearGradient id="hairGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#6b3a1a"/>
+          <stop offset="100%" stop-color="#4a2810"/>
+        </linearGradient>
+        <!-- Boot gradient -->
+        <linearGradient id="bootGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#5a3a20"/>
+          <stop offset="100%" stop-color="#3a2510"/>
+        </linearGradient>
+        <!-- Tunic gradient -->
+        <linearGradient id="tunicGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#8cc088"/>
+          <stop offset="100%" stop-color="#6aaa66"/>
+        </linearGradient>
+        <!-- Gold gradient for banner text -->
+        <linearGradient id="bannerTextGold" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ffd700"/>
+          <stop offset="50%" stop-color="#ffec80"/>
+          <stop offset="100%" stop-color="#c8960a"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Banner pole -->
+      <g class="squire-body-group">
+        <!-- Pole (held by right hand, extends up) -->
+        <rect x="264" y="10" width="6" height="290" rx="3" fill="#8b6914" stroke="#6b5010" stroke-width="1"/>
+        <!-- Pole cap -->
+        <circle cx="267" cy="12" r="7" fill="#c8960a" stroke="#a07808" stroke-width="1"/>
+        <circle cx="267" cy="12" r="3" fill="#ffd700"/>
+      </g>
+
+      <!-- Banner flag (separate animation) -->
+      <g class="banner-flag">
+        <path d="M273 25 Q320 30 340 28 Q360 26 370 32 L370 110 Q350 105 330 108 Q310 112 273 108 Z"
+              fill="url(#bannerGrad)" stroke="#5a1010" stroke-width="1.5"/>
+        <!-- Banner border decoration -->
+        <path d="M275 30 Q318 34 338 32 Q358 30 368 35 L368 105 Q348 101 328 104 Q310 107 275 103 Z"
+              fill="none" stroke="rgba(255,215,0,0.35)" stroke-width="1" stroke-dasharray="3,3"/>
+      </g>
+
+      <!-- Banner text on flag -->
+      <g class="banner-text-group">
+        <text x="321" y="58" text-anchor="middle" font-family="Cinzel, serif" font-weight="700" font-size="12" fill="url(#bannerTextGold)">Knight's</text>
+        <text x="321" y="74" text-anchor="middle" font-family="Cinzel, serif" font-weight="700" font-size="12" fill="url(#bannerTextGold)">Quest</text>
+        <text x="321" y="94" text-anchor="middle" font-family="Cinzel, serif" font-weight="400" font-size="7" fill="#ffd700" letter-spacing="1">MATH ADV.</text>
+      </g>
+
+      <!-- Squire body group (shifts weight) -->
+      <g class="squire-body-group">
+
+        <!-- ── LEGS ── -->
+        <!-- Left leg -->
+        <rect x="230" y="320" width="22" height="50" rx="6" fill="#c8a870"/>
+        <!-- Right leg -->
+        <rect x="256" y="320" width="22" height="50" rx="6" fill="#c0a068"/>
+
+        <!-- ── BOOTS ── -->
+        <!-- Left boot -->
+        <path d="M226 358 L226 385 Q226 392 233 392 L258 392 Q262 392 262 388 L262 358 Z"
+              fill="url(#bootGrad)" stroke="#2a1808" stroke-width="1"/>
+        <!-- Boot strap -->
+        <rect x="228" y="362" width="32" height="4" rx="1" fill="#3a2510"/>
+        <!-- Boot sole -->
+        <rect x="224" y="389" width="40" height="5" rx="2" fill="#2a1808"/>
+
+        <!-- Right boot -->
+        <path d="M252 358 L252 385 Q252 392 259 392 L284 392 Q288 392 288 388 L288 358 Z"
+              fill="url(#bootGrad)" stroke="#2a1808" stroke-width="1"/>
+        <!-- Boot strap -->
+        <rect x="254" y="362" width="32" height="4" rx="1" fill="#3a2510"/>
+        <!-- Boot sole -->
+        <rect x="250" y="389" width="40" height="5" rx="2" fill="#2a1808"/>
+
+        <!-- ── TUNIC / BODY ── -->
+        <path d="M222 220 Q220 230 218 260 L218 330 Q218 340 230 340 L278 340 Q290 340 290 330 L290 260 Q288 230 286 220 Z"
+              fill="url(#tunicGrad)" stroke="#4a8a46" stroke-width="1.5"/>
+        <!-- Tunic pattern overlay -->
+        <path d="M222 220 Q220 230 218 260 L218 330 Q218 340 230 340 L278 340 Q290 340 290 330 L290 260 Q288 230 286 220 Z"
+              fill="url(#tunicPattern)"/>
+
+        <!-- Tunic neckline -->
+        <path d="M238 220 Q254 235 270 220" fill="none" stroke="#4a8a46" stroke-width="2"/>
+
+        <!-- ── BELT ── -->
+        <rect x="215" y="285" width="80" height="12" rx="2" fill="#6b4a20" stroke="#4a3010" stroke-width="1"/>
+        <!-- Belt buckle -->
+        <rect x="247" y="283" width="16" height="16" rx="2" fill="#c8960a" stroke="#a07808" stroke-width="1"/>
+        <rect x="251" y="287" width="8" height="8" rx="1" fill="none" stroke="#a07808" stroke-width="1.5"/>
+        <!-- Belt buckle prong -->
+        <line x1="255" y1="285" x2="255" y2="297" stroke="#8b7014" stroke-width="1.5"/>
+
+        <!-- ── LEFT ARM (hanging at side) ── -->
+        <!-- Upper arm -->
+        <path d="M222 224 L208 260 L212 280 L224 282 L228 260 L232 228 Z"
+              fill="url(#tunicGrad)" stroke="#4a8a46" stroke-width="1"/>
+        <!-- Left hand -->
+        <ellipse cx="215" cy="286" rx="9" ry="10" fill="url(#skinGrad)" stroke="#d4a878" stroke-width="1"/>
+        <!-- Fingers -->
+        <path d="M210 293 Q212 298 215 298 Q218 298 220 293" fill="none" stroke="#d4a878" stroke-width="0.8"/>
+
+        <!-- ── RIGHT ARM (raised, holding pole) ── -->
+        <!-- Upper arm -->
+        <path d="M286 224 L295 210 L298 195 L288 190 L280 205 L276 228 Z"
+              fill="url(#tunicGrad)" stroke="#4a8a46" stroke-width="1"/>
+        <!-- Forearm (reaching up to pole) -->
+        <path d="M295 210 L268 195 L264 200 L262 210 L288 215 Z"
+              fill="url(#skinGrad)" stroke="#d4a878" stroke-width="0.8"/>
+        <!-- Right hand gripping pole -->
+        <ellipse cx="265" cy="200" rx="9" ry="11" fill="url(#skinGrad)" stroke="#d4a878" stroke-width="1"/>
+        <!-- Fingers wrapped around pole -->
+        <path d="M260 194 Q258 200 260 206" fill="none" stroke="#d4a878" stroke-width="1.2"/>
+        <path d="M262 193 Q260 200 262 207" fill="none" stroke="#d4a878" stroke-width="0.8"/>
+
+        <!-- ── HEAD ── -->
+        <!-- Neck -->
+        <rect x="246" y="200" width="16" height="22" rx="5" fill="url(#skinGrad)"/>
+
+        <!-- Head shape -->
+        <ellipse cx="254" cy="188" rx="28" ry="32" fill="url(#skinGrad)" stroke="#d4a878" stroke-width="1"/>
+
+        <!-- ── HAIR (messy brown) ── -->
+        <!-- Main hair mass -->
+        <path d="M226 180 Q224 158 235 148 Q248 138 264 140 Q280 142 286 158 Q288 168 286 180
+                 Q284 172 278 165 Q270 158 260 156 Q248 155 240 162 Q232 170 228 180 Z"
+              fill="url(#hairGrad)"/>
+        <!-- Messy tufts -->
+        <path d="M230 170 Q225 160 228 150 Q232 144 238 142" fill="none" stroke="#5a3018" stroke-width="3" stroke-linecap="round"/>
+        <path d="M268 158 Q275 148 280 145 Q284 148 285 155" fill="none" stroke="#5a3018" stroke-width="3" stroke-linecap="round"/>
+        <path d="M248 152 Q250 142 256 138 Q260 140 262 148" fill="none" stroke="#4a2810" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Side hair -->
+        <path d="M226 185 Q222 178 224 168 Q226 162 230 158" fill="url(#hairGrad)" stroke="none"/>
+        <path d="M282 185 Q286 178 284 168 Q282 162 278 158" fill="url(#hairGrad)" stroke="none"/>
+
+        <!-- ── FACE ── -->
+        <!-- Eyes -->
+        <ellipse cx="242" cy="186" rx="5" ry="5.5" fill="white" stroke="#888" stroke-width="0.5"/>
+        <ellipse cx="266" cy="186" rx="5" ry="5.5" fill="white" stroke="#888" stroke-width="0.5"/>
+        <!-- Irises -->
+        <circle cx="243" cy="186" r="3" fill="#4a7a3a"/>
+        <circle cx="267" cy="186" r="3" fill="#4a7a3a"/>
+        <!-- Pupils -->
+        <circle cx="243.5" cy="186" r="1.5" fill="#1a2a10"/>
+        <circle cx="267.5" cy="186" r="1.5" fill="#1a2a10"/>
+        <!-- Eye highlights -->
+        <circle cx="244.5" cy="184.5" r="0.8" fill="white"/>
+        <circle cx="268.5" cy="184.5" r="0.8" fill="white"/>
+
+        <!-- Eyebrows (determined) -->
+        <path d="M235 178 Q240 175 248 177" fill="none" stroke="#4a2810" stroke-width="2" stroke-linecap="round"/>
+        <path d="M260 177 Q268 175 273 178" fill="none" stroke="#4a2810" stroke-width="2" stroke-linecap="round"/>
+
+        <!-- Nose -->
+        <path d="M254 190 Q252 196 250 198 Q254 200 258 198 Q256 196 254 190" fill="#e0a878" stroke="none"/>
+
+        <!-- Freckles -->
+        <circle cx="237" cy="194" r="1" fill="#c8946060"/>
+        <circle cx="234" cy="191" r="0.8" fill="#c8946060"/>
+        <circle cx="240" cy="192" r="0.9" fill="#c8946060"/>
+        <circle cx="268" cy="194" r="1" fill="#c8946060"/>
+        <circle cx="271" cy="191" r="0.8" fill="#c8946060"/>
+        <circle cx="265" cy="192" r="0.9" fill="#c8946060"/>
+
+        <!-- Mouth (determined smile) -->
+        <path d="M247 205 Q254 210 261 205" fill="none" stroke="#a06048" stroke-width="1.8" stroke-linecap="round"/>
+
+        <!-- Ears -->
+        <ellipse cx="225" cy="190" rx="5" ry="7" fill="url(#skinGrad)" stroke="#d4a878" stroke-width="0.8"/>
+        <ellipse cx="283" cy="190" rx="5" ry="7" fill="url(#skinGrad)" stroke="#d4a878" stroke-width="0.8"/>
+
+        <!-- Cheek blush -->
+        <ellipse cx="236" cy="196" rx="7" ry="4" fill="rgba(230,140,140,0.2)"/>
+        <ellipse cx="272" cy="196" rx="7" ry="4" fill="rgba(230,140,140,0.2)"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- ── Parchment Scroll ── -->
+  <div class="parchment-area">
+    <div class="parchment">
+      <!-- Corner ornaments -->
+      <svg class="corner-ornament tl" viewBox="0 0 30 30">
+        <path d="M2 28 Q2 2 28 2" fill="none" stroke="#8a6a30" stroke-width="2"/>
+        <path d="M6 28 Q6 6 28 6" fill="none" stroke="#8a6a30" stroke-width="1"/>
+        <circle cx="4" cy="4" r="2" fill="#8a6a30"/>
+      </svg>
+      <svg class="corner-ornament tr" viewBox="0 0 30 30">
+        <path d="M2 28 Q2 2 28 2" fill="none" stroke="#8a6a30" stroke-width="2"/>
+        <path d="M6 28 Q6 6 28 6" fill="none" stroke="#8a6a30" stroke-width="1"/>
+        <circle cx="4" cy="4" r="2" fill="#8a6a30"/>
+      </svg>
+      <svg class="corner-ornament bl" viewBox="0 0 30 30">
+        <path d="M2 28 Q2 2 28 2" fill="none" stroke="#8a6a30" stroke-width="2"/>
+        <path d="M6 28 Q6 6 28 6" fill="none" stroke="#8a6a30" stroke-width="1"/>
+        <circle cx="4" cy="4" r="2" fill="#8a6a30"/>
+      </svg>
+      <svg class="corner-ornament br" viewBox="0 0 30 30">
+        <path d="M2 28 Q2 2 28 2" fill="none" stroke="#8a6a30" stroke-width="2"/>
+        <path d="M6 28 Q6 6 28 6" fill="none" stroke="#8a6a30" stroke-width="1"/>
+        <circle cx="4" cy="4" r="2" fill="#8a6a30"/>
+      </svg>
+
+      <p class="script-text">
+        Brave adventurer, you've shown courage, curiosity, and a heart ready to learn.
+        Now it's time to begin your greatest quest yet: the challenge of math.
+        Your training begins now.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── CTA Button ── -->
+  <div class="cta-area">
+    <button class="cta-button" onclick="alert('Quest accepted!')">
+      <span class="cta-button-border"></span>
+      Accept the Quest!
+    </button>
+  </div>
+
+</div>
+
+</body>
+</html>

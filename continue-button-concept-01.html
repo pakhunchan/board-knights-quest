@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept 01: Wooden Sign - Knight's Quest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka', sans-serif;
+    background: linear-gradient(180deg,
+      #87CEEB 0%,
+      #B0DEF5 30%,
+      #D4EDFC 50%,
+      #C8E6A0 58%,
+      #A4D65E 65%,
+      #7BBF3A 75%,
+      #5DA832 100%
+    );
+    position: relative;
+  }
+
+  /* Distant rolling hills */
+  body::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 55%;
+    background:
+      radial-gradient(ellipse 120% 80% at 15% 100%, #6DB840 0%, transparent 60%),
+      radial-gradient(ellipse 100% 90% at 85% 100%, #5EA830 0%, transparent 55%),
+      radial-gradient(ellipse 140% 60% at 50% 100%, #74C044 0%, transparent 50%),
+      radial-gradient(ellipse 80% 50% at 30% 85%, #82C94E 0%, transparent 45%),
+      radial-gradient(ellipse 90% 55% at 70% 90%, #6AB838 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Soft clouds */
+  body::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+    background:
+      radial-gradient(ellipse 25% 12% at 20% 25%, rgba(255,255,255,0.5) 0%, transparent 70%),
+      radial-gradient(ellipse 30% 10% at 65% 15%, rgba(255,255,255,0.4) 0%, transparent 70%),
+      radial-gradient(ellipse 20% 8% at 80% 30%, rgba(255,255,255,0.35) 0%, transparent 70%),
+      radial-gradient(ellipse 22% 9% at 40% 20%, rgba(255,255,255,0.3) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .concept-label {
+    position: relative;
+    z-index: 1;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+    letter-spacing: 0.5px;
+    margin-bottom: 32px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  }
+
+  /* ---- WOODEN SIGN BUTTON ---- */
+
+  .sign-wrapper {
+    position: relative;
+    z-index: 1;
+    animation: gentleBob 3s ease-in-out infinite;
+  }
+
+  @keyframes gentleBob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .continue-btn {
+    position: relative;
+    display: inline-block;
+    min-width: 280px;
+    padding: 20px 52px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Fredoka One', 'Fredoka', sans-serif;
+    font-size: 32px;
+    letter-spacing: 2px;
+    color: #3E2510;
+    text-shadow:
+      0 1px 0 rgba(255, 220, 160, 0.6),
+      0 -1px 0 rgba(60, 30, 10, 0.15);
+
+    /* Wood plank base */
+    background:
+      /* Grain lines */
+      repeating-linear-gradient(
+        92deg,
+        transparent 0px,
+        transparent 18px,
+        rgba(120, 70, 20, 0.07) 18px,
+        rgba(120, 70, 20, 0.07) 19px,
+        transparent 19px,
+        transparent 35px,
+        rgba(100, 55, 15, 0.05) 35px,
+        rgba(100, 55, 15, 0.05) 36px
+      ),
+      /* Subtle knot */
+      radial-gradient(ellipse 18px 12px at 75% 40%, rgba(140, 80, 25, 0.18) 0%, transparent 70%),
+      /* Main wood color */
+      linear-gradient(
+        180deg,
+        #D4A45A 0%,
+        #C6943E 8%,
+        #BB8A38 20%,
+        #C89842 50%,
+        #B88434 80%,
+        #A87530 100%
+      );
+
+    border-radius: 10px;
+
+    /* Carved edge / bevel */
+    box-shadow:
+      /* Outer shadow for depth */
+      0 6px 14px rgba(50, 25, 0, 0.4),
+      0 2px 4px rgba(50, 25, 0, 0.3),
+      /* Bottom bevel (dark) */
+      inset 0 -4px 6px rgba(80, 40, 5, 0.35),
+      /* Top bevel (light) */
+      inset 0 4px 6px rgba(255, 220, 150, 0.35),
+      /* Left bevel */
+      inset 4px 0 5px rgba(255, 210, 130, 0.2),
+      /* Right bevel */
+      inset -4px 0 5px rgba(80, 40, 5, 0.15),
+      /* Border-like ring */
+      0 0 0 3px #8B5E2A,
+      0 0 0 5px #6B4420,
+      0 0 0 6px rgba(50, 25, 0, 0.3);
+
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease,
+      filter 0.15s ease;
+  }
+
+  /* Nail heads on left and right */
+  .continue-btn::before,
+  .continue-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 40% 35%,
+        #B0B0B0 0%,
+        #888 40%,
+        #666 70%,
+        #555 100%
+      );
+    box-shadow:
+      inset 0 1px 2px rgba(255,255,255,0.4),
+      inset 0 -1px 2px rgba(0,0,0,0.3),
+      0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  .continue-btn::before {
+    left: 16px;
+  }
+
+  .continue-btn::after {
+    right: 16px;
+  }
+
+  /* Hover */
+  .continue-btn:hover {
+    transform: translateY(-2px) scale(1.02);
+    filter: brightness(1.08);
+    box-shadow:
+      0 10px 22px rgba(50, 25, 0, 0.45),
+      0 4px 8px rgba(50, 25, 0, 0.3),
+      inset 0 -4px 6px rgba(80, 40, 5, 0.35),
+      inset 0 4px 6px rgba(255, 220, 150, 0.35),
+      inset 4px 0 5px rgba(255, 210, 130, 0.2),
+      inset -4px 0 5px rgba(80, 40, 5, 0.15),
+      0 0 0 3px #8B5E2A,
+      0 0 0 5px #6B4420,
+      0 0 0 6px rgba(50, 25, 0, 0.3),
+      0 0 20px rgba(255, 200, 80, 0.25);
+  }
+
+  /* Active / Pressed */
+  .continue-btn:active {
+    transform: translateY(2px) scale(0.98);
+    filter: brightness(0.95);
+    box-shadow:
+      0 2px 4px rgba(50, 25, 0, 0.4),
+      0 1px 2px rgba(50, 25, 0, 0.3),
+      inset 0 -2px 3px rgba(80, 40, 5, 0.25),
+      inset 0 4px 8px rgba(80, 40, 5, 0.3),
+      inset 4px 0 5px rgba(80, 40, 5, 0.1),
+      inset -4px 0 5px rgba(80, 40, 5, 0.15),
+      0 0 0 3px #8B5E2A,
+      0 0 0 5px #6B4420,
+      0 0 0 6px rgba(50, 25, 0, 0.3);
+    transition-duration: 0.05s;
+  }
+
+  /* Focus (keyboard nav) */
+  .continue-btn:focus-visible {
+    outline: none;
+    box-shadow:
+      0 6px 14px rgba(50, 25, 0, 0.4),
+      0 2px 4px rgba(50, 25, 0, 0.3),
+      inset 0 -4px 6px rgba(80, 40, 5, 0.35),
+      inset 0 4px 6px rgba(255, 220, 150, 0.35),
+      inset 4px 0 5px rgba(255, 210, 130, 0.2),
+      inset -4px 0 5px rgba(80, 40, 5, 0.15),
+      0 0 0 3px #8B5E2A,
+      0 0 0 5px #6B4420,
+      0 0 0 6px rgba(50, 25, 0, 0.3),
+      0 0 0 10px rgba(135, 206, 235, 0.6),
+      0 0 24px rgba(135, 206, 235, 0.35);
+  }
+
+  /* Pause animation on hover for a more intentional feel */
+  .sign-wrapper:hover {
+    animation-play-state: paused;
+  }
+</style>
+</head>
+<body>
+
+  <span class="concept-label">Concept 01: Wooden Sign</span>
+
+  <div class="sign-wrapper">
+    <button class="continue-btn" type="button">CONTINUE</button>
+  </div>
+
+</body>
+</html>

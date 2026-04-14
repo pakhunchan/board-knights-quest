@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept 10: Adventure Badge - Knight's Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    background: linear-gradient(180deg, #a8cce0 0%, #d4c9a8 35%, #e6d9b8 100%);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Parchment texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      /* Grid lines */
+      repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(160,140,100,0.10) 59px, rgba(160,140,100,0.10) 60px),
+      repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(160,140,100,0.10) 59px, rgba(160,140,100,0.10) 60px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Compass rose */
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: 60px;
+    right: 80px;
+    width: 180px;
+    height: 180px;
+    opacity: 0.07;
+    background:
+      /* N-S line */
+      linear-gradient(0deg, transparent 0%, #6b5a3e 45%, #6b5a3e 55%, transparent 100%) no-repeat center center / 3px 100%,
+      /* E-W line */
+      linear-gradient(90deg, transparent 0%, #6b5a3e 45%, #6b5a3e 55%, transparent 100%) no-repeat center center / 100% 3px,
+      /* NE-SW */
+      linear-gradient(45deg, transparent 0%, #6b5a3e 45%, #6b5a3e 55%, transparent 100%) no-repeat center center / 3px 140%,
+      /* NW-SE */
+      linear-gradient(-45deg, transparent 0%, #6b5a3e 45%, #6b5a3e 55%, transparent 100%) no-repeat center center / 3px 140%,
+      /* Center circle */
+      radial-gradient(circle, #6b5a3e 8px, transparent 9px) no-repeat center center,
+      /* Outer circle */
+      radial-gradient(circle, transparent 68px, #6b5a3e 69px, #6b5a3e 72px, transparent 73px) no-repeat center center;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .concept-label {
+    position: relative;
+    z-index: 1;
+    color: #5a4a30;
+    font-size: 18px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+    opacity: 0.7;
+  }
+
+  .badge-wrapper {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ---- THE BADGE BUTTON ---- */
+  .badge-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 240px;
+    height: 220px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'Fredoka One', cursive;
+    transition: transform 0.2s ease, filter 0.2s ease;
+  }
+
+  /* Outer badge shape — the felt/fabric body */
+  .badge-btn .badge-body {
+    position: absolute;
+    inset: 0;
+    border-radius: 50% / 46%;
+    background: linear-gradient(160deg, #6BAF5E 0%, #5A8F4E 50%, #4d7a42 100%);
+    box-shadow:
+      0 6px 0 0 #3d6635,
+      0 8px 16px rgba(0,0,0,0.25),
+      inset 0 2px 4px rgba(255,255,255,0.25),
+      inset 0 -3px 6px rgba(0,0,0,0.15);
+    transition: box-shadow 0.2s ease, background 0.2s ease;
+  }
+
+  /* Stitched border */
+  .badge-btn .badge-body::before {
+    content: '';
+    position: absolute;
+    inset: 10px;
+    border-radius: 50% / 44%;
+    border: 3px dashed rgba(255, 248, 220, 0.55);
+    pointer-events: none;
+  }
+
+  /* Inner lighter patch */
+  .badge-btn .badge-body::after {
+    content: '';
+    position: absolute;
+    inset: 22px;
+    border-radius: 50% / 42%;
+    background: linear-gradient(160deg, rgba(255,255,255,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  /* Shimmer sweep */
+  .badge-btn .shimmer {
+    position: absolute;
+    inset: 0;
+    border-radius: 50% / 46%;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .badge-btn .shimmer::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    left: -60%;
+    width: 40%;
+    height: 140%;
+    background: linear-gradient(105deg, transparent 30%, rgba(255,215,100,0.15) 45%, rgba(255,255,255,0.18) 50%, rgba(255,215,100,0.15) 55%, transparent 70%);
+    transform: skewX(-15deg);
+    animation: shimmerSweep 4s ease-in-out infinite;
+  }
+
+  @keyframes shimmerSweep {
+    0%, 100% { left: -60%; opacity: 0; }
+    10% { opacity: 1; }
+    50% { left: 120%; opacity: 1; }
+    60%, 100% { left: 120%; opacity: 0; }
+  }
+
+  /* Star accent at top */
+  .badge-btn .star {
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 38px;
+    height: 38px;
+    z-index: 3;
+    filter: drop-shadow(0 2px 4px rgba(180,140,40,0.5));
+    animation: starWobble 3s ease-in-out infinite;
+  }
+  .badge-btn .star::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(160deg, #FFD666 0%, #D4A843 100%);
+    clip-path: polygon(
+      50% 0%,
+      61% 30%,
+      98% 35%,
+      70% 58%,
+      79% 91%,
+      50% 73%,
+      21% 91%,
+      30% 58%,
+      2% 35%,
+      39% 30%
+    );
+  }
+  /* Star sparkle dot */
+  .badge-btn .star::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    opacity: 0.8;
+    animation: starSparkle 2s ease-in-out infinite;
+  }
+
+  @keyframes starWobble {
+    0%, 100% { transform: translateX(-50%) rotate(0deg); }
+    25% { transform: translateX(-50%) rotate(6deg); }
+    75% { transform: translateX(-50%) rotate(-6deg); }
+  }
+
+  @keyframes starSparkle {
+    0%, 100% { opacity: 0.4; transform: translateX(-50%) scale(0.8); }
+    50% { opacity: 1; transform: translateX(-50%) scale(1.3); }
+  }
+
+  /* Button text */
+  .badge-btn .btn-text {
+    position: relative;
+    z-index: 2;
+    font-family: 'Fredoka One', cursive;
+    font-size: 26px;
+    letter-spacing: 2.5px;
+    color: #fff8e0;
+    text-shadow:
+      0 2px 3px rgba(50,80,30,0.5),
+      0 0 8px rgba(255,215,100,0.2);
+    margin-top: 8px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Small decorative ribbon/banner underneath text */
+  .badge-btn .ribbon {
+    position: absolute;
+    bottom: 38px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, rgba(255,248,220,0.35), transparent);
+    border-radius: 2px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Small dots decorating the inner stitching */
+  .badge-btn .dot {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255,248,220,0.3);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .badge-btn .dot:nth-child(1) { top: 50px; left: 36px; }
+  .badge-btn .dot:nth-child(2) { top: 50px; right: 36px; }
+  .badge-btn .dot:nth-child(3) { bottom: 50px; left: 36px; }
+  .badge-btn .dot:nth-child(4) { bottom: 50px; right: 36px; }
+
+  /* Golden border ring */
+  .badge-btn .border-ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50% / 46%;
+    border: 3.5px solid #D4A843;
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 0.2s ease, border-color 0.2s ease;
+  }
+
+  /* ---- HOVER ---- */
+  .badge-btn:hover {
+    transform: scale(1.06);
+  }
+  .badge-btn:hover .badge-body {
+    background: linear-gradient(160deg, #78c06a 0%, #62a052 50%, #5A8F4E 100%);
+    box-shadow:
+      0 6px 0 0 #3d6635,
+      0 10px 24px rgba(0,0,0,0.3),
+      0 0 20px rgba(212,168,67,0.25),
+      inset 0 2px 4px rgba(255,255,255,0.3),
+      inset 0 -3px 6px rgba(0,0,0,0.15);
+  }
+  .badge-btn:hover .border-ring {
+    opacity: 0.85;
+    border-color: #FFD666;
+  }
+  .badge-btn:hover .star {
+    animation: starWobbleHover 1.2s ease-in-out infinite;
+    filter: drop-shadow(0 2px 8px rgba(255,215,100,0.7));
+  }
+  @keyframes starWobbleHover {
+    0%, 100% { transform: translateX(-50%) rotate(0deg) scale(1.1); }
+    25% { transform: translateX(-50%) rotate(10deg) scale(1.15); }
+    75% { transform: translateX(-50%) rotate(-10deg) scale(1.15); }
+  }
+
+  /* ---- ACTIVE / PRESSED ---- */
+  .badge-btn:active {
+    transform: scale(0.96);
+  }
+  .badge-btn:active .badge-body {
+    box-shadow:
+      0 2px 0 0 #3d6635,
+      0 3px 8px rgba(0,0,0,0.3),
+      inset 0 2px 6px rgba(0,0,0,0.2);
+  }
+
+  /* ---- FOCUS ---- */
+  .badge-btn:focus-visible {
+    transform: scale(1.04);
+  }
+  .badge-btn:focus-visible .border-ring {
+    opacity: 1;
+    border-color: #FFD666;
+    box-shadow: 0 0 0 4px rgba(255,214,102,0.35);
+  }
+
+  /* ---- Small shield icon below text ---- */
+  .badge-btn .shield {
+    position: absolute;
+    bottom: 46px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 18px;
+    height: 20px;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.35;
+  }
+  .badge-btn .shield::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #fff8e0;
+    clip-path: polygon(50% 100%, 0% 30%, 0% 0%, 100% 0%, 100% 30%);
+  }
+</style>
+</head>
+<body>
+  <div class="concept-label">Concept 10: Adventure Badge</div>
+
+  <div class="badge-wrapper">
+    <button class="badge-btn" type="button" aria-label="Continue">
+      <!-- Decorative dots -->
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+
+      <!-- Badge layers -->
+      <span class="border-ring"></span>
+      <span class="badge-body"></span>
+      <span class="shimmer"></span>
+
+      <!-- Star -->
+      <span class="star"></span>
+
+      <!-- Text -->
+      <span class="btn-text">CONTINUE</span>
+
+      <!-- Decorative ribbon line -->
+      <span class="ribbon"></span>
+
+      <!-- Small shield -->
+      <span class="shield"></span>
+    </button>
+  </div>
+</body>
+</html>

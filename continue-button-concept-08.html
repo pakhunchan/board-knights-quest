@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept 08: Banner Ribbon - Knight's Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Luckiest+Guy&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-family: 'Fredoka One', sans-serif;
+    background: linear-gradient(180deg,
+      #7EC8E3 0%,
+      #A8DCF0 30%,
+      #C6E8B8 50%,
+      #8FBF6A 65%,
+      #6DA34D 80%,
+      #5A8F3C 100%
+    );
+    position: relative;
+  }
+
+  /* Soft cloud wisps */
+  body::before,
+  body::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.25);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::before {
+    width: 300px;
+    height: 90px;
+    top: 12%;
+    left: 10%;
+    filter: blur(20px);
+    animation: cloudDrift 18s ease-in-out infinite;
+  }
+  body::after {
+    width: 250px;
+    height: 70px;
+    top: 8%;
+    right: 15%;
+    filter: blur(25px);
+    animation: cloudDrift 22s ease-in-out infinite reverse;
+  }
+
+  @keyframes cloudDrift {
+    0%, 100% { transform: translateX(0); opacity: 0.25; }
+    50% { transform: translateX(30px); opacity: 0.35; }
+  }
+
+  /* Pennant decorations in the background */
+  .pennants {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .pennant {
+    position: absolute;
+    width: 30px;
+    height: 50px;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    opacity: 0.15;
+  }
+  .pennant:nth-child(1) { background: #C0704A; top: 5%; left: 20%; transform: rotate(-8deg); }
+  .pennant:nth-child(2) { background: #D4A84B; top: 3%; left: 35%; transform: rotate(5deg); }
+  .pennant:nth-child(3) { background: #A0522D; top: 6%; left: 50%; transform: rotate(-3deg); }
+  .pennant:nth-child(4) { background: #C0704A; top: 2%; left: 65%; transform: rotate(7deg); }
+  .pennant:nth-child(5) { background: #D4A84B; top: 5%; left: 80%; transform: rotate(-5deg); }
+
+  .concept-label {
+    position: relative;
+    z-index: 1;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: 'Fredoka One', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 50px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  /* === BANNER RIBBON BUTTON === */
+  .banner-wrap {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .banner-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    height: 80px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background: linear-gradient(
+      180deg,
+      #D4845A 0%,
+      #C0704A 15%,
+      #B56540 50%,
+      #A85838 75%,
+      #C0704A 100%
+    );
+    border-top: 2px solid rgba(255, 220, 170, 0.4);
+    border-bottom: 2px solid rgba(100, 40, 10, 0.3);
+    box-shadow:
+      0 4px 12px rgba(100, 40, 10, 0.3),
+      0 2px 4px rgba(100, 40, 10, 0.2),
+      inset 0 1px 0 rgba(255, 220, 180, 0.25),
+      inset 0 -2px 4px rgba(100, 40, 10, 0.15);
+    font-family: 'Luckiest Guy', 'Fredoka One', cursive;
+    font-size: 32px;
+    letter-spacing: 4px;
+    color: #FFF5E0;
+    text-shadow:
+      0 2px 4px rgba(100, 40, 10, 0.5),
+      0 0 10px rgba(212, 168, 75, 0.3);
+    transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    -webkit-tap-highlight-color: transparent;
+    z-index: 2;
+  }
+
+  /* Fabric texture overlay */
+  .banner-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(255, 255, 255, 0.03) 3px,
+      rgba(255, 255, 255, 0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Gold trim top and bottom */
+  .banner-btn::after {
+    content: '';
+    position: absolute;
+    inset: 4px 0;
+    border-top: 2px solid rgba(212, 168, 75, 0.45);
+    border-bottom: 2px solid rgba(212, 168, 75, 0.45);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* === RIBBON TAILS (left and right) === */
+  .ribbon-tail {
+    position: absolute;
+    top: 0;
+    width: 40px;
+    height: 80px;
+    z-index: 1;
+  }
+
+  .ribbon-tail-left {
+    right: 100%;
+    /* Ribbon tail shape: rectangle with a V notch on the left */
+    clip-path: polygon(
+      40% 0%,
+      100% 0%,
+      100% 100%,
+      40% 100%,
+      0% 50%
+    );
+    background: linear-gradient(
+      180deg,
+      #C97A52 0%,
+      #B56540 50%,
+      #A85838 100%
+    );
+    transform-origin: right center;
+    animation: ribbonFlutterLeft 4s ease-in-out infinite;
+  }
+
+  .ribbon-tail-right {
+    left: 100%;
+    clip-path: polygon(
+      0% 0%,
+      60% 0%,
+      100% 50%,
+      60% 100%,
+      0% 100%
+    );
+    background: linear-gradient(
+      180deg,
+      #C97A52 0%,
+      #B56540 50%,
+      #A85838 100%
+    );
+    transform-origin: left center;
+    animation: ribbonFlutterRight 4s ease-in-out infinite;
+  }
+
+  /* Fold shadows where tails meet the main body */
+  .ribbon-fold {
+    position: absolute;
+    top: 0;
+    width: 8px;
+    height: 80px;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .ribbon-fold-left {
+    left: -4px;
+    background: linear-gradient(
+      90deg,
+      rgba(80, 30, 5, 0.35) 0%,
+      rgba(80, 30, 5, 0.12) 50%,
+      transparent 100%
+    );
+  }
+
+  .ribbon-fold-right {
+    right: -4px;
+    background: linear-gradient(
+      270deg,
+      rgba(80, 30, 5, 0.35) 0%,
+      rgba(80, 30, 5, 0.12) 50%,
+      transparent 100%
+    );
+  }
+
+  /* Under-fold triangles (depth illusion beneath the folds) */
+  .ribbon-under {
+    position: absolute;
+    top: 0;
+    width: 12px;
+    height: 80px;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .ribbon-under-left {
+    right: calc(100% + 28px);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      #7A3A1A 100%
+    );
+    clip-path: polygon(0% 10%, 100% 0%, 100% 100%, 0% 90%);
+    opacity: 0.5;
+  }
+
+  .ribbon-under-right {
+    left: calc(100% + 28px);
+    background: linear-gradient(
+      270deg,
+      transparent 0%,
+      #7A3A1A 100%
+    );
+    clip-path: polygon(0% 0%, 100% 10%, 100% 90%, 0% 100%);
+    opacity: 0.5;
+  }
+
+  /* === FLUTTER ANIMATION === */
+  @keyframes ribbonFlutterLeft {
+    0%, 100% {
+      transform: skewY(0deg) scaleX(1);
+    }
+    25% {
+      transform: skewY(-1.5deg) scaleX(0.97);
+    }
+    50% {
+      transform: skewY(0.5deg) scaleX(1.01);
+    }
+    75% {
+      transform: skewY(-0.8deg) scaleX(0.99);
+    }
+  }
+
+  @keyframes ribbonFlutterRight {
+    0%, 100% {
+      transform: skewY(0deg) scaleX(1);
+    }
+    25% {
+      transform: skewY(1.5deg) scaleX(0.97);
+    }
+    50% {
+      transform: skewY(-0.5deg) scaleX(1.01);
+    }
+    75% {
+      transform: skewY(0.8deg) scaleX(0.99);
+    }
+  }
+
+  /* Gentle sway on the entire banner */
+  @keyframes bannerSway {
+    0%, 100% { transform: rotate(0deg) translateY(0); }
+    33% { transform: rotate(0.3deg) translateY(-1px); }
+    66% { transform: rotate(-0.3deg) translateY(1px); }
+  }
+
+  .banner-wrap {
+    animation: bannerSway 6s ease-in-out infinite;
+  }
+
+  /* === HOVER STATE === */
+  .banner-btn:hover {
+    background: linear-gradient(
+      180deg,
+      #E09368 0%,
+      #D07E58 15%,
+      #C47050 50%,
+      #B86545 75%,
+      #D07E58 100%
+    );
+    box-shadow:
+      0 6px 20px rgba(100, 40, 10, 0.35),
+      0 3px 8px rgba(100, 40, 10, 0.25),
+      inset 0 1px 0 rgba(255, 220, 180, 0.35),
+      inset 0 -2px 4px rgba(100, 40, 10, 0.12),
+      0 0 20px rgba(212, 168, 75, 0.15);
+    transform: translateY(-2px);
+    color: #FFFAED;
+    text-shadow:
+      0 2px 4px rgba(100, 40, 10, 0.5),
+      0 0 16px rgba(212, 168, 75, 0.5);
+  }
+
+  .banner-btn:hover ~ .ribbon-tail-left,
+  .banner-wrap:hover .ribbon-tail-left {
+    background: linear-gradient(180deg, #D88A60 0%, #C47050 50%, #B86545 100%);
+    animation-duration: 2s;
+  }
+
+  .banner-btn:hover ~ .ribbon-tail-right,
+  .banner-wrap:hover .ribbon-tail-right {
+    background: linear-gradient(180deg, #D88A60 0%, #C47050 50%, #B86545 100%);
+    animation-duration: 2s;
+  }
+
+  /* === ACTIVE / PRESSED STATE === */
+  .banner-btn:active {
+    background: linear-gradient(
+      180deg,
+      #B5654A 0%,
+      #A85838 15%,
+      #9E4E30 50%,
+      #944528 75%,
+      #A85838 100%
+    );
+    transform: translateY(1px);
+    box-shadow:
+      0 2px 6px rgba(100, 40, 10, 0.3),
+      0 1px 2px rgba(100, 40, 10, 0.2),
+      inset 0 2px 4px rgba(60, 20, 0, 0.2);
+    text-shadow:
+      0 1px 2px rgba(100, 40, 10, 0.6);
+  }
+
+  /* === FOCUS STATE === */
+  .banner-btn:focus-visible {
+    box-shadow:
+      0 4px 12px rgba(100, 40, 10, 0.3),
+      0 2px 4px rgba(100, 40, 10, 0.2),
+      0 0 0 3px rgba(212, 168, 75, 0.5),
+      0 0 0 6px rgba(212, 168, 75, 0.2),
+      0 0 25px rgba(212, 168, 75, 0.3);
+  }
+
+  /* Gold sparkle accents on corners */
+  .sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: radial-gradient(circle, rgba(255, 215, 100, 0.9) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 4;
+    animation: sparkleGlow 3s ease-in-out infinite;
+  }
+  .sparkle:nth-child(1) { top: -3px; left: 20px; animation-delay: 0s; }
+  .sparkle:nth-child(2) { top: -3px; right: 20px; animation-delay: 1s; }
+  .sparkle:nth-child(3) { bottom: -3px; left: 20px; animation-delay: 0.5s; }
+  .sparkle:nth-child(4) { bottom: -3px; right: 20px; animation-delay: 1.5s; }
+
+  @keyframes sparkleGlow {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.9; transform: scale(1.6); }
+  }
+
+  /* Small shield emblem decorations */
+  .shield-decor {
+    position: absolute;
+    width: 18px;
+    height: 20px;
+    clip-path: polygon(50% 100%, 0% 30%, 0% 0%, 100% 0%, 100% 30%);
+    background: rgba(212, 168, 75, 0.3);
+    pointer-events: none;
+    z-index: 4;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .shield-decor-left { left: 14px; }
+  .shield-decor-right { right: 14px; }
+
+  /* Banner text styling refinement */
+  .banner-btn span {
+    position: relative;
+    z-index: 2;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="pennants">
+  <div class="pennant"></div>
+  <div class="pennant"></div>
+  <div class="pennant"></div>
+  <div class="pennant"></div>
+  <div class="pennant"></div>
+</div>
+
+<div class="concept-label">Concept 08: Banner Ribbon</div>
+
+<div class="banner-wrap">
+  <!-- Under-fold depth shadows -->
+  <div class="ribbon-under ribbon-under-left"></div>
+  <div class="ribbon-under ribbon-under-right"></div>
+
+  <!-- Left ribbon tail -->
+  <div class="ribbon-tail ribbon-tail-left"></div>
+
+  <!-- Main banner button -->
+  <button class="banner-btn" type="button" aria-label="Continue">
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="sparkle"></div>
+    <div class="shield-decor shield-decor-left"></div>
+    <div class="shield-decor shield-decor-right"></div>
+    <span>CONTINUE</span>
+  </button>
+
+  <!-- Right ribbon tail -->
+  <div class="ribbon-tail ribbon-tail-right"></div>
+
+  <!-- Fold shadow overlays -->
+  <div class="ribbon-fold ribbon-fold-left" style="position:absolute; left:calc(50% - 154px); top:0;"></div>
+  <div class="ribbon-fold ribbon-fold-right" style="position:absolute; right:calc(50% - 154px); top:0;"></div>
+</div>
+
+<script>
+  // Add a subtle ripple effect on click
+  document.querySelector('.banner-btn').addEventListener('click', function(e) {
+    var btn = this;
+    var ripple = document.createElement('div');
+    ripple.style.cssText = 'position:absolute;inset:0;z-index:5;pointer-events:none;overflow:hidden;';
+    var circle = document.createElement('div');
+    var rect = btn.getBoundingClientRect();
+    var x = e.clientX - rect.left;
+    var y = e.clientY - rect.top;
+    var size = Math.max(rect.width, rect.height) * 2;
+    circle.style.cssText =
+      'position:absolute;border-radius:50%;background:rgba(255,220,170,0.3);' +
+      'width:' + size + 'px;height:' + size + 'px;' +
+      'left:' + (x - size/2) + 'px;top:' + (y - size/2) + 'px;' +
+      'transform:scale(0);animation:rippleOut 0.6s ease-out forwards;';
+    ripple.appendChild(circle);
+    btn.appendChild(ripple);
+
+    // Inject ripple keyframes if not already present
+    if (!document.getElementById('ripple-style')) {
+      var s = document.createElement('style');
+      s.id = 'ripple-style';
+      s.textContent = '@keyframes rippleOut{0%{transform:scale(0);opacity:1;}100%{transform:scale(1);opacity:0;}}';
+      document.head.appendChild(s);
+    }
+
+    setTimeout(function() { ripple.remove(); }, 650);
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080, initial-scale=1">
+<title>Knight's Quest: Math Adventures — Intro (Concept 7)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=MedievalSharp&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    font-family: 'MedievalSharp', cursive;
+  }
+
+  body {
+    background-image: url('../../Assets/Textures/landscape_bg_soft.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  /* Semi-transparent overlay */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    background: linear-gradient(
+      135deg,
+      rgba(200, 220, 200, 0.45) 0%,
+      rgba(180, 210, 235, 0.40) 40%,
+      rgba(240, 230, 200, 0.45) 100%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .container {
+    width: 1920px;
+    height: 1080px;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  /* ── Title ── */
+  .title {
+    position: absolute;
+    top: 55px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: 62px;
+    background: linear-gradient(180deg, #ffd700 0%, #e8a800 40%, #ffec80 60%, #c8960a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: center;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.35));
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+
+  /* ── Vine-framed panel (left side) ── */
+  .panel-area {
+    position: absolute;
+    left: 5%;
+    top: 50%;
+    transform: translateY(-42%);
+    width: 52%;
+  }
+
+  .vine-panel {
+    position: relative;
+    background: linear-gradient(
+      160deg,
+      rgba(255, 252, 240, 0.92) 0%,
+      rgba(245, 240, 220, 0.90) 50%,
+      rgba(235, 228, 205, 0.92) 100%
+    );
+    border-radius: 16px;
+    padding: 55px 60px 50px 60px;
+    box-shadow:
+      0 6px 30px rgba(60, 90, 40, 0.25),
+      inset 0 0 30px rgba(180, 200, 150, 0.15);
+  }
+
+  /* ── Vine border (SVG decorative) ── */
+  .vine-border {
+    position: absolute;
+    inset: -28px;
+    pointer-events: none;
+  }
+
+  .panel-text {
+    font-family: 'MedievalSharp', cursive;
+    font-size: 31px;
+    line-height: 1.65;
+    color: #3a4a2a;
+    text-align: left;
+  }
+
+  /* ── Trail button ── */
+  .cta-area {
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  .trail-btn {
+    display: inline-block;
+    position: relative;
+    background: linear-gradient(135deg, #6b8f3a 0%, #4a7028 40%, #5a8830 70%, #7aa040 100%);
+    color: #fff;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 28px;
+    letter-spacing: 2px;
+    border: 3px solid #3a5a18;
+    cursor: pointer;
+    padding: 18px 80px;
+    border-radius: 40px 50px 40px 50px;
+    transition: all 0.35s ease;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 16px rgba(60, 90, 30, 0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+    overflow: hidden;
+  }
+
+  .trail-btn::before {
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    transition: all 0.35s ease;
+  }
+
+  .trail-btn:hover {
+    background: linear-gradient(135deg, #7aa040 0%, #5a8830 40%, #6b9838 70%, #8ab848 100%);
+    transform: scale(1.06);
+    padding: 18px 100px;
+    box-shadow: 0 6px 24px rgba(60, 90, 30, 0.5), inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+
+  /* Footprints on hover */
+  .trail-btn:hover .footprint-l,
+  .trail-btn:hover .footprint-r {
+    opacity: 1;
+  }
+
+  .footprint-l, .footprint-r {
+    position: absolute;
+    bottom: 4px;
+    opacity: 0;
+    transition: opacity 0.4s ease 0.1s;
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+  }
+  .footprint-l { left: 18px; transform: rotate(-15deg); }
+  .footprint-r { right: 18px; transform: rotate(10deg); }
+
+  .trail-btn:active {
+    transform: scale(0.97);
+  }
+
+  .divider {
+    width: 200px;
+    height: 2px;
+    margin: 28px auto 0 auto;
+    background: linear-gradient(90deg, transparent, #6b8f3a, transparent);
+  }
+
+  /* ── Fox character (right side, peeking in) ── */
+  .character-area {
+    position: absolute;
+    right: -40px;
+    top: 50%;
+    transform: translateY(-48%);
+  }
+
+  .character-wrap {
+    animation: bodyRock 4s ease-in-out infinite;
+  }
+
+  @keyframes bodyRock {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-6px); }
+  }
+
+  /* Ear twitch */
+  .ear-left, .ear-right {
+    animation: earTwitch 0.25s ease-in-out;
+    animation-iteration-count: 1;
+  }
+  .ear-left { transform-origin: 128px 55px; animation-delay: 0s; }
+  .ear-right { transform-origin: 188px 55px; animation-delay: 0.08s; }
+
+  @keyframes earTwitch {
+    0%, 100% { transform: rotateZ(0deg); }
+    40% { transform: rotateZ(-8deg); }
+    70% { transform: rotateZ(4deg); }
+  }
+
+  /* Tail wag */
+  .fox-tail {
+    transform-origin: 200px 310px;
+    animation: tailWag 2s ease-in-out infinite;
+  }
+
+  @keyframes tailWag {
+    0%, 100% { transform: rotateZ(0deg); }
+    25% { transform: rotateZ(8deg); }
+    75% { transform: rotateZ(-6deg); }
+  }
+</style>
+</head>
+<body>
+<div class="overlay">
+<div class="container">
+
+  <!-- Title -->
+  <div class="title">Knight's Quest: Math Adventures</div>
+
+  <!-- Vine-framed text panel (left) -->
+  <div class="panel-area">
+    <div class="vine-panel">
+      <!-- Vine border SVG -->
+      <svg class="vine-border" viewBox="0 0 900 500" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Top vine -->
+        <path d="M 60 18 Q 200 5, 350 14 Q 500 22, 650 10 Q 780 4, 840 18" stroke="#5a8a30" stroke-width="4" fill="none"/>
+        <path d="M 60 18 Q 200 8, 350 16 Q 500 24, 650 12 Q 780 6, 840 18" stroke="#4a7828" stroke-width="2.5" fill="none"/>
+        <!-- Top leaves -->
+        <ellipse cx="120" cy="10" rx="14" ry="7" fill="#6b9f3a" transform="rotate(-20, 120, 10)" opacity="0.85"/>
+        <ellipse cx="130" cy="16" rx="12" ry="6" fill="#5a8a30" transform="rotate(15, 130, 16)" opacity="0.8"/>
+        <ellipse cx="280" cy="10" rx="13" ry="6" fill="#78a848" transform="rotate(-10, 280, 10)" opacity="0.85"/>
+        <ellipse cx="420" cy="18" rx="14" ry="7" fill="#6b9f3a" transform="rotate(20, 420, 18)" opacity="0.8"/>
+        <ellipse cx="430" cy="10" rx="11" ry="5.5" fill="#5a8830" transform="rotate(-25, 430, 10)" opacity="0.75"/>
+        <ellipse cx="580" cy="8" rx="13" ry="6.5" fill="#78a848" transform="rotate(12, 580, 8)" opacity="0.85"/>
+        <ellipse cx="720" cy="6" rx="14" ry="7" fill="#6b9f3a" transform="rotate(-18, 720, 6)" opacity="0.8"/>
+        <ellipse cx="730" cy="14" rx="11" ry="5.5" fill="#5a8830" transform="rotate(22, 730, 14)" opacity="0.75"/>
+        <!-- Small flowers on top -->
+        <circle cx="200" cy="8" r="5" fill="#f0a0b0" opacity="0.7"/>
+        <circle cx="200" cy="8" r="2.5" fill="#ffe080" opacity="0.8"/>
+        <circle cx="550" cy="12" r="5.5" fill="#c0a0e0" opacity="0.65"/>
+        <circle cx="550" cy="12" r="2.5" fill="#ffe080" opacity="0.8"/>
+        <circle cx="800" cy="12" r="5" fill="#f0a0b0" opacity="0.7"/>
+        <circle cx="800" cy="12" r="2.5" fill="#ffe080" opacity="0.8"/>
+
+        <!-- Bottom vine -->
+        <path d="M 60 482 Q 200 495, 350 486 Q 500 478, 650 490 Q 780 496, 840 482" stroke="#5a8a30" stroke-width="4" fill="none"/>
+        <path d="M 60 482 Q 200 492, 350 484 Q 500 476, 650 488 Q 780 494, 840 482" stroke="#4a7828" stroke-width="2.5" fill="none"/>
+        <!-- Bottom leaves -->
+        <ellipse cx="150" cy="492" rx="14" ry="7" fill="#6b9f3a" transform="rotate(20, 150, 492)" opacity="0.85"/>
+        <ellipse cx="310" cy="486" rx="13" ry="6" fill="#78a848" transform="rotate(-15, 310, 486)" opacity="0.8"/>
+        <ellipse cx="480" cy="480" rx="14" ry="7" fill="#5a8830" transform="rotate(18, 480, 480)" opacity="0.75"/>
+        <ellipse cx="640" cy="490" rx="13" ry="6.5" fill="#6b9f3a" transform="rotate(-12, 640, 490)" opacity="0.85"/>
+        <ellipse cx="770" cy="494" rx="12" ry="6" fill="#78a848" transform="rotate(22, 770, 494)" opacity="0.8"/>
+        <!-- Small flowers on bottom -->
+        <circle cx="380" cy="490" r="5" fill="#a0d0f0" opacity="0.6"/>
+        <circle cx="380" cy="490" r="2.5" fill="#ffe080" opacity="0.8"/>
+        <circle cx="700" cy="492" r="5.5" fill="#f0a0b0" opacity="0.65"/>
+        <circle cx="700" cy="492" r="2.5" fill="#ffe080" opacity="0.8"/>
+
+        <!-- Left vine -->
+        <path d="M 18 60 Q 5 150, 14 250 Q 22 350, 10 420 Q 6 450, 18 470" stroke="#5a8a30" stroke-width="4" fill="none"/>
+        <path d="M 18 60 Q 8 150, 16 250 Q 24 350, 12 420 Q 8 450, 18 470" stroke="#4a7828" stroke-width="2.5" fill="none"/>
+        <!-- Left leaves -->
+        <ellipse cx="10" cy="120" rx="7" ry="14" fill="#6b9f3a" transform="rotate(-20, 10, 120)" opacity="0.85"/>
+        <ellipse cx="16" cy="130" rx="6" ry="12" fill="#5a8830" transform="rotate(30, 16, 130)" opacity="0.8"/>
+        <ellipse cx="8" cy="220" rx="7" ry="13" fill="#78a848" transform="rotate(-10, 8, 220)" opacity="0.85"/>
+        <ellipse cx="14" cy="320" rx="6.5" ry="14" fill="#6b9f3a" transform="rotate(15, 14, 320)" opacity="0.8"/>
+        <ellipse cx="10" cy="400" rx="7" ry="13" fill="#5a8830" transform="rotate(-25, 10, 400)" opacity="0.75"/>
+        <!-- Small flowers on left -->
+        <circle cx="8" cy="180" r="5" fill="#f0c0a0" opacity="0.7"/>
+        <circle cx="8" cy="180" r="2.5" fill="#ffe080" opacity="0.8"/>
+        <circle cx="12" cy="370" r="5" fill="#c0a0e0" opacity="0.65"/>
+        <circle cx="12" cy="370" r="2.5" fill="#ffe080" opacity="0.8"/>
+
+        <!-- Right vine -->
+        <path d="M 882 60 Q 895 150, 886 250 Q 878 350, 890 420 Q 894 450, 882 470" stroke="#5a8a30" stroke-width="4" fill="none"/>
+        <path d="M 882 60 Q 892 150, 884 250 Q 876 350, 888 420 Q 892 450, 882 470" stroke="#4a7828" stroke-width="2.5" fill="none"/>
+        <!-- Right leaves -->
+        <ellipse cx="890" cy="100" rx="7" ry="14" fill="#6b9f3a" transform="rotate(20, 890, 100)" opacity="0.85"/>
+        <ellipse cx="884" cy="200" rx="6.5" ry="13" fill="#78a848" transform="rotate(-15, 884, 200)" opacity="0.8"/>
+        <ellipse cx="892" cy="290" rx="7" ry="14" fill="#5a8830" transform="rotate(25, 892, 290)" opacity="0.75"/>
+        <ellipse cx="886" cy="400" rx="6.5" ry="13" fill="#6b9f3a" transform="rotate(-18, 886, 400)" opacity="0.85"/>
+        <!-- Small flowers on right -->
+        <circle cx="892" cy="160" r="5" fill="#a0d0f0" opacity="0.6"/>
+        <circle cx="892" cy="160" r="2.5" fill="#ffe080" opacity="0.8"/>
+        <circle cx="888" cy="340" r="5.5" fill="#f0a0b0" opacity="0.65"/>
+        <circle cx="888" cy="340" r="2.5" fill="#ffe080" opacity="0.8"/>
+
+        <!-- Corner clusters (extra leaves/flowers) -->
+        <!-- Top-left -->
+        <ellipse cx="30" cy="28" rx="16" ry="8" fill="#6b9f3a" transform="rotate(-40, 30, 28)" opacity="0.85"/>
+        <ellipse cx="38" cy="36" rx="14" ry="7" fill="#5a8830" transform="rotate(20, 38, 36)" opacity="0.8"/>
+        <circle cx="24" cy="24" r="6" fill="#f0a0b0" opacity="0.7"/>
+        <circle cx="24" cy="24" r="3" fill="#ffe080" opacity="0.8"/>
+        <!-- Top-right -->
+        <ellipse cx="870" cy="28" rx="16" ry="8" fill="#6b9f3a" transform="rotate(40, 870, 28)" opacity="0.85"/>
+        <ellipse cx="862" cy="36" rx="14" ry="7" fill="#5a8830" transform="rotate(-20, 862, 36)" opacity="0.8"/>
+        <!-- Bottom-left -->
+        <ellipse cx="30" cy="472" rx="16" ry="8" fill="#6b9f3a" transform="rotate(40, 30, 472)" opacity="0.85"/>
+        <ellipse cx="38" cy="464" rx="14" ry="7" fill="#78a848" transform="rotate(-20, 38, 464)" opacity="0.8"/>
+        <!-- Bottom-right -->
+        <ellipse cx="870" cy="472" rx="16" ry="8" fill="#6b9f3a" transform="rotate(-40, 870, 472)" opacity="0.85"/>
+        <ellipse cx="862" cy="464" rx="14" ry="7" fill="#78a848" transform="rotate(20, 862, 464)" opacity="0.8"/>
+      </svg>
+
+      <p class="panel-text">
+        Brave adventurer, you've shown courage, curiosity, and a heart ready to learn.
+        Now it's time to begin your greatest quest yet: the challenge of math.
+        Your training begins now.
+      </p>
+      <div class="divider"></div>
+      <div class="cta-area">
+        <button class="trail-btn">
+          <span class="footprint-l">&#x1F43E;</span>
+          Set Off!
+          <span class="footprint-r">&#x1F43E;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fox character (peeking from right) -->
+  <div class="character-area">
+    <div class="character-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 470" width="380" height="520">
+        <defs>
+          <linearGradient id="furGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#e8783a"/>
+            <stop offset="100%" stop-color="#c85a20"/>
+          </linearGradient>
+          <linearGradient id="furLight" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f09050"/>
+            <stop offset="100%" stop-color="#d87040"/>
+          </linearGradient>
+          <linearGradient id="chestGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#fff8e8"/>
+            <stop offset="100%" stop-color="#f0e0c0"/>
+          </linearGradient>
+          <linearGradient id="cloakGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#4a8a3a"/>
+            <stop offset="50%" stop-color="#3a7028"/>
+            <stop offset="100%" stop-color="#2a5a1a"/>
+          </linearGradient>
+          <linearGradient id="cloakInner" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#5a9a48"/>
+            <stop offset="100%" stop-color="#3a7830"/>
+          </linearGradient>
+          <linearGradient id="satchelGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#a07848"/>
+            <stop offset="100%" stop-color="#7a5830"/>
+          </linearGradient>
+          <linearGradient id="bootGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#8b6f50"/>
+            <stop offset="100%" stop-color="#6b5040"/>
+          </linearGradient>
+          <radialGradient id="noseGrad">
+            <stop offset="0%" stop-color="#2a2a2a"/>
+            <stop offset="80%" stop-color="#1a1a1a"/>
+            <stop offset="100%" stop-color="#0a0a0a"/>
+          </radialGradient>
+        </defs>
+
+        <!-- Ground shadow -->
+        <ellipse cx="155" cy="448" rx="80" ry="12" fill="rgba(0,0,0,0.1)"/>
+
+        <!-- Bushy tail (behind body, peeking from under cloak) -->
+        <g class="fox-tail">
+          <path d="M 200 310 Q 250 280, 280 240 Q 310 200, 300 180 Q 290 165, 275 175
+                   Q 295 200, 270 240 Q 245 275, 210 300 Z"
+                fill="url(#furGrad)" stroke="#b05020" stroke-width="1"/>
+          <!-- Tail white tip -->
+          <path d="M 300 180 Q 290 165, 275 175 Q 285 170, 295 180
+                   Q 305 195, 295 200 Q 308 195, 300 180 Z"
+                fill="#fff8e8" stroke="#e0d0b0" stroke-width="0.5" opacity="0.95"/>
+          <!-- Tail fur texture -->
+          <path d="M 240 270 Q 260 250, 270 240" stroke="#d06830" stroke-width="1.5" fill="none" opacity="0.4"/>
+          <path d="M 220 290 Q 245 265, 260 250" stroke="#d06830" stroke-width="1" fill="none" opacity="0.3"/>
+        </g>
+
+        <!-- Cloak (behind body) -->
+        <path d="M 100 135 Q 85 180, 80 250 Q 78 300, 85 360 Q 88 380, 100 390
+                 L 210 390 Q 222 380, 225 360 Q 232 300, 230 250 Q 228 180, 215 135 Z"
+              fill="url(#cloakGrad)" stroke="#2a5a18" stroke-width="1.5"/>
+        <!-- Cloak drape lines -->
+        <path d="M 110 160 Q 105 220, 108 300 Q 110 340, 105 380" stroke="#2a5a18" stroke-width="1.5" fill="none" opacity="0.3"/>
+        <path d="M 130 150 Q 125 230, 128 320 Q 130 360, 125 390" stroke="#2a5a18" stroke-width="1" fill="none" opacity="0.2"/>
+        <path d="M 195 155 Q 200 230, 198 320 Q 196 360, 200 390" stroke="#2a5a18" stroke-width="1.5" fill="none" opacity="0.3"/>
+
+        <!-- Hood (down, draped behind head) -->
+        <path d="M 105 130 Q 100 115, 110 105 Q 130 90, 155 88 Q 180 90, 200 105 Q 210 115, 205 130
+                 L 215 145 Q 210 155, 200 150 Q 180 140, 155 138 Q 130 140, 110 150 Q 100 155, 95 145 Z"
+              fill="url(#cloakInner)" stroke="#2a5a18" stroke-width="1.5"/>
+        <!-- Hood folds -->
+        <path d="M 120 110 Q 125 120, 118 135" stroke="#3a6a28" stroke-width="1.5" fill="none" opacity="0.4"/>
+        <path d="M 190 110 Q 185 120, 192 135" stroke="#3a6a28" stroke-width="1.5" fill="none" opacity="0.4"/>
+
+        <!-- Legs -->
+        <rect x="118" y="370" width="30" height="55" rx="10" fill="url(#furGrad)"/>
+        <rect x="162" y="370" width="30" height="55" rx="10" fill="url(#furGrad)"/>
+
+        <!-- Boots -->
+        <path d="M 116 412 L 116 435 Q 116 445 126 445 L 155 445 Q 158 445 158 441 L 158 430 Q 152 412 148 412 Z"
+              fill="url(#bootGrad)" stroke="#5a4030" stroke-width="1"/>
+        <path d="M 160 412 L 160 435 Q 160 445 170 445 L 199 445 Q 202 445 202 441 L 202 430 Q 196 412 192 412 Z"
+              fill="url(#bootGrad)" stroke="#5a4030" stroke-width="1"/>
+        <!-- Boot straps -->
+        <rect x="116" y="416" width="42" height="4" rx="1" fill="#5a4030" opacity="0.5"/>
+        <rect x="160" y="416" width="42" height="4" rx="1" fill="#5a4030" opacity="0.5"/>
+
+        <!-- Body (chest visible under open cloak) -->
+        <path d="M 120 140 Q 115 180, 115 220 Q 115 300, 120 370 L 190 370 Q 195 300, 195 220 Q 195 180, 190 140 Z"
+              fill="url(#furGrad)" stroke="#b05020" stroke-width="1"/>
+        <!-- White chest patch -->
+        <path d="M 135 150 Q 130 170, 132 210 Q 134 260, 138 310 Q 140 340, 145 365
+                 L 165 365 Q 170 340, 172 310 Q 176 260, 178 210 Q 180 170, 175 150 Z"
+              fill="url(#chestGrad)" stroke="#e0d0b0" stroke-width="0.5" opacity="0.9"/>
+
+        <!-- Leaf clasp at cloak front -->
+        <g transform="translate(150, 135)">
+          <path d="M 0 -8 Q 8 -4, 10 4 Q 8 10, 0 12 Q -2 6, 0 0 Q 2 -4, 0 -8 Z"
+                fill="#78a848" stroke="#4a7828" stroke-width="1"/>
+          <line x1="0" y1="-6" x2="0" y2="10" stroke="#4a7828" stroke-width="0.8" opacity="0.6"/>
+          <!-- Leaf veins -->
+          <line x1="0" y1="-2" x2="5" y2="0" stroke="#4a7828" stroke-width="0.5" opacity="0.4"/>
+          <line x1="0" y1="3" x2="6" y2="5" stroke="#4a7828" stroke-width="0.5" opacity="0.4"/>
+          <!-- Clasp ring -->
+          <circle cx="0" cy="2" r="4" fill="none" stroke="#c8960a" stroke-width="1.5"/>
+        </g>
+
+        <!-- Left arm / paw (satchel side) -->
+        <path d="M 120 160 Q 95 180, 85 210 Q 78 235, 85 255"
+              stroke="url(#furGrad)" stroke-width="20" stroke-linecap="round" fill="none"/>
+        <!-- Left paw -->
+        <ellipse cx="87" cy="258" rx="12" ry="10" fill="url(#furLight)"/>
+        <!-- Paw pads -->
+        <circle cx="82" cy="256" r="2.5" fill="#d09070" opacity="0.5"/>
+        <circle cx="88" cy="254" r="2.5" fill="#d09070" opacity="0.5"/>
+        <circle cx="93" cy="257" r="2.5" fill="#d09070" opacity="0.5"/>
+
+        <!-- Satchel strap (diagonal across body) -->
+        <path d="M 180 130 Q 160 180, 95 240" stroke="#8a6838" stroke-width="7" fill="none" opacity="0.9"/>
+        <path d="M 180 130 Q 160 180, 95 240" stroke="#705028" stroke-width="1" fill="none" opacity="0.3"/>
+
+        <!-- Satchel bag -->
+        <g transform="translate(70, 235)">
+          <rect x="0" y="0" width="45" height="35" rx="6" fill="url(#satchelGrad)" stroke="#5a4020" stroke-width="1.5"/>
+          <!-- Flap -->
+          <path d="M -2 0 Q 22 -12, 47 0 L 47 10 Q 22 2, -2 10 Z"
+                fill="#8a6838" stroke="#5a4020" stroke-width="1"/>
+          <!-- Buckle -->
+          <rect x="17" y="4" width="11" height="8" rx="2" fill="#c8960a" stroke="#a07a10" stroke-width="1"/>
+          <rect x="20" y="6" width="5" height="4" rx="1" fill="#a07a10"/>
+          <!-- Scroll/map peeking out -->
+          <rect x="35" y="-8" width="8" height="18" rx="3" fill="#f0e0c0" stroke="#c8b890" stroke-width="0.8" transform="rotate(15, 39, 1)"/>
+          <path d="M 36 -6 Q 39 -8, 42 -6" stroke="#c8b890" stroke-width="0.8" fill="none" transform="rotate(15, 39, 1)"/>
+        </g>
+
+        <!-- Right arm / paw -->
+        <path d="M 190 160 Q 215 180, 220 210 Q 224 235, 218 255"
+              stroke="url(#furGrad)" stroke-width="20" stroke-linecap="round" fill="none"/>
+        <!-- Right paw -->
+        <ellipse cx="217" cy="258" rx="12" ry="10" fill="url(#furLight)"/>
+        <!-- Paw pads -->
+        <circle cx="212" cy="256" r="2.5" fill="#d09070" opacity="0.5"/>
+        <circle cx="218" cy="254" r="2.5" fill="#d09070" opacity="0.5"/>
+        <circle cx="223" cy="257" r="2.5" fill="#d09070" opacity="0.5"/>
+
+        <!-- Neck -->
+        <rect x="140" y="110" width="30" height="30" rx="10" fill="url(#furGrad)"/>
+
+        <!-- Head -->
+        <ellipse cx="155" cy="85" rx="40" ry="35" fill="url(#furGrad)" stroke="#b05020" stroke-width="1"/>
+
+        <!-- White face markings -->
+        <path d="M 155 62 Q 138 72, 130 90 Q 128 100, 135 110 Q 145 118, 155 120
+                 Q 165 118, 175 110 Q 182 100, 180 90 Q 172 72, 155 62 Z"
+              fill="url(#chestGrad)" opacity="0.85"/>
+
+        <!-- Ears -->
+        <g class="ear-left">
+          <path d="M 120 75 L 108 28 Q 106 18, 115 22 L 135 60 Z"
+                fill="url(#furGrad)" stroke="#b05020" stroke-width="1"/>
+          <!-- Inner ear -->
+          <path d="M 122 68 L 113 35 Q 112 28, 118 30 L 132 58 Z"
+                fill="#f0a080" opacity="0.6"/>
+        </g>
+        <g class="ear-right">
+          <path d="M 190 75 L 202 28 Q 204 18, 195 22 L 175 60 Z"
+                fill="url(#furGrad)" stroke="#b05020" stroke-width="1"/>
+          <!-- Inner ear -->
+          <path d="M 188 68 L 197 35 Q 198 28, 192 30 L 178 58 Z"
+                fill="#f0a080" opacity="0.6"/>
+        </g>
+
+        <!-- Eyes — bright green, friendly -->
+        <ellipse cx="140" cy="82" rx="9" ry="10" fill="white"/>
+        <ellipse cx="170" cy="82" rx="9" ry="10" fill="white"/>
+        <!-- Irises -->
+        <circle cx="142" cy="83" r="6" fill="#3a8a3a"/>
+        <circle cx="172" cy="83" r="6" fill="#3a8a3a"/>
+        <!-- Bright green ring -->
+        <circle cx="142" cy="83" r="6" fill="none" stroke="#50b050" stroke-width="1.5"/>
+        <circle cx="172" cy="83" r="6" fill="none" stroke="#50b050" stroke-width="1.5"/>
+        <!-- Pupils -->
+        <circle cx="143" cy="84" r="3" fill="#1a1a1a"/>
+        <circle cx="173" cy="84" r="3" fill="#1a1a1a"/>
+        <!-- Eye highlights -->
+        <circle cx="144" cy="80" r="2" fill="white" opacity="0.9"/>
+        <circle cx="174" cy="80" r="2" fill="white" opacity="0.9"/>
+        <circle cx="140" cy="86" r="1" fill="white" opacity="0.5"/>
+        <circle cx="170" cy="86" r="1" fill="white" opacity="0.5"/>
+        <!-- Eyelids (friendly) -->
+        <path d="M 130 77 Q 140 73 150 77" stroke="#c06830" stroke-width="1.5" fill="none"/>
+        <path d="M 160 77 Q 170 73 180 77" stroke="#c06830" stroke-width="1.5" fill="none"/>
+
+        <!-- Triangular snout -->
+        <path d="M 140 90 Q 145 95, 155 105 Q 165 95, 170 90 Q 165 88, 155 92 Q 145 88, 140 90 Z"
+              fill="url(#chestGrad)" stroke="#e0d0b0" stroke-width="0.5" opacity="0.9"/>
+
+        <!-- Nose (black, shiny) -->
+        <ellipse cx="155" cy="96" rx="6" ry="4.5" fill="url(#noseGrad)"/>
+        <!-- Nose highlight -->
+        <ellipse cx="153" cy="94.5" rx="2.5" ry="1.5" fill="white" opacity="0.3"/>
+
+        <!-- Whiskers -->
+        <line x1="130" y1="98" x2="100" y2="92" stroke="#d8c0a0" stroke-width="1" opacity="0.6"/>
+        <line x1="128" y1="102" x2="96" y2="100" stroke="#d8c0a0" stroke-width="1" opacity="0.6"/>
+        <line x1="130" y1="106" x2="100" y2="108" stroke="#d8c0a0" stroke-width="1" opacity="0.5"/>
+        <line x1="180" y1="98" x2="210" y2="92" stroke="#d8c0a0" stroke-width="1" opacity="0.6"/>
+        <line x1="182" y1="102" x2="214" y2="100" stroke="#d8c0a0" stroke-width="1" opacity="0.6"/>
+        <line x1="180" y1="106" x2="210" y2="108" stroke="#d8c0a0" stroke-width="1" opacity="0.5"/>
+
+        <!-- Friendly smile -->
+        <path d="M 143 104 Q 155 114 167 104" stroke="#a05030" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Small teeth showing in smile -->
+        <path d="M 150 106 L 151 109 L 153 106" fill="white" stroke="white" stroke-width="0.5" opacity="0.6"/>
+        <path d="M 157 106 L 158 109 L 160 106" fill="white" stroke="white" stroke-width="0.5" opacity="0.6"/>
+
+        <!-- Cheek fur tufts -->
+        <path d="M 118 90 Q 112 95, 115 100" stroke="#d87040" stroke-width="2" fill="none" opacity="0.5"/>
+        <path d="M 115 88 Q 108 92, 112 98" stroke="#d87040" stroke-width="1.5" fill="none" opacity="0.4"/>
+        <path d="M 192 90 Q 198 95, 195 100" stroke="#d87040" stroke-width="2" fill="none" opacity="0.5"/>
+        <path d="M 195 88 Q 202 92, 198 98" stroke="#d87040" stroke-width="1.5" fill="none" opacity="0.4"/>
+      </svg>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+  // Ear twitch: replay animation every 3 seconds
+  function triggerEarTwitch() {
+    const earL = document.querySelector('.ear-left');
+    const earR = document.querySelector('.ear-right');
+    if (!earL || !earR) return;
+
+    // Remove and re-add animation
+    earL.style.animation = 'none';
+    earR.style.animation = 'none';
+    // Force reflow
+    void earL.offsetWidth;
+    void earR.offsetWidth;
+    earL.style.animation = 'earTwitch 0.25s ease-in-out 1';
+    earR.style.animation = 'earTwitch 0.25s ease-in-out 1 0.08s';
+  }
+
+  setInterval(triggerEarTwitch, 3000);
+</script>
+</body>
+</html>

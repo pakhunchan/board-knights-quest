@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Concept 03: Nature-Framed - Knight's Quest</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    overflow: hidden;
+    background:
+      /* tiny wildflowers scattered across the meadow */
+      radial-gradient(3px 3px at 12% 72%, #F5D76E 50%, transparent 51%),
+      radial-gradient(4px 4px at 25% 78%, #E8A0BF 50%, transparent 51%),
+      radial-gradient(3px 3px at 40% 70%, #F9F3DC 50%, transparent 51%),
+      radial-gradient(4px 4px at 55% 75%, #F5D76E 50%, transparent 51%),
+      radial-gradient(3px 3px at 68% 71%, #E8A0BF 50%, transparent 51%),
+      radial-gradient(4px 4px at 82% 77%, #F9F3DC 50%, transparent 51%),
+      radial-gradient(3px 3px at 93% 73%, #F5D76E 50%, transparent 51%),
+      radial-gradient(3px 3px at 7% 82%, #E8A0BF 50%, transparent 51%),
+      radial-gradient(4px 4px at 33% 85%, #F9F3DC 50%, transparent 51%),
+      radial-gradient(3px 3px at 48% 88%, #F5D76E 50%, transparent 51%),
+      radial-gradient(4px 4px at 60% 83%, #E8A0BF 50%, transparent 51%),
+      radial-gradient(3px 3px at 75% 86%, #F5D76E 50%, transparent 51%),
+      radial-gradient(4px 4px at 88% 84%, #F9F3DC 50%, transparent 51%),
+      radial-gradient(3px 3px at 18% 92%, #E8A0BF 50%, transparent 51%),
+      radial-gradient(4px 4px at 50% 95%, #F5D76E 50%, transparent 51%),
+      radial-gradient(3px 3px at 70% 91%, #F9F3DC 50%, transparent 51%),
+      /* meadow and sky gradient */
+      linear-gradient(
+        to bottom,
+        #87CEEB 0%,
+        #A8DCEA 20%,
+        #B5E6B5 40%,
+        #8FBC6B 55%,
+        #6B8E4E 70%,
+        #5A7A42 85%,
+        #4A6B35 100%
+      );
+    background-attachment: fixed;
+  }
+
+  .concept-label {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 14px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    font-weight: 400;
+    font-family: 'Fredoka One', cursive;
+  }
+
+  .button-wrap {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* ---- decorative leaves at corners ---- */
+  .leaf {
+    position: absolute;
+    width: 28px;
+    height: 16px;
+    border-radius: 50% 0 50% 0;
+    background: linear-gradient(135deg, #8FBC6B 0%, #6B8E4E 100%);
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.92;
+    box-shadow: inset -2px -1px 3px rgba(0,0,0,0.12);
+  }
+  .leaf::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 20%;
+    width: 55%;
+    height: 1px;
+    background: rgba(74, 124, 63, 0.5);
+    transform: rotate(-8deg);
+  }
+  .leaf-tl { top: -6px; left: -8px; transform: rotate(-20deg); }
+  .leaf-tr { top: -6px; right: -8px; transform: rotate(70deg) scaleX(-1); }
+  .leaf-bl { bottom: -6px; left: -8px; transform: rotate(-70deg); }
+  .leaf-br { bottom: -6px; right: -8px; transform: rotate(20deg) scaleX(-1); }
+
+  /* extra smaller accent leaves */
+  .leaf-sm {
+    position: absolute;
+    width: 18px;
+    height: 10px;
+    border-radius: 50% 0 50% 0;
+    background: linear-gradient(135deg, #A3D48C 0%, #7DAF5A 100%);
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0.8;
+  }
+  .leaf-sm-1 { top: -10px; left: 22px; transform: rotate(-40deg); }
+  .leaf-sm-2 { top: -10px; right: 22px; transform: rotate(40deg) scaleX(-1); }
+  .leaf-sm-3 { bottom: -10px; left: 30px; transform: rotate(50deg); }
+  .leaf-sm-4 { bottom: -10px; right: 30px; transform: rotate(-50deg) scaleX(-1); }
+
+  /* vine tendrils along edges */
+  .vine {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .vine-left {
+    left: -5px;
+    top: 20%;
+    width: 6px;
+    height: 60%;
+    background: linear-gradient(to bottom, transparent, #5A7A42 20%, #6B8E4E 50%, #5A7A42 80%, transparent);
+    border-radius: 3px;
+  }
+  .vine-right {
+    right: -5px;
+    top: 20%;
+    width: 6px;
+    height: 60%;
+    background: linear-gradient(to bottom, transparent, #5A7A42 20%, #6B8E4E 50%, #5A7A42 80%, transparent);
+    border-radius: 3px;
+  }
+  /* small vine dots (berries) */
+  .vine-left::after, .vine-right::after {
+    content: '';
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #C67B3F, #8B5E3C);
+    top: 30%;
+  }
+  .vine-left::after { left: -2px; }
+  .vine-right::after { right: -2px; }
+
+  /* ---- the button ---- */
+  .continue-btn {
+    position: relative;
+    z-index: 3;
+    display: inline-block;
+    min-width: 280px;
+    min-height: 76px;
+    padding: 18px 52px;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+    font-family: 'Fredoka One', cursive;
+    font-size: 32px;
+    letter-spacing: 2.5px;
+    color: #FFF5D4;
+    text-shadow:
+      0 2px 0 #4A6B35,
+      0 0 12px rgba(255, 230, 140, 0.3);
+    background:
+      linear-gradient(
+        180deg,
+        #8FBC6B 0%,
+        #6B8E4E 45%,
+        #5A7A42 100%
+      );
+    box-shadow:
+      /* earthy border effect */
+      0 0 0 3px #4A6B35,
+      0 0 0 8px #8B6B3E,
+      /* mossy outer glow */
+      0 0 14px 2px rgba(107, 142, 78, 0.4),
+      /* depth shadow */
+      0 6px 0 0 #3D5F2E,
+      0 8px 16px rgba(40, 60, 25, 0.45);
+    /* subtle moss texture via repeating gradients */
+    background-size: 100% 100%;
+    animation: bob 3s ease-in-out infinite;
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      background 0.18s ease,
+      filter 0.18s ease;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+  }
+
+  /* mossy texture overlay */
+  .continue-btn::before {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 15px;
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(168, 212, 140, 0.35) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 80%, rgba(90, 122, 66, 0.25) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* inner highlight for that stone-under-moss feel */
+  .continue-btn::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 12px;
+    right: 12px;
+    height: 28%;
+    border-radius: 12px 12px 50% 50%;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.22) 0%,
+      rgba(255, 255, 255, 0.04) 100%
+    );
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* bobbing animation */
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+
+  /* hover */
+  .continue-btn:hover {
+    background:
+      linear-gradient(
+        180deg,
+        #A3D48C 0%,
+        #7DAF5A 45%,
+        #6B8E4E 100%
+      );
+    box-shadow:
+      0 0 0 3px #5A8242,
+      0 0 0 8px #A07B4A,
+      /* sunlight glow */
+      0 0 24px 6px rgba(168, 212, 140, 0.5),
+      0 0 40px 10px rgba(255, 230, 140, 0.15),
+      0 6px 0 0 #3D5F2E,
+      0 8px 20px rgba(40, 60, 25, 0.4);
+    animation: bob-hover 3s ease-in-out infinite;
+  }
+
+  @keyframes bob-hover {
+    0%, 100% { transform: translateY(0) scale(1.06); }
+    50% { transform: translateY(-5px) scale(1.06); }
+  }
+
+  /* pressed */
+  .continue-btn:active {
+    transform: translateY(4px) scale(1.02) !important;
+    box-shadow:
+      0 0 0 3px #4A6B35,
+      0 0 0 8px #8B6B3E,
+      0 0 10px 2px rgba(107, 142, 78, 0.3),
+      0 2px 0 0 #3D5F2E,
+      0 3px 8px rgba(40, 60, 25, 0.4);
+    background:
+      linear-gradient(
+        180deg,
+        #7DAF5A 0%,
+        #5A7A42 45%,
+        #4A6B35 100%
+      );
+    animation: none;
+    transition: transform 0.06s ease, box-shadow 0.06s ease, background 0.06s ease;
+  }
+
+  /* focus (keyboard) */
+  .continue-btn:focus-visible {
+    box-shadow:
+      0 0 0 3px #4A6B35,
+      0 0 0 8px #8B6B3E,
+      0 0 0 12px rgba(168, 212, 140, 0.6),
+      0 0 20px 8px rgba(143, 188, 107, 0.35),
+      0 6px 0 0 #3D5F2E,
+      0 8px 16px rgba(40, 60, 25, 0.45);
+  }
+
+  /* hover state for decorative elements */
+  .button-wrap:hover .leaf {
+    opacity: 1;
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .button-wrap:hover .leaf-tl { transform: rotate(-25deg) scale(1.15); }
+  .button-wrap:hover .leaf-tr { transform: rotate(75deg) scaleX(-1) scale(1.15); }
+  .button-wrap:hover .leaf-bl { transform: rotate(-75deg) scale(1.15); }
+  .button-wrap:hover .leaf-br { transform: rotate(25deg) scaleX(-1) scale(1.15); }
+  .leaf { transition: opacity 0.3s, transform 0.3s; }
+
+  .button-wrap:hover .leaf-sm {
+    opacity: 1;
+    transition: opacity 0.4s 0.05s;
+  }
+  .leaf-sm { transition: opacity 0.3s; }
+
+  /* grass tufts at the bottom */
+  .grass-cluster {
+    position: absolute;
+    bottom: -14px;
+    pointer-events: none;
+    z-index: 0;
+    display: flex;
+    gap: 2px;
+    align-items: flex-end;
+  }
+  .grass-cluster-left { left: 12px; }
+  .grass-cluster-right { right: 12px; }
+  .grass-cluster-center { left: 50%; transform: translateX(-50%); }
+
+  .grass-blade {
+    width: 4px;
+    border-radius: 2px 2px 0 0;
+    background: linear-gradient(to top, #5A7A42, #8FBC6B);
+  }
+</style>
+</head>
+<body>
+
+<div class="concept-label">Concept 03: Nature-Framed</div>
+
+<div class="button-wrap">
+  <!-- corner leaves -->
+  <div class="leaf leaf-tl"></div>
+  <div class="leaf leaf-tr"></div>
+  <div class="leaf leaf-bl"></div>
+  <div class="leaf leaf-br"></div>
+
+  <!-- accent leaves -->
+  <div class="leaf-sm leaf-sm-1"></div>
+  <div class="leaf-sm leaf-sm-2"></div>
+  <div class="leaf-sm leaf-sm-3"></div>
+  <div class="leaf-sm leaf-sm-4"></div>
+
+  <!-- vine tendrils -->
+  <div class="vine vine-left"></div>
+  <div class="vine vine-right"></div>
+
+  <!-- grass tufts -->
+  <div class="grass-cluster grass-cluster-left">
+    <div class="grass-blade" style="height:12px; transform:rotate(-12deg);"></div>
+    <div class="grass-blade" style="height:16px; transform:rotate(-4deg);"></div>
+    <div class="grass-blade" style="height:14px; transform:rotate(6deg);"></div>
+    <div class="grass-blade" style="height:10px; transform:rotate(14deg);"></div>
+  </div>
+  <div class="grass-cluster grass-cluster-center">
+    <div class="grass-blade" style="height:10px; transform:rotate(-10deg);"></div>
+    <div class="grass-blade" style="height:15px; transform:rotate(-2deg);"></div>
+    <div class="grass-blade" style="height:13px; transform:rotate(8deg);"></div>
+  </div>
+  <div class="grass-cluster grass-cluster-right">
+    <div class="grass-blade" style="height:10px; transform:rotate(-14deg);"></div>
+    <div class="grass-blade" style="height:14px; transform:rotate(-6deg);"></div>
+    <div class="grass-blade" style="height:16px; transform:rotate(4deg);"></div>
+    <div class="grass-blade" style="height:12px; transform:rotate(12deg);"></div>
+  </div>
+
+  <button class="continue-btn" type="button">CONTINUE</button>
+</div>
+
+</body>
+</html>
