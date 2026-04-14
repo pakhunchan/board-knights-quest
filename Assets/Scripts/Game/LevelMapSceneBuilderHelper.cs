@@ -31,7 +31,7 @@ namespace BoardOfEducation.Game
             cam.orthographic = true;
             cam.orthographicSize = 5;
             cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = HexColor("#0f0e2a");
+            cam.backgroundColor = HexColor("#3d7a3d");
             cameraGo.tag = "MainCamera";
 
             // ── EventSystem ──
@@ -60,17 +60,16 @@ namespace BoardOfEducation.Game
             // ── Map background image (full-screen) ──
             var mapBgGo = CreateUIElement("MapImage", canvasGo.transform);
             StretchFill(mapBgGo);
-            var mapImg = mapBgGo.AddComponent<Image>();
-            mapImg.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(mapSpritePath);
-            mapImg.preserveAspect = false;
-            mapImg.raycastTarget = false;
-            if (mapImg.sprite == null)
-                Debug.LogWarning($"[LevelMapSceneBuilder] Could not load sprite at {mapSpritePath}");
+            var mapRawImg = mapBgGo.AddComponent<RawImage>();
+            mapRawImg.texture = AssetDatabase.LoadAssetAtPath<Texture2D>(mapSpritePath);
+            mapRawImg.raycastTarget = false;
+            if (mapRawImg.texture == null)
+                Debug.LogWarning($"[LevelMapSceneBuilder] Could not load texture at {mapSpritePath}");
 
             // ── GO button (bottom-center) ──
             var goBtnGo = CreateButton(canvasGo.transform, "GoButton",
                 "GO \u25B8", HexColor("#c9a96e"));
-            SetAnchored(goBtnGo, new Vector2(0.40f, 0.03f), new Vector2(0.60f, 0.12f));
+            SetAnchored(goBtnGo, new Vector2(0.40f, 0.08f), new Vector2(0.60f, 0.17f));
 
             // ── GameCore ──
             var gameCoreGo = new GameObject("GameCore");
@@ -187,11 +186,21 @@ namespace BoardOfEducation.Game
                 importer.spriteImportMode = SpriteImportMode.Single;
                 needsReimport = true;
             }
+            if (importer.maxTextureSize < 2048)
+            {
+                importer.maxTextureSize = 2048;
+                needsReimport = true;
+            }
+            if (importer.npotScale != TextureImporterNPOTScale.None)
+            {
+                importer.npotScale = TextureImporterNPOTScale.None;
+                needsReimport = true;
+            }
+            importer.spritePixelsPerUnit = 100;
             if (needsReimport)
             {
-                importer.spritePixelsPerUnit = 100;
                 importer.SaveAndReimport();
-                Debug.Log($"[LevelMapSceneBuilder] Reimported {path} as Single Sprite");
+                Debug.Log($"[LevelMapSceneBuilder] Reimported {path} as Single Sprite (maxSize=2048)");
             }
         }
 
