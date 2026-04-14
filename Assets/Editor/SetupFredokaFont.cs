@@ -22,6 +22,13 @@ public static class SetupFredokaFont
         var existing = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontAssetPath);
         if (existing != null)
         {
+            if (existing.atlasPopulationMode != TMPro.AtlasPopulationMode.Dynamic)
+            {
+                existing.atlasPopulationMode = TMPro.AtlasPopulationMode.Dynamic;
+                EditorUtility.SetDirty(existing);
+                AssetDatabase.SaveAssets();
+                Debug.Log("[SetupFredokaFont] Switched existing asset to Dynamic atlas mode.");
+            }
             EnsureDefault(existing);
             return;
         }
@@ -41,6 +48,8 @@ public static class SetupFredokaFont
             Debug.LogError("[SetupFredokaFont] Failed to create font asset.");
             return;
         }
+
+        fontAsset.atlasPopulationMode = TMPro.AtlasPopulationMode.Dynamic;
 
         AssetDatabase.CreateAsset(fontAsset, FontAssetPath);
 

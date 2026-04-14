@@ -128,7 +128,7 @@ namespace BoardOfEducation.Game
         private const float ZoomScale = 1.5f;
         private const float ZoomDuration = 0.8f;
 
-        private static readonly Color HandwriteColor = new Color(0.18f, 0.8f, 0.44f);
+        private static readonly Color HandwriteColor = new Color(1f, 0.75f, 0.3f);
 
         // ── Piece/finger dwell tracking for Play button ──────────────
         private float dwellOnPlay = -1f;
@@ -911,7 +911,7 @@ namespace BoardOfEducation.Game
             }
 
             tmp.text = newValue;
-            tmp.color = new Color(0.18f, 0.8f, 0.44f);
+            tmp.color = HandwriteColor;
 
             elapsed = 0f;
             while (elapsed < half)
