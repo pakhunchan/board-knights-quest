@@ -47,6 +47,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LevelMap0.unity
     guid: a4aa8c9a8fbbf4c6ca7411de15fd3b78
+  - enabled: 1
+    path: Assets/Scenes/LevelMap-Test.unity
+    guid: 26bec549f08ef4b13b020ba1b1ee9ff9
+  - enabled: 1
+    path: Assets/Scenes/LevelMap-Test2.unity
+    guid: c6821501b94b5405e8b408102b4acbee
+  - enabled: 1
+    path: Assets/Scenes/Intro1.unity
+    guid: 307639567af56483dbaa60728634b97f
+  - enabled: 1
+    path: Assets/Scenes/LevelMap1.unity
+    guid: aa3a4b8d1207f4dc38df0791d5fe7b7f
   m_configObjects:
     fun.board.input.settings: {fileID: 11400000, guid: 038ef9367c3ca4cdba9b7d23125bff13, type: 2}
     fun.board.settings: {fileID: 11400000, guid: 9e4311430c6124a63a48bfab46d73a8d, type: 2}

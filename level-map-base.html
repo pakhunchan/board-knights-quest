@@ -13,13 +13,9 @@ canvas { display: block; width: 1920px; height: 1080px; }
 <script>
 const W = 1920, H = 1080;
 const canvas = document.getElementById('c');
-const dpr = window.devicePixelRatio || 1;
-canvas.width = W * dpr;
-canvas.height = H * dpr;
-canvas.style.width = W + 'px';
-canvas.style.height = H + 'px';
+canvas.width = W;
+canvas.height = H;
 const ctx = canvas.getContext('2d');
-ctx.scale(dpr, dpr);
 
 // Path node positions (no graphics drawn, just for path routing)
 const nodes = [

@@ -60,11 +60,13 @@ namespace BoardOfEducation.Game
             // ── Map background image (full-screen) ──
             var mapBgGo = CreateUIElement("MapImage", canvasGo.transform);
             StretchFill(mapBgGo);
-            var mapRawImg = mapBgGo.AddComponent<RawImage>();
-            mapRawImg.texture = AssetDatabase.LoadAssetAtPath<Texture2D>(mapSpritePath);
-            mapRawImg.raycastTarget = false;
-            if (mapRawImg.texture == null)
-                Debug.LogWarning($"[LevelMapSceneBuilder] Could not load texture at {mapSpritePath}");
+            var mapImg = mapBgGo.AddComponent<Image>();
+            mapImg.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(mapSpritePath);
+            mapImg.type = Image.Type.Simple;
+            mapImg.preserveAspect = false;
+            mapImg.raycastTarget = false;
+            if (mapImg.sprite == null)
+                Debug.LogWarning($"[LevelMapSceneBuilder] Could not load sprite at {mapSpritePath}");
 
             // ── GO button (bottom-center) ──
             var goBtnGo = CreateButton(canvasGo.transform, "GoButton",
