@@ -12,7 +12,7 @@ namespace BoardOfEducation.Navigation
     /// </summary>
     public static class TitleSceneBuilder
     {
-        [MenuItem("Board of Education/Build Title Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build Title Scene")]
         public static void BuildTitleScene()
         {
             if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -41,6 +41,7 @@ namespace BoardOfEducation.Navigation
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = HexColor("#0f0e2a");
             cameraGo.tag = "MainCamera";
+            cameraGo.AddComponent<AudioListener>();
 
             // ── EventSystem ──
             var eventSystemGo = new GameObject("EventSystem");
@@ -51,11 +52,16 @@ namespace BoardOfEducation.Navigation
                 eventSystemGo.AddComponent(inputModuleType);
             else
                 eventSystemGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            var boardInputModule = eventSystemGo.AddComponent<Board.Input.BoardUIInputModule>();
+            var boardInputSO = new SerializedObject(boardInputModule);
+            var maskProp = boardInputSO.FindProperty("m_InputMask.m_Bits");
+            if (maskProp != null) { maskProp.longValue = 3; boardInputSO.ApplyModifiedPropertiesWithoutUndo(); }
 
             // ── GameCore ──
             var gameCoreGo = new GameObject("GameCore");
             gameCoreGo.AddComponent<Core.BoardStartup>();
             gameCoreGo.AddComponent<Input.PieceManager>();
+            gameCoreGo.AddComponent<Audio.GameAudioManager>();
             var titleManager = gameCoreGo.AddComponent<TitleScreenManager>();
 
             // ── MainCanvas ──
@@ -175,7 +181,7 @@ namespace BoardOfEducation.Navigation
             subTmp.alignment = TextAlignmentOptions.Center;
             subTmp.color = new Color(0.91f, 0.94f, 0.85f, 0.75f);
             subTmp.characterSpacing = 2f;
-            subTmp.enableWordWrapping = false;
+            subTmp.textWrappingMode = TextWrappingModes.NoWrap;
             subTmp.overflowMode = TextOverflowModes.Overflow;
             if (cinzelFont != null) subTmp.font = cinzelFont;
 
@@ -251,7 +257,7 @@ namespace BoardOfEducation.Navigation
             versionTmp.fontSize = 18;
             versionTmp.alignment = TextAlignmentOptions.BottomLeft;
             versionTmp.color = Color.white;
-            versionTmp.enableWordWrapping = false;
+            versionTmp.textWrappingMode = TextWrappingModes.NoWrap;
             versionTmp.overflowMode = TextOverflowModes.Overflow;
 
             // ══════════════════════════════════════════════════
@@ -334,7 +340,7 @@ namespace BoardOfEducation.Navigation
             tmp.fontSize = fontSize;
             tmp.alignment = alignment;
             tmp.color = color;
-            tmp.enableWordWrapping = true;
+            tmp.textWrappingMode = TextWrappingModes.Normal;
             tmp.overflowMode = TextOverflowModes.Ellipsis;
             return go;
         }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using BoardOfEducation.Audio;
 using BoardOfEducation.Core;
 using BoardOfEducation.Input;
 
@@ -154,6 +155,7 @@ namespace BoardOfEducation.Lessons
             string feedback;
             if (correct)
             {
+                GameAudioManager.PlayCorrectSFX();
                 feedback = GetCorrectFeedback();
                 GameManager.Instance?.RecordAnswer(true, DetermineActivePlayer());
                 Logging.InteractionLogger.Instance?.LogGameEvent("answer_correct", currentProblem.Prompt);

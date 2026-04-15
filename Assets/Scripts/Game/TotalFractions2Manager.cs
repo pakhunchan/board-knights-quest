@@ -26,6 +26,8 @@ namespace BoardOfEducation.Game
         [SerializeField] private LessonSequencer sequencer;
         [SerializeField] private bool autoPlay;
 
+        public System.Action OnComplete;
+
         // ── Phase 1 (circles) — set by BuildCircleVisuals(), nulled after transition ──
         private FractionCircle leftCircle, rightCircle;
         private CanvasGroup leftCircleGroup, rightCircleGroup;
@@ -55,14 +57,27 @@ namespace BoardOfEducation.Game
 
         // ── TTS side-channel for direct subtitle calls ──
         private bool _ttsSideDone;
+        private bool _ttsPlaying;
         private void StartTTSSide(string text)
         {
             _ttsSideDone = false;
+            _ttsPlaying = true;
             if (sequencer.TTSProvider != null)
-                StartCoroutine(sequencer.TTSProvider(text, () => _ttsSideDone = true));
+                StartCoroutine(sequencer.TTSProvider(text, () => { _ttsSideDone = true; _ttsPlaying = false; }));
             else
+            {
                 _ttsSideDone = true;
+                _ttsPlaying = false;
+            }
         }
+
+        // ── Lift-piece overlay ──
+        private GameObject liftOverlay;
+        private CanvasGroup liftOverlayGroup;
+
+        // ── Green pulse ring ──
+        private Coroutine _correctPulseCoroutine;
+        private GameObject _correctPulseRing;
 
         // ── Step Definitions (42 steps) ──────────────────────────────────
 
@@ -349,7 +364,7 @@ namespace BoardOfEducation.Game
             numTmp.fontSize = LabelFontSize;
             numTmp.alignment = TextAlignmentOptions.Center;
             numTmp.color = Color.white;
-            numTmp.enableWordWrapping = false;
+            numTmp.textWrappingMode = TextWrappingModes.NoWrap;
 
             var barGo = new GameObject("Bar");
             barGo.transform.SetParent(go.transform, false);
@@ -374,7 +389,7 @@ namespace BoardOfEducation.Game
             denTmp.fontSize = LabelFontSize;
             denTmp.alignment = TextAlignmentOptions.Center;
             denTmp.color = Color.white;
-            denTmp.enableWordWrapping = false;
+            denTmp.textWrappingMode = TextWrappingModes.NoWrap;
 
             return cg;
         }
@@ -719,6 +734,7 @@ namespace BoardOfEducation.Game
             NullEquationRefs();
             DestroyAnswerCircles();
             if (rulesContainer != null) { Destroy(rulesContainer.gameObject); rulesContainer = null; }
+            if (liftOverlay != null) { Destroy(liftOverlay); liftOverlay = null; }
 
             // ── Intro Card + Welcome subtitle ──
             sequencer.Begin();
@@ -798,7 +814,25 @@ namespace BoardOfEducation.Game
             yield return RunP4AnswerInteraction();
 
             sequencer.End();
-            playButtonGo.SetActive(true);
+
+            // Lesson complete — pass progression data and navigate to Results
+            QuestResultsData.Pending = new QuestResultsData
+            {
+                levelBefore     = 1,
+                levelAfter      = 2,
+                titleBefore     = "Squire",
+                titleAfter      = "Knight",
+                xpBefore        = 0,
+                xpGained        = 500,
+                xpToNextLevel   = 200,
+                xpToNextLevelAfter = 600,
+                mapStageBefore  = 0,
+                mapStageAfter   = 1,
+                nextSceneName   = "Outro1",
+            };
+            if (liftOverlay != null) { Destroy(liftOverlay); liftOverlay = null; }
+            if (OnComplete != null) { OnComplete(); yield break; }
+            NavigationHelper.LoadScene("Results1");
         }
 
         // ══════════════════════════════════════════════════════════════
@@ -1260,7 +1294,10 @@ namespace BoardOfEducation.Game
             yield return new WaitUntil(() => subDone && _ttsSideDone);
 
             // Wait for correct answer: circle index 1 ("3")
+            StartCorrectPulse(1);
             yield return CoWaitForAnswer(1);
+            StopCorrectPulse();
+            yield return CoWaitForPieceRemoval();
 
             // Correct: destroy circles, handwrite "3" on fracMiddleDen
             DestroyAnswerCircles();
@@ -1289,7 +1326,10 @@ namespace BoardOfEducation.Game
             yield return new WaitUntil(() => subDone && _ttsSideDone);
 
             // Wait for correct answer: circle index 1 ("3")
+            StartCorrectPulse(1);
             yield return CoWaitForAnswer(1);
+            StopCorrectPulse();
+            yield return CoWaitForPieceRemoval();
 
             // Correct: destroy circles, handwrite "3" on fracMiddleNum
             DestroyAnswerCircles();
@@ -1332,7 +1372,10 @@ namespace BoardOfEducation.Game
             yield return new WaitUntil(() => subDone && _ttsSideDone);
 
             // Wait for correct answer: circle index 2 ("6")
+            StartCorrectPulse(2);
             yield return CoWaitForAnswer(2);
+            StopCorrectPulse();
+            yield return CoWaitForPieceRemoval();
 
             // Correct: destroy circles, handwrite "6" on fracRightNum
             DestroyAnswerCircles();
@@ -1386,6 +1429,7 @@ namespace BoardOfEducation.Game
 
             // Wait for correct answer: circle index 1 ("12")
             yield return CoWaitForAnswer(1);
+            yield return CoWaitForPieceRemoval();
 
             // Correct: destroy circles, handwrite "12" on fracRightNum
             DestroyAnswerCircles();
@@ -1476,6 +1520,17 @@ namespace BoardOfEducation.Game
             {
                 if (PieceManager.Instance == null) { yield return null; continue; }
 
+                if (_ttsPlaying)
+                {
+                    for (int i = 0; i < answerDwellTimes.Length; i++)
+                    {
+                        answerDwellTimes[i] = -1f;
+                        ResetCircleColor(i);
+                    }
+                    yield return null;
+                    continue;
+                }
+
                 // Get first active piece
                 Vector2 screenPos = Vector2.zero;
                 bool hasContact = false;
@@ -1543,7 +1598,8 @@ namespace BoardOfEducation.Game
                 {
                     if (hoveredIndex == correctIndex)
                     {
-                        // Correct: green flash
+                        // Correct: play chime + green flash
+                        BoardOfEducation.Audio.GameAudioManager.PlayCorrectSFX();
                         yield return CoFlashCircle(hoveredIndex, CircleCorrectColor, 0.3f);
                         answered = true;
                     }
@@ -1574,6 +1630,155 @@ namespace BoardOfEducation.Game
             if (img == null) yield break;
             img.color = flashColor;
             yield return new WaitForSeconds(duration);
+        }
+
+        // ── Green Pulse (guided hints) ────────────────────────────────
+
+        private IEnumerator CoPulseCorrectCircle(int index)
+        {
+            if (index < 0 || index >= answerCircles.Length) yield break;
+            var circleRect = answerCircleRects[index];
+            if (circleRect == null) yield break;
+
+            // Create a larger circle behind the answer circle to form a visible ring
+            var ringGo = new GameObject("CorrectRing");
+            ringGo.transform.SetParent(circleRect.parent, false);
+            var ringRect = ringGo.AddComponent<RectTransform>();
+            ringRect.anchoredPosition = circleRect.anchoredPosition;
+            float border = 12f;
+            float ringSize = circleRect.sizeDelta.x + border * 2f;
+            ringRect.sizeDelta = new Vector2(ringSize, ringSize);
+            ringRect.SetSiblingIndex(circleRect.GetSiblingIndex());
+
+            var ringImg = ringGo.AddComponent<Image>();
+            ringImg.sprite = NavigationHelper.EnsureCircleSprite();
+            ringImg.color = new Color(CircleCorrectColor.r, CircleCorrectColor.g, CircleCorrectColor.b, 0f);
+            ringImg.raycastTarget = false;
+
+            _correctPulseRing = ringGo;
+
+            // Flash exactly twice
+            const float fadeIn = 0.3f;
+            const float fadeOut = 0.3f;
+            for (int flash = 0; flash < 2; flash++)
+            {
+                float elapsed = 0f;
+                while (elapsed < fadeIn)
+                {
+                    elapsed += Time.deltaTime;
+                    float a = Mathf.Clamp01(elapsed / fadeIn);
+                    ringImg.color = new Color(CircleCorrectColor.r, CircleCorrectColor.g, CircleCorrectColor.b, a);
+                    yield return null;
+                }
+                elapsed = 0f;
+                while (elapsed < fadeOut)
+                {
+                    elapsed += Time.deltaTime;
+                    float a = 1f - Mathf.Clamp01(elapsed / fadeOut);
+                    ringImg.color = new Color(CircleCorrectColor.r, CircleCorrectColor.g, CircleCorrectColor.b, a);
+                    yield return null;
+                }
+            }
+
+            Destroy(ringGo);
+            _correctPulseRing = null;
+            _correctPulseCoroutine = null;
+        }
+
+        private void StartCorrectPulse(int correctIndex)
+        {
+            StopCorrectPulse();
+            _correctPulseCoroutine = StartCoroutine(CoPulseCorrectCircle(correctIndex));
+        }
+
+        private void StopCorrectPulse()
+        {
+            if (_correctPulseCoroutine != null)
+            {
+                StopCoroutine(_correctPulseCoroutine);
+                _correctPulseCoroutine = null;
+            }
+            if (_correctPulseRing != null)
+            {
+                Destroy(_correctPulseRing);
+                _correctPulseRing = null;
+            }
+        }
+
+        // ── Lift-Piece Overlay ───────────────────────────────────────
+
+        private void CreateLiftOverlay()
+        {
+            var canvas = contentArea.GetComponentInParent<Canvas>();
+            var parent = canvas != null ? canvas.transform : contentArea;
+
+            liftOverlay = new GameObject("LiftOverlay");
+            liftOverlay.transform.SetParent(parent, false);
+            var rect = liftOverlay.AddComponent<RectTransform>();
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+
+            var bg = liftOverlay.AddComponent<Image>();
+            bg.color = new Color(0, 0, 0, 0.85f);
+            bg.raycastTarget = false;
+
+            liftOverlayGroup = liftOverlay.AddComponent<CanvasGroup>();
+            liftOverlayGroup.alpha = 0f;
+            liftOverlayGroup.blocksRaycasts = false;
+
+            var textGo = new GameObject("LiftText");
+            textGo.transform.SetParent(liftOverlay.transform, false);
+            var textRect = textGo.AddComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = Vector2.zero;
+            textRect.offsetMax = Vector2.zero;
+            var tmp = textGo.AddComponent<TextMeshProUGUI>();
+            tmp.text = "Remove your piece to continue";
+            tmp.fontSize = 52;
+            tmp.alignment = TextAlignmentOptions.Center;
+            tmp.color = Color.white;
+            tmp.raycastTarget = false;
+
+            liftOverlay.SetActive(false);
+        }
+
+        private IEnumerator CoWaitForPieceRemoval()
+        {
+            if (PieceManager.Instance == null || PieceManager.Instance.ActivePieces.Count == 0)
+                yield break;
+
+            if (liftOverlay == null)
+                CreateLiftOverlay();
+
+            liftOverlay.SetActive(true);
+            liftOverlay.transform.SetAsLastSibling();
+
+            float elapsed = 0f;
+            const float fadeDuration = 0.2f;
+            while (elapsed < fadeDuration)
+            {
+                elapsed += Time.deltaTime;
+                liftOverlayGroup.alpha = Mathf.Lerp(0f, 1f, Mathf.Clamp01(elapsed / fadeDuration));
+                yield return null;
+            }
+            liftOverlayGroup.alpha = 1f;
+
+            yield return new WaitUntil(() =>
+                PieceManager.Instance == null || PieceManager.Instance.ActivePieces.Count == 0);
+
+            elapsed = 0f;
+            float startAlpha = liftOverlayGroup.alpha;
+            while (elapsed < fadeDuration)
+            {
+                elapsed += Time.deltaTime;
+                liftOverlayGroup.alpha = Mathf.Lerp(startAlpha, 0f, Mathf.Clamp01(elapsed / fadeDuration));
+                yield return null;
+            }
+            liftOverlayGroup.alpha = 0f;
+            liftOverlay.SetActive(false);
         }
 
         private void DestroyAnswerCircles()

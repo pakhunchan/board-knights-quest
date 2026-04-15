@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using BoardOfEducation.Audio;
 using BoardOfEducation.Navigation;
 
 namespace BoardOfEducation.Game
@@ -17,6 +18,8 @@ namespace BoardOfEducation.Game
         {
             if (goButton != null)
                 goButton.onClick.AddListener(OnGoClicked);
+
+            GameAudioManager.Instance?.PlayBGM();
         }
 
         private void OnGoClicked()

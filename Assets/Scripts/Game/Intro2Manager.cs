@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using System.Collections;
 using BoardOfEducation.Navigation;
 
@@ -8,7 +9,7 @@ namespace BoardOfEducation.Game
     /// <summary>
     /// Manages the Intro2 scene: Native title screen → Level map screen.
     /// Screen 1 uses sprite assets (hex play zone + robots), Screen 2 is the level map.
-    /// Button clicks cross-fade between screens; the map button loads the lesson scene.
+    /// PLAY button updates subtitle to prompt robot placement; placing a robot proceeds.
     /// </summary>
     public class Intro2Manager : MonoBehaviour
     {
@@ -16,9 +17,13 @@ namespace BoardOfEducation.Game
         [SerializeField] private CanvasGroup mapScreen;
         [SerializeField] private Button playButton;
         [SerializeField] private Button goButton;
+        [SerializeField] private TextMeshProUGUI subtitleText;
+
+        public System.Action OnComplete;
 
         private const float FADE_DURATION = 0.6f;
         private bool transitioning;
+        private bool subscribedToPieces;
 
         private void Start()
         {
@@ -30,10 +35,45 @@ namespace BoardOfEducation.Game
 
             playButton.onClick.AddListener(OnPlayClicked);
             goButton.onClick.AddListener(OnGoClicked);
+
+            // Subscribe here instead of OnEnable — guarantees PieceManager.Instance
+            // is set (all Awake calls complete before any Start call).
+            SubscribeToPieces();
+        }
+
+        private void OnDisable()
+        {
+            UnsubscribeFromPieces();
+        }
+
+        private void SubscribeToPieces()
+        {
+            if (subscribedToPieces) return;
+            if (Input.PieceManager.Instance != null)
+            {
+                Input.PieceManager.Instance.OnPiecePlaced += OnRobotPlaced;
+                subscribedToPieces = true;
+            }
+        }
+
+        private void UnsubscribeFromPieces()
+        {
+            if (!subscribedToPieces) return;
+            if (Input.PieceManager.Instance != null)
+                Input.PieceManager.Instance.OnPiecePlaced -= OnRobotPlaced;
+            subscribedToPieces = false;
         }
 
         private void OnPlayClicked()
         {
+            // Tapping PLAY directly transitions (no two-step flow needed)
+            if (transitioning) return;
+            StartCoroutine(CrossFade(titleScreen, mapScreen));
+        }
+
+        private void OnRobotPlaced(Input.PieceManager.PieceContact piece)
+        {
+            // Placing any robot on the board also transitions directly
             if (transitioning) return;
             StartCoroutine(CrossFade(titleScreen, mapScreen));
         }
@@ -41,7 +81,8 @@ namespace BoardOfEducation.Game
         private void OnGoClicked()
         {
             if (transitioning) return;
-            NavigationHelper.LoadScene("TotalFractions2DemoWithBG");
+            if (OnComplete != null) { OnComplete(); return; }
+            NavigationHelper.LoadScene("Intro3");
         }
 
         private IEnumerator CrossFade(CanvasGroup from, CanvasGroup to)

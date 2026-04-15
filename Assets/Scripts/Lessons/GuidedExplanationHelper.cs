@@ -76,14 +76,23 @@ namespace BoardOfEducation.Lessons
 
         // ── TTS side-channel ──
         private bool _ttsDone;
+        private bool _ttsPlaying;
         private void StartTTS(string text)
         {
             _ttsDone = false;
+            _ttsPlaying = true;
             if (sequencer.TTSProvider != null)
-                host.StartCoroutine(sequencer.TTSProvider(text, () => _ttsDone = true));
+                host.StartCoroutine(sequencer.TTSProvider(text, () => { _ttsDone = true; _ttsPlaying = false; }));
             else
+            {
                 _ttsDone = true;
+                _ttsPlaying = false;
+            }
         }
+
+        // ── Green pulse ring ──
+        private Coroutine _correctPulseCoroutine;
+        private GameObject _correctPulseRing;
 
         // ── Public Entry Point ──────────────────────────────────────
 
@@ -206,7 +215,9 @@ namespace BoardOfEducation.Lessons
             yield return new WaitUntil(() => subDone && _ttsDone);
 
             // Wait for correct answer
+            StartCorrectPulse(correctIdx);
             yield return CoWaitForAnswer(correctIdx);
+            StopCorrectPulse();
             yield return CoWaitForPieceRemoval();
 
             // Handwrite answer
@@ -239,7 +250,9 @@ namespace BoardOfEducation.Lessons
                 new LessonStep(sub).EstimatedDuration, () => subDone = true));
             yield return new WaitUntil(() => subDone && _ttsDone);
 
+            StartCorrectPulse(correctIdx);
             yield return CoWaitForAnswer(correctIdx);
+            StopCorrectPulse();
             yield return CoWaitForPieceRemoval();
 
             DestroyAnswerCircles();
@@ -291,7 +304,9 @@ namespace BoardOfEducation.Lessons
                 new LessonStep(sub4).EstimatedDuration, () => subDone = true));
             yield return new WaitUntil(() => subDone && _ttsDone);
 
+            StartCorrectPulse(correctIdx);
             yield return CoWaitForAnswer(correctIdx);
+            StopCorrectPulse();
             yield return CoWaitForPieceRemoval();
 
             DestroyAnswerCircles();
@@ -598,6 +613,17 @@ namespace BoardOfEducation.Lessons
             {
                 if (PieceManager.Instance == null) { yield return null; continue; }
 
+                if (_ttsPlaying)
+                {
+                    for (int i = 0; i < answerDwellTimes.Length; i++)
+                    {
+                        answerDwellTimes[i] = -1f;
+                        ResetCircleColor(i);
+                    }
+                    yield return null;
+                    continue;
+                }
+
                 Vector2 screenPos = Vector2.zero;
                 bool hasContact = false;
                 foreach (var kvp in PieceManager.Instance.ActivePieces)
@@ -661,6 +687,7 @@ namespace BoardOfEducation.Lessons
                 {
                     if (hoveredIndex == correctIndex)
                     {
+                        BoardOfEducation.Audio.GameAudioManager.PlayCorrectSFX();
                         yield return CoFlashCircle(hoveredIndex, CircleCorrectColor, 0.3f);
                         answered = true;
                     }
@@ -701,6 +728,79 @@ namespace BoardOfEducation.Lessons
             if (img == null) yield break;
             img.color = flashColor;
             yield return new WaitForSeconds(duration);
+        }
+
+        // ── Green Pulse (guided hints) ────────────────────────────────
+
+        private IEnumerator CoPulseCorrectCircle(int index)
+        {
+            if (index < 0 || index >= answerCircles.Length) yield break;
+            var circleRect = answerCircleRects[index];
+            if (circleRect == null) yield break;
+
+            // Create a larger circle behind the answer circle to form a visible ring
+            var ringGo = new GameObject("CorrectRing");
+            ringGo.transform.SetParent(circleRect.parent, false);
+            var ringRect = ringGo.AddComponent<RectTransform>();
+            ringRect.anchoredPosition = circleRect.anchoredPosition;
+            float border = 12f;
+            float ringSize = circleRect.sizeDelta.x + border * 2f;
+            ringRect.sizeDelta = new Vector2(ringSize, ringSize);
+            ringRect.SetSiblingIndex(circleRect.GetSiblingIndex());
+
+            var ringImg = ringGo.AddComponent<Image>();
+            ringImg.sprite = NavigationHelper.EnsureCircleSprite();
+            ringImg.color = new Color(CircleCorrectColor.r, CircleCorrectColor.g, CircleCorrectColor.b, 0f);
+            ringImg.raycastTarget = false;
+
+            _correctPulseRing = ringGo;
+
+            // Flash exactly twice
+            const float fadeIn = 0.3f;
+            const float fadeOut = 0.3f;
+            for (int flash = 0; flash < 2; flash++)
+            {
+                float elapsed = 0f;
+                while (elapsed < fadeIn)
+                {
+                    elapsed += Time.deltaTime;
+                    float a = Mathf.Clamp01(elapsed / fadeIn);
+                    ringImg.color = new Color(CircleCorrectColor.r, CircleCorrectColor.g, CircleCorrectColor.b, a);
+                    yield return null;
+                }
+                elapsed = 0f;
+                while (elapsed < fadeOut)
+                {
+                    elapsed += Time.deltaTime;
+                    float a = 1f - Mathf.Clamp01(elapsed / fadeOut);
+                    ringImg.color = new Color(CircleCorrectColor.r, CircleCorrectColor.g, CircleCorrectColor.b, a);
+                    yield return null;
+                }
+            }
+
+            UnityEngine.Object.Destroy(ringGo);
+            _correctPulseRing = null;
+            _correctPulseCoroutine = null;
+        }
+
+        private void StartCorrectPulse(int correctIndex)
+        {
+            StopCorrectPulse();
+            _correctPulseCoroutine = host.StartCoroutine(CoPulseCorrectCircle(correctIndex));
+        }
+
+        private void StopCorrectPulse()
+        {
+            if (_correctPulseCoroutine != null)
+            {
+                host.StopCoroutine(_correctPulseCoroutine);
+                _correctPulseCoroutine = null;
+            }
+            if (_correctPulseRing != null)
+            {
+                UnityEngine.Object.Destroy(_correctPulseRing);
+                _correctPulseRing = null;
+            }
         }
 
         private void DestroyAnswerCircles()

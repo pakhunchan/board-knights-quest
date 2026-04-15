@@ -25,6 +25,8 @@ namespace BoardOfEducation.Game
         [SerializeField] private LessonSequencer sequencer;
         [SerializeField] private bool autoPlay;
 
+        public System.Action OnComplete;
+
         // ── Chalkboard orchestration ──
         [SerializeField] private ChalkboardDemoManager chalkboardManager;
         [SerializeField] private CanvasGroup contentGroup;
@@ -395,10 +397,9 @@ namespace BoardOfEducation.Game
                 yield return CoShowAnswerCircles(q.choices);
 
                 // Show karaoke subtitle + TTS (concurrent with waiting for answer)
-                bool subDone = false;
                 StartTTSSide(q.subtitle);
                 StartCoroutine(sequencer.CoShowSubtitle(q.subtitle,
-                    new LessonStep(q.subtitle).EstimatedDuration, () => subDone = true));
+                    new LessonStep(q.subtitle).EstimatedDuration, () => { }));
 
                 // Wait for correct answer
                 yield return CoWaitForAnswer(q.correctIndex);
@@ -446,6 +447,7 @@ namespace BoardOfEducation.Game
             yield return sequencer.RunStep(outroStep, null);
 
             sequencer.End();
+            if (OnComplete != null) { OnComplete(); yield break; }
             playButtonGo.SetActive(true);
         }
 
@@ -756,7 +758,8 @@ namespace BoardOfEducation.Game
                 {
                     if (hoveredIndex == correctIndex)
                     {
-                        // Correct: green flash
+                        // Correct: play chime + green flash
+                        BoardOfEducation.Audio.GameAudioManager.PlayCorrectSFX();
                         yield return CoFlashCircle(hoveredIndex, CircleCorrectColor, 0.3f);
                         answered = true;
                     }

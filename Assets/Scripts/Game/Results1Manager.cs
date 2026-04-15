@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
+using BoardOfEducation.Audio;
 using BoardOfEducation.Navigation;
 
 namespace BoardOfEducation.Game
@@ -39,11 +40,15 @@ namespace BoardOfEducation.Game
         [SerializeField] private TextMeshProUGUI rankTitleText;
         [SerializeField] private RectTransform continueButtonRect;
 
+        public System.Action OnComplete;
+
         // Track which flowers have bloomed
         private bool[] flowerBloomed;
 
         private void Start()
         {
+            GameAudioManager.Instance?.PlayBGM();
+
             var data = QuestResultsData.Pending;
             QuestResultsData.Pending = null;
 
@@ -136,7 +141,11 @@ namespace BoardOfEducation.Game
 
             // Wire continue button
             string nextScene = string.IsNullOrEmpty(data.nextSceneName) ? "Outro1" : data.nextSceneName;
-            continueButton.onClick.AddListener(() => NavigationHelper.LoadScene(nextScene));
+            continueButton.onClick.AddListener(() =>
+            {
+                if (OnComplete != null) { OnComplete(); return; }
+                NavigationHelper.LoadScene(nextScene);
+            });
 
             StartCoroutine(PlaySequence(data));
         }

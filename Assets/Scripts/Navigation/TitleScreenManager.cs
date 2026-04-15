@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
+using BoardOfEducation.Audio;
 using BoardOfEducation.Input;
 
 namespace BoardOfEducation.Navigation
@@ -32,6 +33,8 @@ namespace BoardOfEducation.Navigation
             // Start with green overlay fully transparent (grey showing)
             if (greenOverlay != null)
                 greenOverlay.color = new Color(1, 1, 1, 0f);
+
+            GameAudioManager.Instance?.PlayBGM();
         }
 
         private void Update()
