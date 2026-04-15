@@ -14,11 +14,11 @@ namespace BoardOfEducation.Core
     /// </summary>
     public static class SceneBuilder
     {
-        [MenuItem("Board of Education/Build Game Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build Game Scene")]
         public static void BuildScene()
         {
             // Clean up existing scene objects (except camera)
-            foreach (var go in Object.FindObjectsByType<GameObject>(FindObjectsSortMode.None))
+            foreach (var go in Object.FindObjectsByType<GameObject>())
             {
                 if (go.name != "Main Camera" && go.transform.parent == null)
                     Object.DestroyImmediate(go);
@@ -49,6 +49,10 @@ namespace BoardOfEducation.Core
             eventSystem.AddComponent<EventSystem>();
             // Use New Input System UI module (required by Board SDK)
             eventSystem.AddComponent<InputSystemUIInputModule>();
+            var boardInputModule = eventSystem.AddComponent<Board.Input.BoardUIInputModule>();
+            var boardInputSO = new SerializedObject(boardInputModule);
+            var maskProp = boardInputSO.FindProperty("m_InputMask.m_Bits");
+            if (maskProp != null) { maskProp.longValue = 3; boardInputSO.ApplyModifiedPropertiesWithoutUndo(); }
 
             // === MAIN CANVAS (Screen Space - Overlay, 1920x1080) ===
             var canvasGO = new GameObject("MainCanvas");
@@ -297,7 +301,7 @@ namespace BoardOfEducation.Core
             tmp.fontSize = fontSize;
             tmp.alignment = alignment;
             tmp.color = color;
-            tmp.enableWordWrapping = true;
+            tmp.textWrappingMode = TextWrappingModes.Normal;
             tmp.overflowMode = TextOverflowModes.Ellipsis;
             return go;
         }

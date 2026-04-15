@@ -25,7 +25,7 @@ namespace BoardOfEducation.Game
             "Assets/Textures/variants/chalkboard-layers/layer-4-border.png",
         };
 
-        [MenuItem("Board of Education/Build Combined1 Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build Combined1 Scene")]
         public static void BuildScene()
         {
             if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -72,6 +72,10 @@ namespace BoardOfEducation.Game
                 eventSystemGo.AddComponent(inputModuleType);
             else
                 eventSystemGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            var boardInputModule = eventSystemGo.AddComponent<Board.Input.BoardUIInputModule>();
+            var boardInputSO = new SerializedObject(boardInputModule);
+            var maskProp = boardInputSO.FindProperty("m_InputMask.m_Bits");
+            if (maskProp != null) { maskProp.longValue = 3; boardInputSO.ApplyModifiedPropertiesWithoutUndo(); }
 
             // ── MainCanvas ──
             var canvasGo = new GameObject("MainCanvas");
@@ -191,7 +195,7 @@ namespace BoardOfEducation.Game
             subTmp.alignment = TextAlignmentOptions.Center;
             subTmp.color = new Color(0.91f, 0.94f, 0.85f, 0.75f);
             subTmp.characterSpacing = 2f;
-            subTmp.enableWordWrapping = false;
+            subTmp.textWrappingMode = TextWrappingModes.NoWrap;
             subTmp.overflowMode = TextOverflowModes.Overflow;
             subTmp.raycastTarget = false;
             if (cinzelFont != null) subTmp.font = cinzelFont;
@@ -259,7 +263,7 @@ namespace BoardOfEducation.Game
             mapImg.raycastTarget = false;
 
             var goBtnGo = CreateButton(mapScreenGo.transform, "GoButton",
-                "GO \u25B8", HexColor("#c9a96e"));
+                "GO >", HexColor("#c9a96e"));
             SetAnchored(goBtnGo, new Vector2(0.40f, 0.03f), new Vector2(0.60f, 0.12f));
 
             // ══════════════════════════════════════════════════
@@ -437,7 +441,7 @@ namespace BoardOfEducation.Game
             tmp.fontSize = fontSize;
             tmp.alignment = alignment;
             tmp.color = color;
-            tmp.enableWordWrapping = true;
+            tmp.textWrappingMode = TextWrappingModes.Normal;
             tmp.overflowMode = TextOverflowModes.Ellipsis;
             return go;
         }

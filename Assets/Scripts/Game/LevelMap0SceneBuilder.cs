@@ -13,7 +13,7 @@ namespace BoardOfEducation.Game
     /// </summary>
     public static class LevelMap0SceneBuilder
     {
-        [MenuItem("Board of Education/Build LevelMap0 Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build LevelMap0 Scene")]
         public static void BuildScene()
         {
             LevelMapSceneBuilderHelper.BuildLevelMapScene(

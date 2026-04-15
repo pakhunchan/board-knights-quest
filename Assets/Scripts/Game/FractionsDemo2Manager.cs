@@ -233,7 +233,7 @@ namespace BoardOfEducation.Game
             numTmp.fontSize = LabelFontSize;
             numTmp.alignment = TextAlignmentOptions.Center;
             numTmp.color = Color.white;
-            numTmp.enableWordWrapping = false;
+            numTmp.textWrappingMode = TextWrappingModes.NoWrap;
 
             // Horizontal bar
             var barGo = new GameObject("Bar");
@@ -260,7 +260,7 @@ namespace BoardOfEducation.Game
             denTmp.fontSize = LabelFontSize;
             denTmp.alignment = TextAlignmentOptions.Center;
             denTmp.color = Color.white;
-            denTmp.enableWordWrapping = false;
+            denTmp.textWrappingMode = TextWrappingModes.NoWrap;
 
             return cg;
         }

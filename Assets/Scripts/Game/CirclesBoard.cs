@@ -112,7 +112,7 @@ namespace BoardOfEducation.Game
             pieceCursorText.fontSize = 32;
             pieceCursorText.alignment = TextAlignmentOptions.Center;
             pieceCursorText.color = Color.white;
-            pieceCursorText.enableWordWrapping = false;
+            pieceCursorText.textWrappingMode = TextWrappingModes.NoWrap;
 
             pieceCursorGo.SetActive(false);
         }
@@ -231,7 +231,7 @@ namespace BoardOfEducation.Game
             tmp.fontSize = 36;
             tmp.alignment = TextAlignmentOptions.Center;
             tmp.color = Color.white;
-            tmp.enableWordWrapping = false;
+            tmp.textWrappingMode = TextWrappingModes.NoWrap;
             tmp.overflowMode = TextOverflowModes.Overflow;
 
             var circle = go.AddComponent<CirclesCircle>();

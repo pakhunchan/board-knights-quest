@@ -12,7 +12,7 @@ namespace BoardOfEducation.Game
     /// </summary>
     public static class LevelMapTestSceneBuilder
     {
-        [MenuItem("Board of Education/Build LevelMap-Test Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build LevelMap-Test Scene")]
         public static void BuildScene()
         {
             if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -40,6 +40,10 @@ namespace BoardOfEducation.Game
                 eventSystemGo.AddComponent(inputModuleType);
             else
                 eventSystemGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            var boardInputModule = eventSystemGo.AddComponent<Board.Input.BoardUIInputModule>();
+            var boardInputSO = new SerializedObject(boardInputModule);
+            var maskProp = boardInputSO.FindProperty("m_InputMask.m_Bits");
+            if (maskProp != null) { maskProp.longValue = 3; boardInputSO.ApplyModifiedPropertiesWithoutUndo(); }
 
             // ── MainCanvas (ScreenSpaceOverlay, same as LevelMap0) ──
             var canvasGo = new GameObject("MainCanvas");

@@ -14,7 +14,7 @@ namespace BoardOfEducation.Game
     /// </summary>
     public static class Intro2SceneBuilder
     {
-        [MenuItem("Board of Education/Build Intro2 Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build Intro2 Scene")]
         public static void BuildScene()
         {
             if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -59,6 +59,10 @@ namespace BoardOfEducation.Game
                 eventSystemGo.AddComponent(inputModuleType);
             else
                 eventSystemGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            var boardInputModule = eventSystemGo.AddComponent<Board.Input.BoardUIInputModule>();
+            var boardInputSO = new SerializedObject(boardInputModule);
+            var maskProp = boardInputSO.FindProperty("m_InputMask.m_Bits");
+            if (maskProp != null) { maskProp.longValue = 3; boardInputSO.ApplyModifiedPropertiesWithoutUndo(); }
 
             // ── MainCanvas ──
             var canvasGo = new GameObject("MainCanvas");
@@ -114,10 +118,10 @@ namespace BoardOfEducation.Game
 
             // Grey hex base — also serves as the PLAY button's target graphic
             var playZoneImg = playZoneGo.AddComponent<Image>();
-            var greyShieldSprite = LoadSprite("Assets/Textures/shield-bg-grey.png");
-            if (greyShieldSprite != null)
+            var greenShieldSprite = LoadSprite("Assets/Textures/shield-bg.png");
+            if (greenShieldSprite != null)
             {
-                playZoneImg.sprite = greyShieldSprite;
+                playZoneImg.sprite = greenShieldSprite;
                 playZoneImg.color = Color.white;
                 playZoneImg.preserveAspect = true;
                 playZoneImg.type = Image.Type.Simple;
@@ -136,7 +140,6 @@ namespace BoardOfEducation.Game
             var greenOverlayGo = CreateUIElement("GreenOverlay", playZoneGo.transform);
             StretchFill(greenOverlayGo);
             var greenOverlayImg = greenOverlayGo.AddComponent<Image>();
-            var greenShieldSprite = LoadSprite("Assets/Textures/shield-bg.png");
             if (greenShieldSprite != null)
             {
                 greenOverlayImg.sprite = greenShieldSprite;
@@ -180,7 +183,7 @@ namespace BoardOfEducation.Game
             subTmp.alignment = TextAlignmentOptions.Center;
             subTmp.color = new Color(0.91f, 0.94f, 0.85f, 0.75f);
             subTmp.characterSpacing = 2f;
-            subTmp.enableWordWrapping = false;
+            subTmp.textWrappingMode = TextWrappingModes.NoWrap;
             subTmp.overflowMode = TextOverflowModes.Overflow;
             if (cinzelFont != null) subTmp.font = cinzelFont;
             subTmp.raycastTarget = false;
@@ -256,7 +259,7 @@ namespace BoardOfEducation.Game
 
             // Map "GO" button (bottom-center)
             var goBtnGo = CreateButton(mapScreenGo.transform, "GoButton",
-                "GO \u25B8", HexColor("#c9a96e"));
+                "GO >", HexColor("#c9a96e"));
             SetAnchored(goBtnGo, new Vector2(0.40f, 0.03f), new Vector2(0.60f, 0.12f));
 
             // ══════════════════════════════════════════════════

@@ -11,7 +11,7 @@ namespace BoardOfEducation.Demo
     /// </summary>
     public static class DemoSceneBuilder
     {
-        [MenuItem("Board of Education/Build Demo Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build Demo Scene")]
         public static void BuildDemoScene()
         {
             // Confirm if the current scene has unsaved changes
@@ -42,6 +42,10 @@ namespace BoardOfEducation.Demo
                 eventSystemGo.AddComponent(inputModuleType);
             else
                 eventSystemGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            var boardInputModule = eventSystemGo.AddComponent<Board.Input.BoardUIInputModule>();
+            var boardInputSO = new SerializedObject(boardInputModule);
+            var maskProp = boardInputSO.FindProperty("m_InputMask.m_Bits");
+            if (maskProp != null) { maskProp.longValue = 3; boardInputSO.ApplyModifiedPropertiesWithoutUndo(); }
 
             // ── GameCore ──
             var gameCoreGo = new GameObject("GameCore");

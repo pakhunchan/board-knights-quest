@@ -18,7 +18,7 @@ namespace BoardOfEducation.Game
         private const string KnightImagePath = "Assets/Textures/intro/knight.png";
         private const string MapImagePath = "Assets/Textures/intro/level-map.png";
 
-        [MenuItem("Board of Education/Build Intro3 Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build Intro3 Scene")]
         public static void BuildScene()
         {
             if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -57,6 +57,10 @@ namespace BoardOfEducation.Game
                 eventSystemGo.AddComponent(inputModuleType);
             else
                 eventSystemGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            var boardInputModule = eventSystemGo.AddComponent<Board.Input.BoardUIInputModule>();
+            var boardInputSO = new SerializedObject(boardInputModule);
+            var maskProp = boardInputSO.FindProperty("m_InputMask.m_Bits");
+            if (maskProp != null) { maskProp.longValue = 3; boardInputSO.ApplyModifiedPropertiesWithoutUndo(); }
 
             // ── MainCanvas ──
             var canvasGo = new GameObject("MainCanvas");
@@ -109,8 +113,8 @@ namespace BoardOfEducation.Game
             // Centered vertically and horizontally
             knightRect.anchorMin = new Vector2(0.5f, 0.5f);
             knightRect.anchorMax = new Vector2(0.5f, 0.5f);
-            knightRect.pivot = new Vector2(0.5f, 0.5f);
-            knightRect.anchoredPosition = Vector2.zero;
+            knightRect.pivot = new Vector2(0.5f, 0f);
+            knightRect.anchoredPosition = new Vector2(0, -400);
             knightRect.sizeDelta = new Vector2(600, 800);
             var knightImg = knightGo.AddComponent<Image>();
             var knightSprite = LoadSprite(KnightImagePath);
@@ -134,16 +138,118 @@ namespace BoardOfEducation.Game
             subtitleTmp.fontSize = 28;
             subtitleTmp.alignment = TextAlignmentOptions.Center;
             subtitleTmp.color = Color.white;
-            subtitleTmp.enableWordWrapping = true;
+            subtitleTmp.textWrappingMode = TextWrappingModes.Normal;
             subtitleTmp.overflowMode = TextOverflowModes.Overflow;
             subtitleTmp.richText = true;
             subtitleTmp.raycastTarget = false;
             if (fredokaFont != null) subtitleTmp.font = fredokaFont;
 
-            // ── Continue button (hidden until narration ends) ──
-            var continueBtnGo = CreateButton(introScreenGo.transform, "ContinueButton",
-                "CONTINUE >", HexColor("#5A7A4A"));
-            SetAnchored(continueBtnGo, new Vector2(0.35f, 0.16f), new Vector2(0.65f, 0.24f));
+            // ── Continue button (nature-framed, hidden until narration ends) ──
+            var circleSprite = Navigation.NavigationHelper.EnsureCircleSprite();
+
+            var contGo = CreateUIElement("ContinueSection", introScreenGo.transform);
+            var contRect = contGo.GetComponent<RectTransform>();
+            contRect.anchorMin = new Vector2(0.63f, 0.35f);
+            contRect.anchorMax = new Vector2(0.93f, 0.58f);
+            contRect.offsetMin = Vector2.zero;
+            contRect.offsetMax = Vector2.zero;
+            var contGroup = contGo.AddComponent<CanvasGroup>();
+
+            // ButtonWrap — parent container
+            var btnWrapGo = CreateUIElement("ButtonWrap", contGo.transform);
+            var btnWrapRect = btnWrapGo.GetComponent<RectTransform>();
+            btnWrapRect.anchorMin = new Vector2(0.5f, 0.5f);
+            btnWrapRect.anchorMax = new Vector2(0.5f, 0.5f);
+            btnWrapRect.pivot = new Vector2(0.5f, 0.5f);
+            btnWrapRect.sizeDelta = new Vector2(540, 200);
+
+            var btnPillSprite = CreatePillSprite(128, 64, 32);
+
+            // WoodRing (rounded background behind button)
+            var woodRingGo = new GameObject("WoodRing");
+            woodRingGo.transform.SetParent(btnWrapGo.transform, false);
+            var woodRingRect = woodRingGo.AddComponent<RectTransform>();
+            woodRingRect.anchorMin = new Vector2(0.5f, 0.5f);
+            woodRingRect.anchorMax = new Vector2(0.5f, 0.5f);
+            woodRingRect.pivot = new Vector2(0.5f, 0.5f);
+            woodRingRect.sizeDelta = new Vector2(540, 200);
+            var woodRingImg = woodRingGo.AddComponent<Image>();
+            woodRingImg.sprite = btnPillSprite;
+            woodRingImg.type = Image.Type.Sliced;
+            woodRingImg.pixelsPerUnitMultiplier = 2f;
+            woodRingImg.color = HexColor("#8B6B3E");
+            woodRingImg.raycastTarget = false;
+
+            // DarkBorder (rounded)
+            var darkBorderGo = new GameObject("DarkBorder");
+            darkBorderGo.transform.SetParent(btnWrapGo.transform, false);
+            var darkBorderRect = darkBorderGo.AddComponent<RectTransform>();
+            darkBorderRect.anchorMin = new Vector2(0.5f, 0.5f);
+            darkBorderRect.anchorMax = new Vector2(0.5f, 0.5f);
+            darkBorderRect.pivot = new Vector2(0.5f, 0.5f);
+            darkBorderRect.sizeDelta = new Vector2(530, 188);
+            var darkBorderImg = darkBorderGo.AddComponent<Image>();
+            darkBorderImg.sprite = btnPillSprite;
+            darkBorderImg.type = Image.Type.Sliced;
+            darkBorderImg.pixelsPerUnitMultiplier = 2f;
+            darkBorderImg.color = HexColor("#5A7A42");
+            darkBorderImg.raycastTarget = false;
+
+            // ContinueButton (rounded, lighter meadow green)
+            var continueBtnGo = new GameObject("ContinueButton");
+            continueBtnGo.transform.SetParent(btnWrapGo.transform, false);
+            var btnRect = continueBtnGo.AddComponent<RectTransform>();
+            btnRect.anchorMin = new Vector2(0.5f, 0.5f);
+            btnRect.anchorMax = new Vector2(0.5f, 0.5f);
+            btnRect.pivot = new Vector2(0.5f, 0.5f);
+            btnRect.sizeDelta = new Vector2(510, 168);
+            var btnImg = continueBtnGo.AddComponent<Image>();
+            btnImg.sprite = btnPillSprite;
+            btnImg.type = Image.Type.Sliced;
+            btnImg.pixelsPerUnitMultiplier = 2f;
+            btnImg.color = HexColor("#8FBC6B");
+            var btn = continueBtnGo.AddComponent<Button>();
+            btn.targetGraphic = btnImg;
+
+            var colors = btn.colors;
+            colors.normalColor = HexColor("#8FBC6B");
+            colors.highlightedColor = HexColor("#A3D48C");
+            colors.pressedColor = HexColor("#7DAF5A");
+            colors.selectedColor = HexColor("#8FBC6B");
+            btn.colors = colors;
+
+            // ButtonText
+            var btnTextGo = new GameObject("ButtonText");
+            btnTextGo.transform.SetParent(continueBtnGo.transform, false);
+            var btnTextRect = btnTextGo.AddComponent<RectTransform>();
+            btnTextRect.anchorMin = Vector2.zero;
+            btnTextRect.anchorMax = Vector2.one;
+            btnTextRect.offsetMin = Vector2.zero;
+            btnTextRect.offsetMax = Vector2.zero;
+            var btnTextTmp = btnTextGo.AddComponent<TextMeshProUGUI>();
+            btnTextTmp.text = "CONTINUE";
+            btnTextTmp.fontSize = 46;
+            btnTextTmp.alignment = TextAlignmentOptions.Center;
+            btnTextTmp.color = HexColor("#FFF5D4");
+            btnTextTmp.raycastTarget = false;
+            if (fredokaFont != null) btnTextTmp.font = fredokaFont;
+
+            // Corner leaves (TL, TR, BL, BR)
+            BuildLeaf(btnWrapGo.transform, "Leaf_TL", circleSprite, new Vector2(-280, 102), -20f, new Vector2(36, 22), "#8FBC6B");
+            BuildLeaf(btnWrapGo.transform, "Leaf_TR", circleSprite, new Vector2(280, 102), 70f, new Vector2(36, 22), "#8FBC6B");
+            BuildLeaf(btnWrapGo.transform, "Leaf_BL", circleSprite, new Vector2(-280, -102), -70f, new Vector2(36, 22), "#8FBC6B");
+            BuildLeaf(btnWrapGo.transform, "Leaf_BR", circleSprite, new Vector2(280, -102), 20f, new Vector2(36, 22), "#8FBC6B");
+
+            // Small leaves between corners
+            BuildLeaf(btnWrapGo.transform, "LeafSm1", circleSprite, new Vector2(-235, 108), -40f, new Vector2(24, 14), "#A3D48C");
+            BuildLeaf(btnWrapGo.transform, "LeafSm2", circleSprite, new Vector2(235, 108), 40f, new Vector2(24, 14), "#A3D48C");
+            BuildLeaf(btnWrapGo.transform, "LeafSm3", circleSprite, new Vector2(-225, -108), 50f, new Vector2(24, 14), "#A3D48C");
+            BuildLeaf(btnWrapGo.transform, "LeafSm4", circleSprite, new Vector2(225, -108), -50f, new Vector2(24, 14), "#A3D48C");
+
+            // Grass clusters (L, C, R)
+            BuildGrassCluster(btnWrapGo.transform, "GrassCluster_L", -220f);
+            BuildGrassCluster(btnWrapGo.transform, "GrassCluster_C", 0f);
+            BuildGrassCluster(btnWrapGo.transform, "GrassCluster_R", 220f);
 
             // ══════════════════════════════════════════════════
             // SCREEN 2: LEVEL MAP
@@ -172,6 +278,7 @@ namespace BoardOfEducation.Game
             var gameCoreGo = new GameObject("GameCore");
             gameCoreGo.AddComponent<Core.BoardStartup>();
             gameCoreGo.AddComponent<Input.PieceManager>();
+            gameCoreGo.AddComponent<BoardOfEducation.Audio.GameAudioManager>();
 
             var manager = gameCoreGo.AddComponent<Intro3Manager>();
 
@@ -182,8 +289,12 @@ namespace BoardOfEducation.Game
             SetRef(so, "introScreen", introGroup);
             SetRef(so, "mapScreen", mapGroup);
             SetRef(so, "subtitleText", subtitleTmp);
-            SetRef(so, "continueButton", continueBtnGo.GetComponent<Button>());
+            SetRef(so, "continueButton", btn);
+            SetRef(so, "continueButtonGroup", contGroup);
+            SetRef(so, "continueButtonRect", btnRect);
             SetRef(so, "goButton", goBtnGo.GetComponent<Button>());
+            SetRef(so, "knightRect", knightRect);
+            SetRef(so, "knightImage", knightImg);
             so.ApplyModifiedPropertiesWithoutUndo();
 
             // ── Save Scene ──
@@ -193,6 +304,10 @@ namespace BoardOfEducation.Game
 
             UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene, scenePath);
             AddToBuildSettings(scenePath);
+
+            // Clear play-mode start scene so this scene plays directly when hitting Play
+            UnityEditor.SceneManagement.EditorSceneManager.playModeStartScene = null;
+
             Debug.Log($"[Intro3SceneBuilder] Scene built and saved to {scenePath}");
         }
 
@@ -319,6 +434,92 @@ namespace BoardOfEducation.Game
             scenes.Add(new EditorBuildSettingsScene(scenePath, true));
             EditorBuildSettings.scenes = scenes.ToArray();
             Debug.Log($"[Intro3SceneBuilder] Added {scenePath} to Build Settings");
+        }
+
+        private static Sprite CreatePillSprite(int width, int height, int radius)
+        {
+            var tex = new Texture2D(width, height, TextureFormat.RGBA32, false);
+            tex.filterMode = FilterMode.Bilinear;
+            var pixels = new Color32[width * height];
+            Color32 white = new Color32(255, 255, 255, 255);
+            Color32 clear = new Color32(0, 0, 0, 0);
+
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    float dx = 0f, dy = 0f;
+                    if (x < radius) dx = radius - x;
+                    else if (x >= width - radius) dx = x - (width - radius - 1);
+                    if (y < radius) dy = radius - y;
+                    else if (y >= height - radius) dy = y - (height - radius - 1);
+
+                    bool inside = (dx * dx + dy * dy) <= (radius * radius);
+                    if (dx == 0 || dy == 0) inside = true;
+
+                    pixels[y * width + x] = inside ? white : clear;
+                }
+            }
+
+            tex.SetPixels32(pixels);
+            tex.Apply();
+
+            var sprite = Sprite.Create(
+                tex,
+                new Rect(0, 0, width, height),
+                new Vector2(0.5f, 0.5f),
+                100f,
+                0,
+                SpriteMeshType.FullRect,
+                new Vector4(radius, radius, radius, radius)
+            );
+            sprite.name = "PillSprite";
+            return sprite;
+        }
+
+        private static void BuildLeaf(Transform parent, string name, Sprite circleSprite,
+            Vector2 position, float rotation, Vector2 size, string hex)
+        {
+            var go = CreateUIElement(name, parent);
+            var rect = go.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0.5f, 0.5f);
+            rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.pivot = new Vector2(0.5f, 0.5f);
+            rect.sizeDelta = size;
+            rect.anchoredPosition = position;
+            rect.localEulerAngles = new Vector3(0, 0, rotation);
+            var img = go.AddComponent<Image>();
+            img.sprite = circleSprite;
+            img.color = HexColor(hex);
+            img.raycastTarget = false;
+        }
+
+        private static void BuildGrassCluster(Transform parent, string name, float xOffset)
+        {
+            var clusterGo = CreateUIElement(name, parent);
+            var clusterRect = clusterGo.GetComponent<RectTransform>();
+            clusterRect.anchorMin = new Vector2(0.5f, 0f);
+            clusterRect.anchorMax = new Vector2(0.5f, 0f);
+            clusterRect.pivot = new Vector2(0.5f, 0f);
+            clusterRect.sizeDelta = new Vector2(30, 16);
+            clusterRect.anchoredPosition = new Vector2(xOffset, -4);
+
+            float[] heights = { 12f, 16f, 10f, 14f };
+            float[] xPositions = { -8f, -2f, 4f, 10f };
+            for (int i = 0; i < 4; i++)
+            {
+                var bladeGo = CreateUIElement($"Blade{i}", clusterGo.transform);
+                var bladeRect = bladeGo.GetComponent<RectTransform>();
+                bladeRect.anchorMin = new Vector2(0.5f, 0f);
+                bladeRect.anchorMax = new Vector2(0.5f, 0f);
+                bladeRect.pivot = new Vector2(0.5f, 0f);
+                bladeRect.sizeDelta = new Vector2(3, heights[i]);
+                bladeRect.anchoredPosition = new Vector2(xPositions[i], 0);
+                bladeRect.localEulerAngles = new Vector3(0, 0, (i % 2 == 0 ? -8f : 8f));
+                var bladeImg = bladeGo.AddComponent<Image>();
+                bladeImg.color = HexColor("#5A7A42");
+                bladeImg.raycastTarget = false;
+            }
         }
     }
 }

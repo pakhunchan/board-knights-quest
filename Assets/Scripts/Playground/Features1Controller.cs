@@ -296,7 +296,7 @@ namespace BoardOfEducation.Playground
                     label.fontSize = 14;
                     label.alignment = TextAlignmentOptions.MidlineLeft;
                     label.color = Color.white;
-                    label.enableWordWrapping = true;
+                    label.textWrappingMode = TextWrappingModes.Normal;
 
                     multiPieceLabels[p.contactId] = (go, label, cImg);
                 }

@@ -382,7 +382,7 @@ namespace BoardOfEducation.Game
             numTmp.fontSize = LabelFontSize;
             numTmp.alignment = TextAlignmentOptions.Center;
             numTmp.color = Color.white;
-            numTmp.enableWordWrapping = false;
+            numTmp.textWrappingMode = TextWrappingModes.NoWrap;
 
             var barGo = new GameObject("Bar");
             barGo.transform.SetParent(go.transform, false);
@@ -407,7 +407,7 @@ namespace BoardOfEducation.Game
             denTmp.fontSize = LabelFontSize;
             denTmp.alignment = TextAlignmentOptions.Center;
             denTmp.color = Color.white;
-            denTmp.enableWordWrapping = false;
+            denTmp.textWrappingMode = TextWrappingModes.NoWrap;
 
             return cg;
         }
@@ -704,9 +704,8 @@ namespace BoardOfEducation.Game
 
                 yield return CoShowAnswerCircles(q.choices);
 
-                bool subDone = false;
                 StartCoroutine(sequencer.CoShowSubtitle(q.subtitle,
-                    new LessonStep(q.subtitle).EstimatedDuration, () => subDone = true));
+                    new LessonStep(q.subtitle).EstimatedDuration, () => { }));
 
                 yield return CoWaitForAnswer(q.correctIndex);
                 UpdateScorePill(i, !currentQuestionHadWrong);
@@ -1580,6 +1579,7 @@ namespace BoardOfEducation.Game
                 {
                     if (hoveredIndex == correctIndex)
                     {
+                        BoardOfEducation.Audio.GameAudioManager.PlayCorrectSFX();
                         yield return CoFlashCircle(hoveredIndex, CircleCorrectColor, 0.3f);
                         answered = true;
                     }

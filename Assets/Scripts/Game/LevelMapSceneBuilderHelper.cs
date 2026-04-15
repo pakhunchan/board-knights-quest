@@ -33,6 +33,7 @@ namespace BoardOfEducation.Game
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = HexColor("#3d7a3d");
             cameraGo.tag = "MainCamera";
+            cameraGo.AddComponent<AudioListener>();
 
             // ── EventSystem ──
             var eventSystemGo = new GameObject("EventSystem");
@@ -43,6 +44,10 @@ namespace BoardOfEducation.Game
                 eventSystemGo.AddComponent(inputModuleType);
             else
                 eventSystemGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            var boardInputModule = eventSystemGo.AddComponent<Board.Input.BoardUIInputModule>();
+            var boardInputSO = new SerializedObject(boardInputModule);
+            var maskProp = boardInputSO.FindProperty("m_InputMask.m_Bits");
+            if (maskProp != null) { maskProp.longValue = 3; boardInputSO.ApplyModifiedPropertiesWithoutUndo(); }
 
             // ── MainCanvas ──
             var canvasGo = new GameObject("MainCanvas");
@@ -70,13 +75,14 @@ namespace BoardOfEducation.Game
 
             // ── GO button (bottom-center) ──
             var goBtnGo = CreateButton(canvasGo.transform, "GoButton",
-                "GO \u25B8", HexColor("#c9a96e"));
+                "GO >", HexColor("#c9a96e"));
             SetAnchored(goBtnGo, new Vector2(0.40f, 0.08f), new Vector2(0.60f, 0.17f));
 
             // ── GameCore ──
             var gameCoreGo = new GameObject("GameCore");
             gameCoreGo.AddComponent<Core.BoardStartup>();
             gameCoreGo.AddComponent<Input.PieceManager>();
+            gameCoreGo.AddComponent<BoardOfEducation.Audio.GameAudioManager>();
 
             var manager = gameCoreGo.AddComponent<LevelMapManager>();
 

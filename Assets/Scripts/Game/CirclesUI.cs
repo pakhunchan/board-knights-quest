@@ -229,7 +229,7 @@ namespace BoardOfEducation.Game
                 label.fontSize = 16;
                 label.alignment = TextAlignmentOptions.Center;
                 label.color = Color.white;
-                label.enableWordWrapping = true;
+                label.textWrappingMode = TextWrappingModes.Normal;
 
                 pieceCircles.Add((rect, img, glyphId));
             }

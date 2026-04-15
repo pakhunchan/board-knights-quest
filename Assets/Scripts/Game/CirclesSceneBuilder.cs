@@ -12,7 +12,7 @@ namespace BoardOfEducation.Game
     /// </summary>
     public static class CirclesSceneBuilder
     {
-        [MenuItem("Board of Education/Build Circles Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build Circles Scene")]
         public static void BuildCirclesScene()
         {
             if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -40,6 +40,10 @@ namespace BoardOfEducation.Game
                 eventSystemGo.AddComponent(inputModuleType);
             else
                 eventSystemGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            var boardInputModule = eventSystemGo.AddComponent<Board.Input.BoardUIInputModule>();
+            var boardInputSO = new SerializedObject(boardInputModule);
+            var maskProp = boardInputSO.FindProperty("m_InputMask.m_Bits");
+            if (maskProp != null) { maskProp.longValue = 3; boardInputSO.ApplyModifiedPropertiesWithoutUndo(); }
 
             // ── GameCore ──
             var gameCoreGo = new GameObject("GameCore");
@@ -278,7 +282,7 @@ namespace BoardOfEducation.Game
             tmp.fontSize = fontSize;
             tmp.alignment = alignment;
             tmp.color = color;
-            tmp.enableWordWrapping = true;
+            tmp.textWrappingMode = TextWrappingModes.Normal;
             tmp.overflowMode = TextOverflowModes.Ellipsis;
             return go;
         }

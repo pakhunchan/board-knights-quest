@@ -13,7 +13,7 @@ namespace BoardOfEducation.Game
     /// </summary>
     public static class Outro1SceneBuilder
     {
-        [MenuItem("Board of Education/Build Outro1 Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build Outro1 Scene")]
         public static void BuildScene()
         {
             if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -51,6 +51,10 @@ namespace BoardOfEducation.Game
                 eventSystemGo.AddComponent(inputModuleType);
             else
                 eventSystemGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            var boardInputModule = eventSystemGo.AddComponent<Board.Input.BoardUIInputModule>();
+            var boardInputSO = new SerializedObject(boardInputModule);
+            var maskProp = boardInputSO.FindProperty("m_InputMask.m_Bits");
+            if (maskProp != null) { maskProp.longValue = 3; boardInputSO.ApplyModifiedPropertiesWithoutUndo(); }
 
             // ── MainCanvas ──
             var canvasGo = new GameObject("MainCanvas");
@@ -102,9 +106,9 @@ namespace BoardOfEducation.Game
             var knightRect = knightGo.AddComponent<RectTransform>();
             knightRect.anchorMin = new Vector2(0.5f, 0.5f);
             knightRect.anchorMax = new Vector2(0.5f, 0.5f);
-            knightRect.pivot = new Vector2(0.5f, 0.5f);
+            knightRect.pivot = new Vector2(0.5f, 0f);
             knightRect.sizeDelta = new Vector2(600, 800);
-            knightRect.anchoredPosition = Vector2.zero;
+            knightRect.anchoredPosition = new Vector2(0, -400);
             var knightImg = knightGo.AddComponent<Image>();
             knightImg.raycastTarget = false;
             var knightSprite = LoadSprite("Assets/Textures/knight-bronze.png");
@@ -133,10 +137,49 @@ namespace BoardOfEducation.Game
             subTmp.fontSize = 32;
             subTmp.alignment = TextAlignmentOptions.Center;
             subTmp.color = Color.white;
-            subTmp.enableWordWrapping = true;
+            subTmp.textWrappingMode = TextWrappingModes.Normal;
             subTmp.overflowMode = TextOverflowModes.Overflow;
             subTmp.raycastTarget = false;
             if (cinzelFont != null) subTmp.font = cinzelFont;
+
+            // Continue button (bottom-center, green #5A7A4A, starts hidden)
+            var continueBtnGo = new GameObject("ContinueButton");
+            continueBtnGo.transform.SetParent(screenGo.transform, false);
+            var continueRect = continueBtnGo.AddComponent<RectTransform>();
+            continueRect.anchorMin = new Vector2(0.35f, 0.03f);
+            continueRect.anchorMax = new Vector2(0.65f, 0.11f);
+            continueRect.offsetMin = Vector2.zero;
+            continueRect.offsetMax = Vector2.zero;
+
+            var continueImg = continueBtnGo.AddComponent<Image>();
+            continueImg.color = HexColor("#5A7A4A");
+
+            var continueBtn = continueBtnGo.AddComponent<Button>();
+            continueBtn.targetGraphic = continueImg;
+            var continueBtnColors = continueBtn.colors;
+            continueBtnColors.normalColor = Color.white;
+            continueBtnColors.highlightedColor = new Color(0.9f, 0.9f, 0.9f, 1f);
+            continueBtnColors.pressedColor = new Color(0.7f, 0.7f, 0.7f, 1f);
+            continueBtn.colors = continueBtnColors;
+
+            var continueBtnGroup = continueBtnGo.AddComponent<CanvasGroup>();
+            continueBtnGroup.alpha = 1f;
+
+            var continueTextGo = new GameObject("Text");
+            continueTextGo.transform.SetParent(continueBtnGo.transform, false);
+            var continueTextRect = continueTextGo.AddComponent<RectTransform>();
+            continueTextRect.anchorMin = Vector2.zero;
+            continueTextRect.anchorMax = Vector2.one;
+            continueTextRect.offsetMin = Vector2.zero;
+            continueTextRect.offsetMax = Vector2.zero;
+
+            var continueTmp = continueTextGo.AddComponent<TextMeshProUGUI>();
+            continueTmp.text = "CONTINUE >";
+            continueTmp.fontSize = 36;
+            continueTmp.alignment = TextAlignmentOptions.Center;
+            continueTmp.color = Color.white;
+            continueTmp.raycastTarget = false;
+            if (cinzelFont != null) continueTmp.font = cinzelFont;
 
             // ══════════════════════════════════════════════════
             // GAMECORE
@@ -144,6 +187,7 @@ namespace BoardOfEducation.Game
             var gameCoreGo = new GameObject("GameCore");
             gameCoreGo.AddComponent<Core.BoardStartup>();
             gameCoreGo.AddComponent<Input.PieceManager>();
+            gameCoreGo.AddComponent<BoardOfEducation.Audio.GameAudioManager>();
 
             var manager = gameCoreGo.AddComponent<Outro1Manager>();
 
@@ -153,6 +197,9 @@ namespace BoardOfEducation.Game
             var so = new SerializedObject(manager);
             SetRef(so, "subtitleText", subTmp);
             SetRef(so, "screenGroup", screenGroup);
+            SetRef(so, "continueButton", continueBtn);
+            SetRef(so, "knightRect", knightRect);
+            SetRef(so, "knightImage", knightImg);
             so.ApplyModifiedPropertiesWithoutUndo();
 
             // ── Save Scene ──
@@ -162,6 +209,10 @@ namespace BoardOfEducation.Game
 
             UnityEditor.SceneManagement.EditorSceneManager.SaveScene(scene, scenePath);
             AddToBuildSettings(scenePath);
+
+            // Clear play-mode start scene so this scene plays directly when hitting Play
+            UnityEditor.SceneManagement.EditorSceneManager.playModeStartScene = null;
+
             Debug.Log($"[Outro1SceneBuilder] Scene built and saved to {scenePath}");
         }
 

@@ -7,7 +7,7 @@ namespace BoardOfEducation.Game
 {
     public static class Test1SceneBuilder
     {
-        [MenuItem("Board of Education/Build Test1 Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build Test1 Scene")]
         public static void BuildScene()
         {
             if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())

@@ -12,7 +12,7 @@ namespace BoardOfEducation.Navigation
     /// </summary>
     public static class LandingSceneBuilder
     {
-        [MenuItem("Board of Education/Build Landing Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build Landing Scene")]
         public static void BuildLandingScene()
         {
             if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -40,6 +40,10 @@ namespace BoardOfEducation.Navigation
                 eventSystemGo.AddComponent(inputModuleType);
             else
                 eventSystemGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            var boardInputModule = eventSystemGo.AddComponent<Board.Input.BoardUIInputModule>();
+            var boardInputSO = new SerializedObject(boardInputModule);
+            var maskProp = boardInputSO.FindProperty("m_InputMask.m_Bits");
+            if (maskProp != null) { maskProp.longValue = 3; boardInputSO.ApplyModifiedPropertiesWithoutUndo(); }
 
             // ── GameCore ──
             var gameCoreGo = new GameObject("GameCore");
@@ -67,9 +71,9 @@ namespace BoardOfEducation.Navigation
             bgImg.color = HexColor("#0f0e2a");
             bgImg.raycastTarget = false;
 
-            // ── Title: "SUM FUN" ──
-            var titleGo = CreateText(canvasGo.transform, "Title", "SUM FUN",
-                72, TextAlignmentOptions.Center, Color.white);
+            // ── Title ──
+            var titleGo = CreateText(canvasGo.transform, "Title", "Knight's Quest,\nMath Adventures",
+                56, TextAlignmentOptions.Center, Color.white);
             SetAnchored(titleGo, new Vector2(0.1f, 0.82f), new Vector2(0.9f, 0.98f));
             titleGo.GetComponent<TextMeshProUGUI>().fontStyle = FontStyles.Bold;
 
@@ -176,7 +180,7 @@ namespace BoardOfEducation.Navigation
             Debug.Log($"[LandingSceneBuilder] Landing scene built and saved to {scenePath}");
         }
 
-        [MenuItem("Board of Education/Configure Build Settings")]
+        [MenuItem("Knight's Quest: Math Adventures/Configure Build Settings")]
         public static void ConfigureBuildSettings()
         {
             var scenes = new[]
@@ -289,7 +293,7 @@ namespace BoardOfEducation.Navigation
             tmp.fontSize = fontSize;
             tmp.alignment = alignment;
             tmp.color = color;
-            tmp.enableWordWrapping = true;
+            tmp.textWrappingMode = TextWrappingModes.Normal;
             tmp.overflowMode = TextOverflowModes.Ellipsis;
             return go;
         }

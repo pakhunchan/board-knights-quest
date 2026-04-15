@@ -597,7 +597,8 @@ namespace BoardOfEducation.Game
                 {
                     if (hoveredIndex == correctIndex)
                     {
-                        // Correct: green flash
+                        // Correct: play chime + green flash
+                        BoardOfEducation.Audio.GameAudioManager.PlayCorrectSFX();
                         yield return CoFlashCircle(hoveredIndex, CircleCorrectColor, 0.3f);
                         answered = true;
                     }

@@ -12,7 +12,7 @@ namespace BoardOfEducation.Playground
     /// </summary>
     public static class PlaygroundSceneBuilder
     {
-        [MenuItem("Board of Education/Build Playground Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build Playground Scene")]
         public static void BuildPlaygroundScene()
         {
             if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -40,6 +40,10 @@ namespace BoardOfEducation.Playground
                 eventSystemGo.AddComponent(inputModuleType);
             else
                 eventSystemGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            var boardInputModule = eventSystemGo.AddComponent<Board.Input.BoardUIInputModule>();
+            var boardInputSO = new SerializedObject(boardInputModule);
+            var maskProp = boardInputSO.FindProperty("m_InputMask.m_Bits");
+            if (maskProp != null) { maskProp.longValue = 3; boardInputSO.ApplyModifiedPropertiesWithoutUndo(); }
 
             // ── GameCore ──
             var gameCoreGo = new GameObject("GameCore");
@@ -387,7 +391,7 @@ namespace BoardOfEducation.Playground
             tmp.fontSize = fontSize;
             tmp.alignment = alignment;
             tmp.color = color;
-            tmp.enableWordWrapping = true;
+            tmp.textWrappingMode = TextWrappingModes.Normal;
             tmp.overflowMode = TextOverflowModes.Ellipsis;
             return go;
         }

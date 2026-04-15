@@ -20,7 +20,7 @@ namespace BoardOfEducation.Game
             "Assets/Textures/variants/chalkboard-layers/layer-4-border.png",
         };
 
-        [MenuItem("Board of Education/Build ChalkboardDemo Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build ChalkboardDemo Scene")]
         public static void BuildChalkboardDemoScene()
         {
             if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -53,6 +53,10 @@ namespace BoardOfEducation.Game
                 eventSystemGo.AddComponent(inputModuleType);
             else
                 eventSystemGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            var boardInputModule = eventSystemGo.AddComponent<Board.Input.BoardUIInputModule>();
+            var boardInputSO = new SerializedObject(boardInputModule);
+            var maskProp = boardInputSO.FindProperty("m_InputMask.m_Bits");
+            if (maskProp != null) { maskProp.longValue = 3; boardInputSO.ApplyModifiedPropertiesWithoutUndo(); }
 
             // ── MainCanvas ──
             var canvasGo = new GameObject("MainCanvas");

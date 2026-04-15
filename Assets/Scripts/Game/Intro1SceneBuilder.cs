@@ -16,7 +16,7 @@ namespace BoardOfEducation.Game
         private const string MenuImagePath = "Assets/Textures/intro/menu-title.png";
         private const string MapImagePath = "Assets/Textures/intro/level-map.png";
 
-        [MenuItem("Board of Education/Build Intro1 Scene")]
+        [MenuItem("Knight's Quest: Math Adventures/Build Intro1 Scene")]
         public static void BuildScene()
         {
             if (!UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
@@ -49,6 +49,10 @@ namespace BoardOfEducation.Game
                 eventSystemGo.AddComponent(inputModuleType);
             else
                 eventSystemGo.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+            var boardInputModule = eventSystemGo.AddComponent<Board.Input.BoardUIInputModule>();
+            var boardInputSO = new SerializedObject(boardInputModule);
+            var maskProp = boardInputSO.FindProperty("m_InputMask.m_Bits");
+            if (maskProp != null) { maskProp.longValue = 3; boardInputSO.ApplyModifiedPropertiesWithoutUndo(); }
 
             // ── MainCanvas ──
             var canvasGo = new GameObject("MainCanvas");
