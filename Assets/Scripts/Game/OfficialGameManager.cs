@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using BoardOfEducation.Audio;
+using Board.Core;
 
 namespace BoardOfEducation.Game
 {
@@ -60,6 +61,21 @@ namespace BoardOfEducation.Game
             practiceManager.OnComplete = () => TransitionToPhase(PHASE_RESULTS);
             results1Manager.OnComplete = () => TransitionToPhase(PHASE_OUTRO);
             outro1Manager.OnComplete = () => TransitionToPhase(PHASE_LEVELMAP);
+
+            BoardApplication.pauseScreenActionReceived += OnPauseScreenAction;
+        }
+
+        private void OnDestroy()
+        {
+            BoardApplication.pauseScreenActionReceived -= OnPauseScreenAction;
+        }
+
+        private void OnPauseScreenAction(BoardPauseAction pauseAction, BoardPauseAudioTrack[] audioTracks)
+        {
+            if (pauseAction == BoardPauseAction.ExitGameSaved || pauseAction == BoardPauseAction.ExitGameUnsaved)
+            {
+                BoardApplication.Exit();
+            }
         }
 
         private void TransitionToPhase(int nextPhase)
