@@ -23,6 +23,7 @@ namespace BoardOfEducation.Game
 
         private const float FADE_DURATION = 0.6f;
         private bool transitioning;
+        private bool mapRevealed;
         private bool subscribedToPieces;
 
         private void Start()
@@ -66,15 +67,15 @@ namespace BoardOfEducation.Game
 
         private void OnPlayClicked()
         {
-            // Tapping PLAY directly transitions (no two-step flow needed)
-            if (transitioning) return;
+            if (transitioning || mapRevealed) return;
+            mapRevealed = true;
             StartCoroutine(CrossFade(titleScreen, mapScreen));
         }
 
         private void OnRobotPlaced(Input.PieceManager.PieceContact piece)
         {
-            // Placing any robot on the board also transitions directly
-            if (transitioning) return;
+            if (transitioning || mapRevealed) return;
+            mapRevealed = true;
             StartCoroutine(CrossFade(titleScreen, mapScreen));
         }
 
