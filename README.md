@@ -1,6 +1,6 @@
 # Knight's Quest: Math Adventures
 
-An educational fractions game built with Unity and the [Board SDK](https://dev.board.fun) for the Playcademy Superbuilders Challenge. Players use physical tabletop pieces (robots and ships) to solve fraction equivalence problems through a narrative-driven knight's quest.
+An educational fractions game built with Unity and the [Board SDK](https://dev.board.fun) for the Playcademy Superbuilders Challenge. Players use physical Board Arcade robot pieces to solve fraction equivalence problems through a narrative-driven knight's quest.
 
 The lesson design is based on the *Completing Equivalent Fractions* lesson (pages 298–300) from *Direct Instruction Mathematics* (5th Edition) by Stein, Kinder, Rolf, and Silbert.
 
