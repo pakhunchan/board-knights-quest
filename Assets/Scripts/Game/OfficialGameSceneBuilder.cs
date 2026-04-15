@@ -345,6 +345,25 @@ namespace BoardOfEducation.Game
             officialSO.ApplyModifiedPropertiesWithoutUndo();
 
             // ══════════════════════════════════════════════════
+            // SET INITIAL VISIBILITY — Phase 1 visible, all others hidden
+            // ══════════════════════════════════════════════════
+            phase1Result.phaseGroup.alpha = 1f;
+            phase1Result.phaseGroup.blocksRaycasts = true;
+            // Hide the map screen within Phase 1 so the title screen shows
+            phase1Result.mapGroup.alpha = 0f;
+            phase1Result.mapGroup.blocksRaycasts = false;
+
+            CanvasGroup[] hiddenPhases = { phase2Result.phaseGroup, phase3Result.phaseGroup,
+                phase4Result.phaseGroup, phase5Result.phaseGroup, phase6Result.phaseGroup,
+                phase7Result.phaseGroup };
+            foreach (var cg in hiddenPhases)
+            {
+                cg.alpha = 0f;
+                cg.blocksRaycasts = false;
+                cg.gameObject.SetActive(false);
+            }
+
+            // ══════════════════════════════════════════════════
             // SAVE + CONFIGURE
             // ══════════════════════════════════════════════════
             string scenePath = "Assets/Scenes/OfficialGame.unity";
@@ -466,6 +485,7 @@ namespace BoardOfEducation.Game
             subTmp.overflowMode = TextOverflowModes.Overflow;
             if (cinzelFont != null) subTmp.font = cinzelFont;
             subTmp.raycastTarget = false;
+            subtitleGo.SetActive(false); // Hide subtitles — relying on TTS
 
             // Robots
             var robotContainer = new GameObject("RobotContainer");
@@ -596,6 +616,7 @@ namespace BoardOfEducation.Game
             subtitleTmp.richText = true;
             subtitleTmp.raycastTarget = false;
             if (fredokaFont != null) subtitleTmp.font = fredokaFont;
+            subtitleGo.SetActive(false); // Hide subtitles — relying on TTS
 
             // Continue button (nature-framed, matching Results1 style)
             var contGo = CreateUIElement("ContinueSection", introScreenGo.transform);
@@ -787,6 +808,7 @@ namespace BoardOfEducation.Game
             var subtitleGo = CreateText(phaseGo.transform, "SubtitleText", "",
                 36, TextAlignmentOptions.Center, new Color(1, 1, 1, 0.9f));
             SetAnchored(subtitleGo, new Vector2(0.1f, 0.03f), new Vector2(0.9f, 0.14f));
+            subtitleGo.SetActive(false); // Hide subtitles — relying on TTS
 
             // PlayButton (hidden)
             var playBtnGo = CreateButtonTwoColor(phaseGo.transform, "PlayButton",
@@ -869,6 +891,7 @@ namespace BoardOfEducation.Game
             var subtitleGo = CreateText(phaseGo.transform, "SubtitleText", "",
                 36, TextAlignmentOptions.Center, new Color(1, 1, 1, 0.9f));
             SetAnchored(subtitleGo, new Vector2(0.1f, 0.03f), new Vector2(0.9f, 0.14f));
+            subtitleGo.SetActive(false); // Hide subtitles — relying on TTS
 
             // ScoreArea
             var scoreAreaGo = CreateUIElement("ScoreArea", lessonUIGo.transform);
@@ -1464,6 +1487,7 @@ namespace BoardOfEducation.Game
             subTmp.overflowMode = TextOverflowModes.Overflow;
             subTmp.raycastTarget = false;
             if (cinzelFont != null) subTmp.font = cinzelFont;
+            subtitleGo.SetActive(false); // Hide subtitles — relying on TTS
 
             // Continue button (nature-framed, matching Intro3 style)
             var contGo = CreateUIElement("ContinueSection", screenGo.transform);
